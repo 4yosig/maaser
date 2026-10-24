@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#1d4ed8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="מעשר">
+  <meta name="description" content="ניהול מעשר כספים מסונכרן אוטומטית עם גוגל">
+  <title>מעשר כספים - מסונכרן בענן</title>
+
+  <!-- אייקון אפליקציה -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231d4ed8'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231d4ed8'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+
+  <!-- טעינת ספריות Google Firebase הרשמיות לעבודה מול ענן גוגל -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --color-primary: #1d4ed8;
+      --color-primary-hover: #1e40af;
+      --color-debt: #b91c1c;
+      --color-debt-bg: #fee2e2;
+      --color-excess: #15803d;
+      --color-excess-bg: #dcfce7;
+      --color-neutral: #475569;
+      --color-neutral-bg: #f1f5f9;
+      --bg-app: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f1f5f9;
+      --border-color: #cbd5e1;
+      --border-focus: #3b82f6;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.12);
+      --transition: 200ms ease;
+    }
+
+    [data-theme="dark"] {
+      --bg-app: #0b1120;
+      --bg-card: #1e293b;
+      --bg-card-subtle: #0f172a;
+      --border-color: #334155;
+      --border-focus: #60a5fa;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --color-primary: #3b82f6;
+      --color-primary-hover: #60a5fa;
+      --color-debt: #f87171;
+      --color-debt-bg: #450a0a;
+      --color-excess: #4ade80;
+      --color-excess-bg: #052e16;
+      --color-neutral: #cbd5e1;
+      --color-neutral-bg: #1e293b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: calc(75px + env(safe-area-inset-bottom));
+      user-select: none;
+    }
+
+    /* פס עליון */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding-top: env(safe-area-inset-top);
+      box-shadow: var(--shadow-sm);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .header-title { font-size: 1.25rem; font-weight: 800; }
+    .header-sync-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #94a3b8; }
+    .sync-dot.synced { background-color: #22c55e; }
+    .sync-dot.syncing { background-color: #eab308; animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+    .user-avatar-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--border-color);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-card-subtle);
+    }
+    .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* תוכן וכרטיסים */
+    .main-content {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 16px;
+      flex: 1;
+    }
+    .tab-view { display: none; animation: fadeIn var(--transition); }
+    .tab-view.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+
+    /* באנר התחברות לגוגל */
+    .google-sync-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #fff;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--shadow-md);
+    }
+    .google-sync-banner.hidden { display: none; }
+    .google-sync-banner h3 { font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+    .google-sync-banner p { font-size: 0.85rem; opacity: 0.95; line-height: 1.4; }
+    .google-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #ffffff;
+      color: #1f2937;
+      border: 1px solid #e5e7eb;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+      transition: background 150ms;
+    }
+    .google-btn:active { background: #f3f4f6; }
+    .google-btn svg { width: 18px; height: 18px; }
+
+    /* Hero Balance Card */
+    .hero-card {
+      border-right: 6px solid var(--color-primary);
+      background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-card-subtle) 100%);
+    }
+    .hero-card.is-debt { border-right-color: var(--color-debt); }
+    .hero-card.is-excess { border-right-color: var(--color-excess); }
+    .hero-top { display: flex; justify-content: space-between; align-items: center; }
+    .hero-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+    .status-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-neutral-bg);
+      color: var(--color-neutral);
+    }
+    .status-badge.debt { background-color: var(--color-debt-bg); color: var(--color-debt); }
+    .status-badge.excess { background-color: var(--color-excess-bg); color: var(--color-excess); }
+    .hero-amount { font-size: 2.3rem; font-weight: 900; margin: 4px 0; letter-spacing: -0.5px; }
+    .hero-status-desc { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); }
+
+    .monthly-progress-block {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border-color);
+    }
+    .progress-labels { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; }
+    .progress-percent { font-weight: 700; color: var(--color-primary); }
+    .progress-bar-track {
+      width: 100%;
+      height: 10px;
+      background-color: var(--border-color);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .progress-bar-fill { height: 100%; background-color: var(--color-primary); border-radius: var(--radius-full); transition: width var(--transition); }
+
+    /* רשת מדדים */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .stat-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+    .stat-label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
+    .stat-val { font-size: 1.2rem; font-weight: 800; }
+    .stat-val.highlight { color: var(--color-primary); }
+
+    /* Quick stats */
+    .quick-stats-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .quick-stat-item {
+      flex: 1;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 6px;
+      text-align: center;
+    }
+    .qs-title { display: block; font-size: 0.72rem; color: var(--text-muted); }
+    .qs-val { font-size: 0.95rem; font-weight: 800; margin-top: 2px; }
+
+    /* כרטיס שנתי */
+    .annual-grid { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .annual-val { font-size: 1.25rem; font-weight: 800; }
+    .annual-forecast-box {
+      background-color: var(--bg-card-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* רשימות */
+    .donation-row-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      margin-bottom: 8px;
+      cursor: pointer;
+      min-height: 52px;
+    }
+    .donation-beneficiary { font-weight: 700; font-size: 1rem; }
+    .donation-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 3px;
+    }
+    .cat-pill {
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      color: #fff;
+      font-weight: 600;
+    }
+    .donation-sum { font-size: 1.15rem; font-weight: 800; }
+
+    /* טפסים */
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
+    .required-star { color: var(--color-debt); }
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 16px;
+      font-family: inherit;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      min-height: 48px;
+      user-select: text;
+    }
+    .form-control:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+    .validation-msg { font-size: 0.8rem; color: var(--color-debt); margin-top: 4px; min-height: 18px; }
+    .quick-chips { display: flex; gap: 8px; margin-top: 6px; }
+    .chip-btn {
+      background-color: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      min-height: 44px;
+    }
+    .checkbox-label input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--color-primary); }
+
+    /* כפתורים */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      min-height: 48px;
+      text-decoration: none;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn-sm { padding: 8px 14px; font-size: 0.85rem; min-height: 38px; }
+    .btn-primary { background-color: var(--color-primary); color: #fff; }
+    .btn-secondary { background-color: var(--bg-card-subtle); border-color: var(--border-color); color: var(--text-main); }
+    .btn-danger { background-color: var(--color-debt); color: #fff; }
+    .btn-outline { background: transparent; border-color: var(--border-color); color: var(--text-main); }
+    .btn-danger-outline { background: transparent; border-color: var(--color-debt); color: var(--color-debt); }
+    .btn-link { background: none; border: none; color: var(--color-primary); font-size: 0.88rem; cursor: pointer; padding: 4px; font-weight: 600; }
+    .btn-icon { background: none; border: none; font-size: 1.3rem; cursor: pointer; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-full); color: var(--text-main); }
+    .w-100 { width: 100%; }
+    .form-actions-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+    .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+
+    /* סרגל תחתון */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background-color: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 50;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      height: 100%;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px 0;
+    }
+    .nav-item.active { color: var(--color-primary); font-weight: 700; }
+    .nav-icon { font-size: 1.3rem; line-height: 1; }
+    .nav-label { font-size: 0.72rem; margin-top: 2px; }
+
+    /* Segmented Control */
+    .segmented-control {
+      display: flex;
+      background-color: var(--bg-card-subtle);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      margin-bottom: 16px;
+      border: 1px solid var(--border-color);
+    }
+    .seg-btn {
+      flex: 1;
+      border: none;
+      background: none;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .seg-btn.active { background-color: var(--bg-card); color: var(--text-main); }
+    .subtab-content { display: none; }
+    .subtab-content.active { display: block; }
+
+    /* חודשים */
+    .month-card {
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .month-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .month-name { font-size: 1.05rem; font-weight: 800; }
+    .month-details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 0.82rem; color: var(--text-muted); }
+    .month-details-grid strong { display: block; color: var(--text-main); font-size: 0.95rem; }
+
+    /* Toasts */
+    .toast-container {
+      position: fixed;
+      top: calc(env(safe-area-inset-top) + 14px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 380px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: var(--shadow-lg);
+      animation: slideDown 250ms ease;
+    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .toast.success { background-color: var(--color-excess); }
+    .toast.error { background-color: var(--color-debt); }
+    .toast.info { background-color: var(--color-primary); }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(2px);
+      z-index: 90;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-color);
+    }
+    .modal-actions { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
+
+    .hidden { display: none !important; }
+    .text-muted { color: var(--text-muted); }
+    .m-0 { margin: 0; }
+    .mt-xs { margin-top: 4px; }
+    .mt-sm { margin-top: 8px; }
+    .mt-md { margin-top: 14px; }
+    .sub-label { font-size: 0.75rem; color: var(--text-muted); }
+    .empty-state { text-align: center; padding: 24px 16px; color: var(--text-muted); }
+    .chart-container { width: 100%; overflow-x: auto; }
+    .chart-svg { width: 100%; height: 210px; display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- פס עליון עם אינדיקטור גוגל -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div>
+        <h1 class="header-title" id="pageHeaderTitle">ניהול מעשר</h1>
+        <div class="header-sync-status" id="headerSyncStatus" title="מצב סנכרון עם ענן גוגל">
+          <span class="sync-dot" id="syncDot"></span>
+          <span id="syncText">מקומי (התחבר לסנכרון)</span>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="user-avatar-btn" id="userAvatarBtn" title="חשבון גוגל" aria-label="חשבון משתמש">
+          <span id="userAvatarPlaceholder">👤</span>
+        </button>
+        <button type="button" class="btn-icon" id="quickAddBtn" aria-label="הוסף תרומה">➕</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- התראות קופצות -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+  <!-- תוכן ראשי -->
+  <main class="main-content">
+
+    <!-- מסך 1: ראשי (Dashboard) -->
+    <section id="tab-dashboard" class="tab-view active">
+      
+      <!-- באנר התחברות לגוגל (מוצג רק למי שעדיין לא מחובר) -->
+      <div class="google-sync-banner" id="googleLoginBanner">
+        <h3>
+          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#ffffff" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/></svg>
+          סנכרון אוטומטי לחשבון Google שלך
+        </h3>
+        <p>התחבר פעם אחת, וכל תרומה שתוסיף תישמר ישירות בחשבון גוגל הפרטי שלך ותסתנכרן לכל מכשיר.</p>
+        <button type="button" class="google-btn" id="btnGoogleSignInMain">
+          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          התחבר עם Google לשמירה בענן
+        </button>
+      </div>
+
+      <!-- כרטיס יתרה מרכזי -->
+      <article class="card hero-card" id="heroCard">
+        <div class="hero-top">
+          <span class="hero-label">יתרת חוב / זכות כוללת</span>
+          <span class="status-badge" id="heroStatusBadge">מעודכן</span>
+        </div>
+        <div class="hero-amount" id="heroBalanceAmount">₪0</div>
+        <div class="hero-status-desc" id="heroStatusDesc">אין חוב פעיל לחודש זה</div>
+        
+        <div class="monthly-progress-block">
+          <div class="progress-labels">
+            <span>יעד חודשי: <strong id="progressDonatedTxt">₪0</strong> מתוך <span id="progressGoalTxt">₪1,000</span></span>
+            <span id="progressPercentTxt" class="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="monthlyProgressFill" style="width: 0%;"></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- רשת מדדים חודשיים -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">חוב חודשי מוגדר</span>
+          <span class="stat-val" id="statBaseDebt">₪0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">נתרם החודש</span>
+          <span class="stat-val highlight" id="statTotalDonated">₪0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">מספר תרומות</span>
+          <span class="stat-val" id="statDonationCount">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">יתרת פתיחה</span>
+          <span class="stat-val" id="statOpeningBalance">₪0</span>
+        </div>
+      </div>
+
+      <!-- מדדים מהירים -->
+      <div class="quick-stats-row">
+        <div class="quick-stat-item">
+          <span class="qs-title">ממוצע לתרומה</span>
+          <span class="qs-val" id="qsAverage">₪0</span>
+        </div>
+        <div class="quick-stat-item">
+          <span class="qs-title">תרומה מקסימלית</span>
+          <span class="qs-val" id="qsMax">₪0</span>
+        </div>
+        <div class="quick-stat-item">
+          <span class="qs-title">רצף (ימים)</span>
+          <span class="qs-val" id="qsStreak">0 ימים</span>
+        </div>
+      </div>
+
+      <!-- יעד שנתי ותחזית קצב -->
+      <article class="card">
+        <h2 class="card-title">יעד שנתי ותחזית קצב</h2>
+        <div class="annual-grid">
+          <div>
+            <div class="sub-label">סה״כ מתחילת השנה</div>
+            <div class="annual-val" id="annualYtdVal">₪0</div>
+          </div>
+          <div>
+            <div class="sub-label">יעד שנתי</div>
+            <div class="annual-val" id="annualTargetVal">₪12,000</div>
+          </div>
+        </div>
+        <div class="annual-forecast-box">
+          <span class="text-muted">תחזית שנתית לפי קצב נוכחי:</span>
+          <strong id="annualForecastVal">₪0</strong>
+        </div>
+      </article>
+
+      <!-- 3 מוטבים מובילים -->
+      <article class="card">
+        <h2 class="card-title">3 המוטבים המובילים השנה</h2>
+        <ul id="topBeneficiariesList" style="list-style:none;">
+          <li class="text-muted">אין עדיין תרומות השנה</li>
+        </ul>
+      </article>
+
+      <!-- 5 תרומות אחרונות -->
+      <article class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+          <h2 class="card-title m-0">תרומות אחרונות</h2>
+          <button type="button" class="btn-link" id="viewAllDonationsLink">לכל התרומות ←</button>
+        </div>
+        <div id="recentDonationsContainer"></div>
+        <button type="button" class="btn btn-primary w-100 mt-md" id="dashAddDonationBtn">➕ הוסף תרומה</button>
+      </article>
+    </section>
+
+    <!-- מסך 2: הוספת / עריכת תרומה -->
+    <section id="tab-donation-form" class="tab-view">
+      <div class="card">
+        <div class="form-header">
+          <button type="button" class="btn-icon" id="formCloseBtn">✕</button>
+          <h2 class="card-title m-0" id="formScreenTitle">הוספת תרומה</h2>
+          <div style="width: 44px;"></div>
+        </div>
+
+        <form id="donationForm" novalidate>
+          <input type="hidden" id="donationId" value="">
+
+          <div class="form-group">
+            <label for="donationAmount">סכום התרומה (₪) <span class="required-star">*</span></label>
+            <input type="number" id="donationAmount" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" class="form-control" required>
+            <div class="validation-msg" id="valMsg-donationAmount"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="donationBeneficiary">שם המוטב / הארגון <span class="required-star">*</span></label>
+            <input type="text" id="donationBeneficiary" list="beneficiariesDataList" placeholder="למשל: יד עזרה, ישיבה..." class="form-control" required>
+            <datalist id="beneficiariesDataList"></datalist>
+            <div class="validation-msg" id="valMsg-donationBeneficiary"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="donationDateDisplay">תאריך (DD/MM/YYYY) <span class="required-star">*</span></label>
+            <input type="text" id="donationDateDisplay" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" required>
+            <div class="quick-chips">
+              <button type="button" class="chip-btn" id="chipDateToday">היום</button>
+              <button type="button" class="chip-btn" id="chipDateYesterday">אתמול</button>
+            </div>
+            <div class="validation-msg" id="valMsg-donationDateDisplay"></div>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <label for="donationCategory">קטגוריה</label>
+              <button type="button" class="btn-link" id="btnInlineNewCategory">+ קטגוריה חדשה</button>
+            </div>
+            <select id="donationCategory" class="form-control"></select>
+          </div>
+
+          <div class="form-group">
+            <label for="donationPaymentMethod">אמצעי תשלום</label>
+            <select id="donationPaymentMethod" class="form-control">
+              <option value="העברה בנקאית">העברה בנקאית</option>
+              <option value="אשראי">אשראי</option>
+              <option value="מזומן">מזומן</option>
+              <option value="הוראת קבע">הוראת קבע</option>
+              <option value="לא צוין">לא צוין</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="donationNotes">הערות</label>
+            <textarea id="donationNotes" rows="2" class="form-control" placeholder="פרטים נוספים..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label" for="donationSection46">
+              <input type="checkbox" id="donationSection46">
+              <span>תרומה מוכרת לפי סעיף 46 (זיכוי מס)</span>
+            </label>
+          </div>
+
+          <div class="form-actions-stack">
+            <button type="submit" class="btn btn-primary">✓ שמור (יסונכרן לגוגל)</button>
+            <button type="button" class="btn btn-secondary" id="btnCancelDonation">ביטול</button>
+            <button type="button" class="btn btn-danger hidden" id="btnDeleteDonation">🗑️ מחק תרומה זו</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- מסך 3: היסטוריה, חודשים וסטטיסטיקה -->
+    <section id="tab-history" class="tab-view">
+      <div class="segmented-control">
+        <button type="button" class="seg-btn active" data-subtab="subtab-donations">תרומות</button>
+        <button type="button" class="seg-btn" data-subtab="subtab-months">חודשים</button>
+        <button type="button" class="seg-btn" data-subtab="subtab-stats">סטטיסטיקה</button>
+      </div>
+
+      <!-- תרומות -->
+      <div id="subtab-donations" class="subtab-content active">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 class="card-title m-0">סינון מהיר</h3>
+            <button type="button" class="btn-link" id="btnResetFilters">נקה סינון</button>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0;">
+            <div>
+              <label for="filterSearchBeneficiary">מוטב</label>
+              <input type="text" id="filterSearchBeneficiary" class="form-control" placeholder="חיפוש...">
+            </div>
+            <div>
+              <label for="filterCategory">קטגוריה</label>
+              <select id="filterCategory" class="form-control"></select>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:8px;">
+            <span id="filterResultsCount" class="text-muted">מציג 0 תרומות</span>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnExportCsv">ייצוא ל-Excel</button>
+          </div>
+        </div>
+        <div id="donationsListContainer"></div>
+      </div>
+
+      <!-- חודשים -->
+      <div id="subtab-months" class="subtab-content">
+        <p class="text-muted" style="font-size:0.85rem; margin-bottom:8px;">לחץ על חודש כדי להוסיף חוב נוסף ידני.</p>
+        <div id="monthsListContainer"></div>
+      </div>
+
+      <!-- גרפים -->
+      <div id="subtab-stats" class="subtab-content">
+        <article class="card">
+          <h3 class="card-title">תרומות ב-12 החודשים האחרונים</h3>
+          <div class="chart-container" id="barChartContainer"></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- מסך 4: הגדרות וחשבון Google -->
+    <section id="tab-settings" class="tab-view">
+      
+      <!-- כרטיס סטטוס חשבון Google וסנכרון -->
+      <article class="card" style="border: 2px solid var(--color-primary);">
+        <h2 class="card-title">חשבון Google וסנכרון ענן ☁️</h2>
+        <div id="accountStatusBox" style="margin-bottom: 12px;">
+          <!-- מתעדכן דינמית לפי מצב התחברות -->
+        </div>
+        <button type="button" class="google-btn w-100" id="btnGoogleAction">התחבר עם חשבון Google</button>
+      </article>
+
+      <!-- הגדרות מעשר -->
+      <article class="card">
+        <h2 class="card-title">הגדרות מעשר</h2>
+        <form id="settingsMaaserForm">
+          <div class="form-group">
+            <label for="settingBaseMaaserAmount">סכום מעשר חודשי בסיסי (₪)</label>
+            <input type="number" id="settingBaseMaaserAmount" class="form-control" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="settingMaaserDay">יום חיוב מעשר בחודש (1–28)</label>
+            <input type="number" id="settingMaaserDay" class="form-control" min="1" max="28" required>
+          </div>
+          <div class="form-group">
+            <label for="settingMonthlyGoal">יעד תרומה חודשי (₪)</label>
+            <input type="number" id="settingMonthlyGoal" class="form-control" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="settingAnnualGoal">יעד תרומה שנתי (₪)</label>
+            <input type="number" id="settingAnnualGoal" class="form-control" min="0" required>
+          </div>
+          <button type="submit" class="btn btn-primary">שמור הגדרות מעשר</button>
+        </form>
+      </article>
+
+      <!-- ניהול קטגוריות -->
+      <article class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 class="card-title m-0">ניהול קטגוריות</h2>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenAddCategoryModal">+ הוסף קטגוריה</button>
+        </div>
+        <ul id="categoriesManageList" style="list-style:none; margin-top:12px;"></ul>
+      </article>
+
+      <!-- גיבוי ידני נוסף -->
+      <article class="card">
+        <h2 class="card-title">גיבוי ושחזור ידני</h2>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button type="button" class="btn btn-secondary" id="btnExportJson">הורד קובץ גיבוי (JSON)</button>
+          <button type="button" class="btn btn-outline" id="btnLoadSampleSeptember">טען נתוני ספטמבר לדוגמה</button>
+          <button type="button" class="btn btn-danger-outline" id="btnResetAllData">איפוס מלא של כל הנתונים</button>
+        </div>
+      </article>
+
+      <!-- הגדרות חיבור ענן מתקדמות (פרויקט Firebase משלך) -->
+      <article class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 class="card-title m-0">הגדרות פרויקט Google (מתקדם)</h2>
+          <button type="button" class="btn-link" id="btnToggleCloudConfig">ערוך מפתחות</button>
+        </div>
+        <div id="cloudConfigBox" class="hidden" style="margin-top:10px;">
+          <p class="text-muted" style="font-size:0.8rem; margin-bottom:8px;">
+            כדי לחבר את הדומיין/אפליקציה שלך לפרויקט Google Firebase אישי, הדבק כאן את מפתחות ה-Firebase שלך (או השאר ריק לשימוש בברירת המחדל).
+          </p>
+          <textarea id="firebaseConfigInput" rows="5" class="form-control" style="font-family:monospace; font-size:12px;" placeholder='{"apiKey": "...", "authDomain": "...", "projectId": "..."}'></textarea>
+          <button type="button" class="btn btn-primary btn-sm mt-sm" id="btnSaveFirebaseConfig">שמור מפתחות פרויקט</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- סרגל תחתון -->
+  <nav class="bottom-nav">
+    <button type="button" class="nav-item active" data-tab="tab-dashboard">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">ראשי</span>
+    </button>
+    <button type="button" class="nav-item" data-tab="tab-donation-form">
+      <span class="nav-icon">➕</span>
+      <span class="nav-label">תרומה</span>
+    </button>
+    <button type="button" class="nav-item" data-tab="tab-history">
+      <span class="nav-icon">📜</span>
+      <span class="nav-label">היסטוריה</span>
+    </button>
+    <button type="button" class="nav-item" data-tab="tab-settings">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">הגדרות</span>
+    </button>
+  </nav>
+
+  <!-- דיאלוגים מודאליים -->
+  <div class="modal-backdrop hidden" id="unsavedModal">
+    <div class="modal-card">
+      <h3>לצאת בלי לשמור?</h3>
+      <p style="margin-top:8px;">השינויים שהזנת יאבדו. האם ברצונך לצאת בכל זאת?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-danger" id="btnConfirmLeave">צא</button>
+        <button type="button" class="btn btn-secondary" id="btnStayInForm">הישאר</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="confirmModal">
+    <div class="modal-card">
+      <h3 id="confirmModalTitle">אישור פעולה</h3>
+      <p id="confirmModalMsg" style="margin-top:8px;"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-danger" id="btnGenericConfirmYes">אישור</button>
+        <button type="button" class="btn btn-secondary" id="btnGenericConfirmCancel">ביטול</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="categoryModal">
+    <div class="modal-card">
+      <h3 id="catModalTitle">קטגוריה</h3>
+      <form id="categoryForm" style="margin-top:12px;">
+        <input type="hidden" id="modalCatId" value="">
+        <div class="form-group">
+          <label for="modalCatName">שם הקטגוריה</label>
+          <input type="text" id="modalCatName" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="modalCatColor">צבע תגית</label>
+          <input type="color" id="modalCatColor" class="form-control" style="height:48px;" value="#1d4ed8">
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">שמור</button>
+          <button type="button" class="btn btn-secondary" id="btnCloseCatModal">ביטול</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="monthDebtModal">
+    <div class="modal-card">
+      <h3>עדכון חוב חודשי נוסף</h3>
+      <p id="monthDebtSub" class="text-muted" style="margin-top:4px;"></p>
+      <form id="monthDebtForm" style="margin-top:12px;">
+        <input type="hidden" id="monthDebtId" value="">
+        <div class="form-group">
+          <label for="monthAdditionalDebtInput">חוב נוסף ידני (₪)</label>
+          <input type="number" id="monthAdditionalDebtInput" step="0.01" min="0" class="form-control">
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">שמור</button>
+          <button type="button" class="btn btn-secondary" id="btnCloseMonthDebtModal">ביטול</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- קוד האפליקציה המלא -->
+  <script>
+    const HEBREW_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+
+    function formatCurrency(val) {
+      const num = Number(val) || 0;
+      const formatted = Math.abs(num).toLocaleString('he-IL', {
+        minimumFractionDigits: num % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2
+      });
+      return num < 0 ? `-₪${formatted}` : `₪${formatted}`;
+    }
+
+    function formatDateToDisplay(dateInput) {
+      if (!dateInput) return "";
+      const d = new Date(dateInput);
+      if (isNaN(d.getTime())) return "";
+      return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+    }
+
+    function parseDisplayDateToIso(str) {
+      if (!str || typeof str !== 'string') return null;
+      const parts = str.trim().split('/');
+      if (parts.length !== 3) return null;
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+      if (isNaN(day) || isNaN(month) || isNaN(year) || year < 1900 || year > 2100 || month < 1 || month > 12) return null;
+      const daysInMonth = new Date(year, month, 0).getDate();
+      if (day < 1 || day > daysInMonth) return null;
+      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+
+    function getYearMonthFromIso(iso) {
+      const p = iso.split('-');
+      return { year: parseInt(p[0], 10), month: parseInt(p[1], 10) };
+    }
+    function getMonthKey(y, m) { return `${y}-${String(m).padStart(2, '0')}`; }
+
+    function calculateClosing(op, base, add, don) {
+      return Math.round(((Number(op)||0) + (Number(base)||0) + (Number(add)||0) - (Number(don)||0)) * 100) / 100;
+    }
+
+    function recalculateCascade(months, donations, startKey, settings) {
+      const mMap = new Map();
+      months.forEach(m => mMap.set(getMonthKey(m.year, m.month), { ...m }));
+
+      const dSums = new Map();
+      const dCounts = new Map();
+      donations.forEach(d => {
+        const ym = getYearMonthFromIso(d.date);
+        const k = getMonthKey(ym.year, ym.month);
+        dSums.set(k, (dSums.get(k) || 0) + (Number(d.amount) || 0));
+        dCounts.set(k, (dCounts.get(k) || 0) + 1);
+      });
+
+      const keys = Array.from(new Set([...mMap.keys(), ...dSums.keys()])).sort();
+      if (keys.length === 0) return [];
+
+      let idx = keys.indexOf(startKey);
+      if (idx === -1) idx = 0;
+
+      let runningOpening = 0;
+      if (idx > 0) {
+        const prev = mMap.get(keys[idx - 1]);
+        runningOpening = prev ? prev.closingBalance : 0;
+      } else {
+        const first = mMap.get(keys[0]);
+        runningOpening = first ? (first.openingBalance || 0) : 0;
+      }
+
+      for (let i = idx; i < keys.length; i++) {
+        const k = keys[i];
+        const [yStr, mStr] = k.split('-');
+        const y = parseInt(yStr, 10);
+        const m = parseInt(mStr, 10);
+
+        let rec = mMap.get(k) || {
+          id: `m_${k}`, year: y, month: m, openingBalance: runningOpening,
+          baseDebt: settings.baseMaaserAmount || 1000, additionalDebt: 0,
+          totalDonations: 0, donationCount: 0, closingBalance: 0, createdAt: new Date().toISOString()
+        };
+
+        rec.openingBalance = runningOpening;
+        rec.totalDonations = Math.round((dSums.get(k) || 0) * 100) / 100;
+        rec.donationCount = dCounts.get(k) || 0;
+        rec.closingBalance = calculateClosing(rec.openingBalance, rec.baseDebt, rec.additionalDebt, rec.totalDonations);
+
+        mMap.set(k, rec);
+        runningOpening = rec.closingBalance;
+      }
+
+      return Array.from(mMap.values()).sort((a,b) => a.year !== b.year ? a.year - b.year : a.month - b.month);
+    }
+
+    /* שכבת מסד נתונים מקומית (Offline-First) */
+    class LocalDB {
+      constructor() { this.db = null; }
+      async init() {
+        return new Promise((resolve, reject) => {
+          const req = indexedDB.open('MaaserAppDB_v2', 1);
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('donations')) db.createObjectStore('donations', { keyPath: 'id' });
+            if (!db.objectStoreNames.contains('monthlyData')) db.createObjectStore('monthlyData', { keyPath: 'id' });
+            if (!db.objectStoreNames.contains('categories')) db.createObjectStore('categories', { keyPath: 'id' });
+            if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings', { keyPath: 'key' });
+          };
+          req.onsuccess = async (e) => {
+            this.db = e.target.result;
+            await this.seed();
+            resolve();
+          };
+          req.onerror = () => reject(req.error);
+        });
+      }
+      async seed() {
+        const cats = await this.getAll('categories');
+        if (cats.length === 0) {
+          await this.put('categories', { id: 'c1', name: 'כללי', color: '#4b5563' });
+          await this.put('categories', { id: 'c2', name: 'חמצני', color: '#1d4ed8' });
+          await this.put('categories', { id: 'c3', name: 'גרצברג', color: '#b91c1c' });
+        }
+        const defaults = [
+          { key: 'baseMaaserAmount', value: 1000 },
+          { key: 'maaserDay', value: 10 },
+          { key: 'monthlyGoal', value: 1000 },
+          { key: 'annualGoal', value: 12000 },
+          { key: 'theme', value: 'auto' }
+        ];
+        for (const s of defaults) {
+          if (!await this.get('settings', s.key)) await this.put('settings', s);
+        }
+      }
+      getAll(s) {
+        return new Promise((res, rej) => {
+          const tx = this.db.transaction(s, 'readonly');
+          const r = tx.objectStore(s).getAll();
+          r.onsuccess = () => res(r.result || []);
+          r.onerror = () => rej(r.error);
+        });
+      }
+      get(s, k) {
+        return new Promise((res, rej) => {
+          const tx = this.db.transaction(s, 'readonly');
+          const r = tx.objectStore(s).get(k);
+          r.onsuccess = () => res(r.result);
+          r.onerror = () => rej(r.error);
+        });
+      }
+      put(s, item) {
+        return new Promise((res, rej) => {
+          const tx = this.db.transaction(s, 'readwrite');
+          const r = tx.objectStore(s).put(item);
+          r.onsuccess = () => res();
+          r.onerror = () => rej(r.error);
+        });
+      }
+      del(s, k) {
+        return new Promise((res, rej) => {
+          const tx = this.db.transaction(s, 'readwrite');
+          const r = tx.objectStore(s).delete(k);
+          r.onsuccess = () => res();
+          r.onerror = () => rej(r.error);
+        });
+      }
+      clear(s) {
+        return new Promise((res, rej) => {
+          const tx = this.db.transaction(s, 'readwrite');
+          const r = tx.objectStore(s).clear();
+          r.onsuccess = () => res();
+          r.onerror = () => rej(r.error);
+        });
+      }
+    }
+
+    /* שכבת סנכרון עם ענן Google (Firebase) */
+    class CloudSync {
+      constructor() {
+        this.currentUser = null;
+        this.firestore = null;
+        this.auth = null;
+        this.isInitialized = false;
+        this.syncInProgress = false;
+      }
+
+      init() {
+        // מפתחות פרויקט מ-localStorage או ברירת מחדל
+        let cfg = null;
+        try {
+          const saved = localStorage.getItem('maaser_firebase_config');
+          if (saved) cfg = JSON.parse(saved);
+        } catch(e) {}
+
+        // ברירת מחדל אוטומטית שניתן לערוך דרך המסך
+        if (!cfg) {
+          cfg = {
+            apiKey: "AIzaSyD-dummyDefaultKeyForMaaserApp99",
+            authDomain: "maaser-kesafim-app.firebaseapp.com",
+            projectId: "maaser-kesafim-app"
+          };
+        }
+
+        try {
+          if (!firebase.apps.length) {
+            firebase.initializeApp(cfg);
+          }
+          this.auth = firebase.auth();
+          this.firestore = firebase.firestore();
+          this.isInitialized = true;
+
+          // האזנה לשינוי מצב כניסה של משתמש
+          this.auth.onAuthStateChanged(async (user) => {
+            this.currentUser = user;
+            updateUserUi(user);
+            if (user) {
+              setSyncStatus('syncing', 'מסנכרן עם Google...');
+              await this.pullFromCloud();
+            } else {
+              setSyncStatus('local', 'מקומי (התחבר לסנכרון)');
+            }
+          });
+        } catch(err) {
+          console.warn('Firebase init deferred / config missing:', err);
+          setSyncStatus('local', 'מקומי');
+        }
+      }
+
+      async loginWithGoogle() {
+        if (!this.isInitialized) {
+          showToast('יש להזין מפתחות פרויקט Firebase בהגדרות כדי להתחבר', 'info');
+          document.getElementById('cloudConfigBox').classList.remove('hidden');
+          switchTab('tab-settings');
+          return;
+        }
+        try {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          provider.setCustomParameters({ prompt: 'select_account' });
+          await this.auth.signInWithPopup(provider);
+          showToast('התחברת בהצלחה לחשבון Google!', 'success');
+        } catch (err) {
+          console.error(err);
+          // אם Popup נחסם במובייל - נסה Redirect
+          if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request') {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            await this.auth.signInWithRedirect(provider);
+          } else {
+            showToast('שגיאה בהתחברות לגוגל: ' + (err.message || ''), 'error');
+          }
+        }
+      }
+
+      async logout() {
+        if (this.auth) {
+          await this.auth.signOut();
+          showToast('התנתקת מחשבון Google', 'info');
+        }
+      }
+
+      // שמירת כל הנתונים לענן גוגל (נקרא בכל עדכון/הוספה/מחיקה)
+      async pushToCloud(dataState) {
+        if (!this.currentUser || !this.firestore) return;
+        setSyncStatus('syncing', 'שומר בגוגל...');
+        try {
+          const userDoc = this.firestore.collection('users').doc(this.currentUser.uid);
+          const payload = {
+            donations: dataState.donations,
+            monthlyData: dataState.monthlyData,
+            categories: dataState.categories,
+            settings: dataState.settings,
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+          };
+          await userDoc.set(payload, { merge: true });
+          setSyncStatus('synced', 'מסונכרן עם Google 🟢');
+        } catch (err) {
+          console.error('Push error:', err);
+          setSyncStatus('error', 'שגיאת סנכרון לגוגל');
+        }
+      }
+
+      // משיכת נתונים מהענן בהתחברות
+      async pullFromCloud() {
+        if (!this.currentUser || !this.firestore) return;
+        try {
+          const userDoc = await this.firestore.collection('users').doc(this.currentUser.uid).get();
+          if (userDoc.exists) {
+            const data = userDoc.data();
+            if (data.donations && data.donations.length > 0) {
+              await db.clear('donations');
+              await db.clear('monthlyData');
+              await db.clear('categories');
+              for (const d of data.donations) await db.put('donations', d);
+              for (const m of (data.monthlyData || [])) await db.put('monthlyData', m);
+              for (const c of (data.categories || [])) await db.put('categories', c);
+              await loadState();
+              render();
+              showToast('הנתונים סונכרנו מחשבון Google שלך!', 'success');
+            } else {
+              // ענן ריק ויש מקומי - נדחוף לענן
+              if (state.donations.length > 0) {
+                await this.pushToCloud(state);
+              }
+            }
+          } else {
+            // מסמך ראשון של המשתמש
+            if (state.donations.length > 0) {
+              await this.pushToCloud(state);
+            }
+          }
+          setSyncStatus('synced', 'מסונכרן עם Google 🟢');
+        } catch(err) {
+          console.error('Pull error:', err);
+          setSyncStatus('error', 'סנכרון לא פעיל כעת');
+        }
+      }
+    }
+
+    const db = new LocalDB();
+    const cloud = new CloudSync();
+
+    const state = {
+      donations: [],
+      monthlyData: [],
+      categories: [],
+      settings: {},
+      editingId: null,
+      isDirty: false,
+      filters: { beneficiary: '', category: '' }
+    };
+
+    function setSyncStatus(status, text) {
+      const dot = document.getElementById('syncDot');
+      const txt = document.getElementById('syncText');
+      dot.className = 'sync-dot';
+      if (status === 'synced') dot.classList.add('synced');
+      if (status === 'syncing') dot.classList.add('syncing');
+      txt.textContent = text;
+    }
+
+    function updateUserUi(user) {
+      const placeholder = document.getElementById('userAvatarPlaceholder');
+      const banner = document.getElementById('googleLoginBanner');
+      const accBox = document.getElementById('accountStatusBox');
+      const actionBtn = document.getElementById('btnGoogleAction');
+
+      if (user) {
+        banner.classList.add('hidden');
+        placeholder.innerHTML = user.photoURL 
+          ? `<img src="${user.photoURL}" alt="${user.displayName}">` 
+          : user.displayName ? user.displayName.slice(0, 1) : '👤';
+
+        accBox.innerHTML = `
+          <div style="display:flex; align-items:center; gap:10px;">
+            ${user.photoURL ? `<img src="${user.photoURL}" style="width:44px; height:44px; border-radius:50%;">` : ''}
+            <div>
+              <strong>${user.displayName || 'משתמש מחובר'}</strong>
+              <div class="text-muted" style="font-size:0.82rem;">${user.email || ''}</div>
+              <div style="color:var(--color-excess); font-size:0.8rem; font-weight:700;">● מחובר ומסונכרן לגוגל</div>
+            </div>
+          </div>
+        `;
+        actionBtn.textContent = 'התנתק מחשבון Google';
+        actionBtn.className = 'btn btn-secondary w-100';
+        actionBtn.onclick = () => cloud.logout();
+      } else {
+        banner.classList.remove('hidden');
+        placeholder.textContent = '👤';
+        accBox.innerHTML = `<p class="text-muted">אינך מחובר לחשבון Google. הנתונים נשמרים כרגע במכשיר זה בלבד.</p>`;
+        actionBtn.textContent = 'התחבר עם חשבון Google';
+        actionBtn.className = 'google-btn w-100';
+        actionBtn.onclick = () => cloud.loginWithGoogle();
+      }
+    }
+
+    async function init() {
+      await db.init();
+      await loadState();
+      ensureCurrentMonth();
+      bindEvents();
+      render();
+      cloud.init();
+    }
+
+    async function loadState() {
+      const [dons, mData, cats, setts] = await Promise.all([
+        db.getAll('donations'), db.getAll('monthlyData'),
+        db.getAll('categories'), db.getAll('settings')
+      ]);
+      state.donations = dons.sort((a,b) => new Date(b.date) - new Date(a.date));
+      state.categories = cats;
+      const sMap = {}; setts.forEach(s => sMap[s.key] = s.value);
+      state.settings = sMap;
+      state.monthlyData = mData.sort((a,b) => a.year !== b.year ? a.year - b.year : a.month - b.month);
+      recalculateCascadeFromEarliest();
+    }
+
+    function ensureCurrentMonth() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = now.getMonth() + 1;
+      const k = getMonthKey(y, m);
+      if (!state.monthlyData.find(x => x.year === y && x.month === m)) {
+        let op = 0;
+        if (state.monthlyData.length > 0) op = state.monthlyData[state.monthlyData.length - 1].closingBalance;
+        const base = state.settings.baseMaaserAmount || 1000;
+        const newM = {
+          id: `m_${k}`, year: y, month: m, openingBalance: op, baseDebt: base,
+          additionalDebt: 0, totalDonations: 0, donationCount: 0,
+          closingBalance: calculateClosing(op, base, 0, 0), createdAt: new Date().toISOString()
+        };
+        state.monthlyData.push(newM);
+        db.put('monthlyData', newM);
+        recalculateCascadeFromEarliest();
+      }
+    }
+
+    function recalculateCascadeFromEarliest(startKey = null) {
+      if (!startKey && state.monthlyData.length > 0) {
+        startKey = getMonthKey(state.monthlyData[0].year, state.monthlyData[0].month);
+      }
+      state.monthlyData = recalculateCascade(state.monthlyData, state.donations, startKey || '2026-01', state.settings);
+      state.monthlyData.forEach(m => db.put('monthlyData', m));
+    }
+
+    // פונקציה מרכזית שמעדכנת גם מקומית וגם ב-Google Cloud!
+    async function notifyDataChanged() {
+      render();
+      await cloud.pushToCloud(state);
+    }
+
+    function render() {
+      const now = new Date();
+      const curM = state.monthlyData.find(m => m.year === now.getFullYear() && m.month === (now.getMonth() + 1)) || state.monthlyData[state.monthlyData.length - 1] || {};
+      const closing = curM.closingBalance || 0;
+      const heroCard = document.getElementById('heroCard');
+      const heroBadge = document.getElementById('heroStatusBadge');
+
+      document.getElementById('heroBalanceAmount').textContent = formatCurrency(closing);
+      heroCard.classList.remove('is-debt', 'is-excess');
+
+      if (closing > 0) {
+        heroCard.classList.add('is-debt');
+        heroBadge.className = 'status-badge debt';
+        heroBadge.textContent = 'חוב לתרומה';
+        document.getElementById('heroStatusDesc').textContent = `יש להפריש עוד ${formatCurrency(closing)} לסגירת החוב`;
+      } else if (closing < 0) {
+        heroCard.classList.add('is-excess');
+        heroBadge.className = 'status-badge excess';
+        heroBadge.textContent = 'עודף זכות';
+        document.getElementById('heroStatusDesc').textContent = `עודף של ${formatCurrency(Math.abs(closing))} מועבר לחודש הבא`;
+      } else {
+        heroBadge.className = 'status-badge';
+        heroBadge.textContent = 'מאוזן';
+        document.getElementById('heroStatusDesc').textContent = 'כל חובות המעשר שולמו במלואם';
+      }
+
+      const mGoal = Number(state.settings.monthlyGoal) || 1000;
+      const donMonth = curM.totalDonations || 0;
+      const pct = Math.min(Math.round((donMonth / (mGoal || 1)) * 100), 100);
+      document.getElementById('progressDonatedTxt').textContent = formatCurrency(donMonth);
+      document.getElementById('progressGoalTxt').textContent = formatCurrency(mGoal);
+      document.getElementById('progressPercentTxt').textContent = `${pct}%`;
+      document.getElementById('monthlyProgressFill').style.width = `${pct}%`;
+
+      document.getElementById('statBaseDebt').textContent = formatCurrency(curM.baseDebt || 1000);
+      document.getElementById('statTotalDonated').textContent = formatCurrency(donMonth);
+      document.getElementById('statDonationCount').textContent = curM.donationCount || 0;
+      document.getElementById('statOpeningBalance').textContent = formatCurrency(curM.openingBalance || 0);
+
+      const totalCount = state.donations.length;
+      const sumAll = state.donations.reduce((a, b) => a + (Number(b.amount) || 0), 0);
+      document.getElementById('qsAverage').textContent = formatCurrency(totalCount > 0 ? (sumAll / totalCount) : 0);
+      document.getElementById('qsMax').textContent = formatCurrency(totalCount > 0 ? Math.max(...state.donations.map(d => Number(d.amount)||0)) : 0);
+      document.getElementById('qsStreak').textContent = `0 ימים`;
+
+      const ytdDons = state.donations.filter(d => getYearMonthFromIso(d.date).year === now.getFullYear());
+      const ytd = ytdDons.reduce((a, b) => a + (Number(b.amount) || 0), 0);
+      const startOfYear = new Date(now.getFullYear(), 0, 1);
+      const daysPassed = Math.max(Math.ceil((now - startOfYear) / (1000 * 60 * 60 * 24)), 1);
+      document.getElementById('annualYtdVal').textContent = formatCurrency(ytd);
+      document.getElementById('annualTargetVal').textContent = formatCurrency(state.settings.annualGoal || 12000);
+      document.getElementById('annualForecastVal').textContent = `${formatCurrency(Math.round((ytd / daysPassed) * 365))} (תחזית)`;
+
+      // מוטבים
+      const bMap = {};
+      ytdDons.forEach(d => bMap[d.beneficiary] = (bMap[d.beneficiary] || 0) + (Number(d.amount) || 0));
+      const top3 = Object.entries(bMap).sort((a,b) => b[1] - a[1]).slice(0, 3);
+      document.getElementById('topBeneficiariesList').innerHTML = top3.length ? top3.map(([n, s], i) => `
+        <li style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border-color);">
+          <span><strong>${i+1}.</strong> ${escapeHtml(n)}</span><strong>${formatCurrency(s)}</strong>
+        </li>
+      `).join('') : '<li class="text-muted">אין עדיין תרומות השנה</li>';
+
+      // 5 אחרונות
+      document.getElementById('recentDonationsContainer').innerHTML = state.donations.slice(0, 5).map(renderDonationHtml).join('') || '<p class="empty-state">עדיין לא נרשמו תרומות</p>';
+
+      // סלקטים
+      const catOpts = state.categories.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+      document.getElementById('donationCategory').innerHTML = catOpts;
+      document.getElementById('filterCategory').innerHTML = '<option value="">כל הקטגוריות</option>' + catOpts;
+      document.getElementById('beneficiariesDataList').innerHTML = Array.from(new Set(state.donations.map(d => d.beneficiary))).map(b => `<option value="${escapeHtml(b)}">`).join('');
+
+      renderHistoryList();
+      renderMonthsList();
+      renderSvgChart();
+
+      // הגדרות
+      document.getElementById('settingBaseMaaserAmount').value = state.settings.baseMaaserAmount || 1000;
+      document.getElementById('settingMaaserDay').value = state.settings.maaserDay || 10;
+      document.getElementById('settingMonthlyGoal').value = state.settings.monthlyGoal || 1000;
+      document.getElementById('settingAnnualGoal').value = state.settings.annualGoal || 12000;
+
+      document.getElementById('categoriesManageList').innerHTML = state.categories.map(c => `
+        <li style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border-color);">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:14px; height:14px; border-radius:50%; background:${c.color};"></span>
+            <strong>${escapeHtml(c.name)}</strong>
+          </div>
+          <div>
+            ${c.name !== 'כללי' ? `<button type="button" class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')">מחק</button>` : ''}
+          </div>
+        </li>
+      `).join('');
+    }
+
+    function renderDonationHtml(d) {
+      const cat = state.categories.find(c => c.name === d.category) || { color: '#64748b', name: d.category || 'כללי' };
+      return `
+        <div class="donation-row-item" onclick="openEditDonation('${d.id}')">
+          <div>
+            <div class="donation-beneficiary">${escapeHtml(d.beneficiary)}</div>
+            <div class="donation-meta">
+              <span>📅 ${formatDateToDisplay(d.date)}</span>
+              <span class="cat-pill" style="background-color:${cat.color}">${escapeHtml(cat.name)}</span>
+              ${d.section46 ? '<span>📜 סעיף 46</span>' : ''}
+            </div>
+          </div>
+          <div class="donation-sum">${formatCurrency(d.amount)}</div>
+        </div>
+      `;
+    }
+
+    function renderHistoryList() {
+      let list = [...state.donations];
+      if (state.filters.beneficiary) list = list.filter(d => d.beneficiary.toLowerCase().includes(state.filters.beneficiary.toLowerCase()));
+      if (state.filters.category) list = list.filter(d => d.category === state.filters.category);
+      document.getElementById('filterResultsCount').textContent = `נמצאו ${list.length} תרומות`;
+      document.getElementById('donationsListContainer').innerHTML = list.map(renderDonationHtml).join('') || '<div class="empty-state card">לא נמצאו תרומות</div>';
+    }
+
+    function renderMonthsList() {
+      document.getElementById('monthsListContainer').innerHTML = [...state.monthlyData].reverse().map(m => {
+        const isDebt = m.closingBalance > 0;
+        const isExcess = m.closingBalance < 0;
+        const badge = isDebt ? `status-badge debt">חוב: ${formatCurrency(m.closingBalance)}` : (isExcess ? `status-badge excess">עודף: ${formatCurrency(Math.abs(m.closingBalance))}` : `status-badge">מאוזן`);
+        return `
+          <div class="month-card" onclick="openMonthModal('${m.id}')">
+            <div class="month-header-row">
+              <span class="month-name">${HEBREW_MONTHS[m.month - 1]} ${m.year}</span>
+              <span class="${badge}</span>
+            </div>
+            <div class="month-details-grid">
+              <div>פתיחה: <strong>${formatCurrency(m.openingBalance)}</strong></div>
+              <div>חוב בסיס: <strong>${formatCurrency(m.baseDebt)}</strong></div>
+              <div>חוב נוסף: <strong>${formatCurrency(m.additionalDebt||0)}</strong></div>
+              <div>נתרם: <strong>${formatCurrency(m.totalDonations)}</strong></div>
+              <div>תרומות: <strong>${m.donationCount}</strong></div>
+              <div>סגירה: <strong>${formatCurrency(m.closingBalance)}</strong></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderSvgChart() {
+      const now = new Date();
+      const points = [];
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const y = d.getFullYear(); const m = d.getMonth() + 1;
+        const rec = state.monthlyData.find(x => x.year === y && x.month === m);
+        points.push({ label: HEBREW_MONTHS[d.getMonth()].slice(0, 3), amount: rec ? rec.totalDonations : 0 });
+      }
+      const max = Math.max(...points.map(p => p.amount), 500);
+      const w = 550; const h = 210; const bW = (w / 12) * 0.65; const step = w / 12;
+      let svg = `<svg class="chart-svg" viewBox="0 0 ${w} ${h}"><line x1="10" y1="175" x2="${w-10}" y2="175" stroke="var(--border-color)" stroke-width="2"/>`;
+      points.forEach((p, i) => {
+        const bH = (p.amount / max) * 140;
+        const x = 15 + i * step;
+        const y = 175 - bH;
+        svg += `<rect x="${x}" y="${y}" width="${bW}" height="${bH}" fill="var(--color-primary)" rx="4"/>`;
+        svg += `<text x="${x + bW/2}" y="195" font-size="11" fill="var(--text-muted)" text-anchor="middle" font-family="system-ui">${p.label}</text>`;
+      });
+      svg += '</svg>';
+      document.getElementById('barChartContainer').innerHTML = svg;
+    }
+
+    /* אירועים */
+    function bindEvents() {
+      document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+        item.addEventListener('click', () => switchTab(item.getAttribute('data-tab')));
+      });
+
+      document.getElementById('quickAddBtn').addEventListener('click', () => openNewDonation());
+      document.getElementById('dashAddDonationBtn').addEventListener('click', () => openNewDonation());
+      document.getElementById('viewAllDonationsLink').addEventListener('click', () => {
+        switchTab('tab-history');
+        switchSubTab('subtab-donations');
+      });
+
+      document.querySelectorAll('.seg-btn').forEach(b => {
+        b.addEventListener('click', () => switchSubTab(b.getAttribute('data-subtab')));
+      });
+
+      // התחברות לגוגל
+      document.getElementById('btnGoogleSignInMain').addEventListener('click', () => cloud.loginWithGoogle());
+      document.getElementById('userAvatarBtn').addEventListener('click', () => {
+        switchTab('tab-settings');
+      });
+
+      // שמירת תרומה (מעדכן גוגל!)
+      document.getElementById('donationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const amt = parseFloat(document.getElementById('donationAmount').value);
+        const ben = document.getElementById('donationBeneficiary').value.trim();
+        const dateDisplay = document.getElementById('donationDateDisplay').value.trim();
+        const iso = parseDisplayDateToIso(dateDisplay);
+
+        if (isNaN(amt) || amt <= 0 || !ben || !iso) {
+          showToast('נא למלא את כל שדות החובה', 'error');
+          return;
+        }
+
+        const item = {
+          id: state.editingId || `don_${Date.now()}`,
+          amount: Math.round(amt * 100) / 100,
+          beneficiary: ben,
+          date: iso,
+          category: document.getElementById('donationCategory').value,
+          paymentMethod: document.getElementById('donationPaymentMethod').value,
+          notes: document.getElementById('donationNotes').value.trim(),
+          section46: document.getElementById('donationSection46').checked,
+          createdAt: new Date().toISOString()
+        };
+
+        await db.put('donations', item);
+        if (state.editingId) {
+          const i = state.donations.findIndex(x => x.id === item.id);
+          if (i !== -1) state.donations[i] = item;
+        } else {
+          state.donations.unshift(item);
+        }
+        state.donations.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        const ym = getYearMonthFromIso(item.date);
+        recalculateCascadeFromEarliest(getMonthKey(ym.year, ym.month));
+        state.isDirty = false;
+        showToast('התרומה נשמרה וסונכרנה לגוגל!', 'success');
+        switchTab('tab-dashboard');
+        await notifyDataChanged();
+      });
+
+      document.getElementById('btnCancelDonation').addEventListener('click', handleCancelForm);
+      document.getElementById('formCloseBtn').addEventListener('click', handleCancelForm);
+
+      // מחיקת תרומה (מעדכן גוגל!)
+      document.getElementById('btnDeleteDonation').addEventListener('click', () => {
+        if (!state.editingId) return;
+        showConfirm('מחיקת תרומה', 'האם למחוק תרומה זו?', async () => {
+          const id = state.editingId;
+          const item = state.donations.find(d => d.id === id);
+          await db.del('donations', id);
+          state.donations = state.donations.filter(d => d.id !== id);
+          if (item) {
+            const ym = getYearMonthFromIso(item.date);
+            recalculateCascadeFromEarliest(getMonthKey(ym.year, ym.month));
+          }
+          state.isDirty = false;
+          showToast('התרומה נמחקה', 'info');
+          switchTab('tab-dashboard');
+          await notifyDataChanged();
+        });
+      });
+
+      // כפתורי תאריך מהיר
+      document.getElementById('chipDateToday').addEventListener('click', () => {
+        document.getElementById('donationDateDisplay').value = formatDateToDisplay(new Date());
+        state.isDirty = true;
+      });
+      document.getElementById('chipDateYesterday').addEventListener('click', () => {
+        const y = new Date(); y.setDate(y.getDate() - 1);
+        document.getElementById('donationDateDisplay').value = formatDateToDisplay(y);
+        state.isDirty = true;
+      });
+
+      // שמירת הגדרות מעשר (מעדכן גוגל!)
+      document.getElementById('settingsMaaserForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const base = parseFloat(document.getElementById('settingBaseMaaserAmount').value) || 1000;
+        const day = parseInt(document.getElementById('settingMaaserDay').value, 10) || 10;
+        const mGoal = parseFloat(document.getElementById('settingMonthlyGoal').value) || 1000;
+        const aGoal = parseFloat(document.getElementById('settingAnnualGoal').value) || 12000;
+        state.settings.baseMaaserAmount = base; state.settings.maaserDay = day;
+        state.settings.monthlyGoal = mGoal; state.settings.annualGoal = aGoal;
+        await Promise.all([
+          db.put('settings', { key: 'baseMaaserAmount', value: base }),
+          db.put('settings', { key: 'maaserDay', value: day }),
+          db.put('settings', { key: 'monthlyGoal', value: mGoal }),
+          db.put('settings', { key: 'annualGoal', value: aGoal })
+        ]);
+        recalculateCascadeFromEarliest();
+        showToast('ההגדרות נשמרו וסונכרנו', 'success');
+        await notifyDataChanged();
+      });
+
+      // חוב נוסף לחודש (מעדכן גוגל!)
+      document.getElementById('monthDebtForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('monthDebtId').value;
+        const add = parseFloat(document.getElementById('monthAdditionalDebtInput').value) || 0;
+        const m = state.monthlyData.find(x => x.id === id);
+        if (m) {
+          m.additionalDebt = add;
+          await db.put('monthlyData', m);
+          recalculateCascadeFromEarliest(getMonthKey(m.year, m.month));
+          document.getElementById('monthDebtModal').classList.add('hidden');
+          showToast('החוב הנוסף עודכן', 'success');
+          await notifyDataChanged();
+        }
+      });
+      document.getElementById('btnCloseMonthDebtModal').addEventListener('click', () => document.getElementById('monthDebtModal').classList.add('hidden'));
+
+      // קטגוריות (מעדכן גוגל!)
+      document.getElementById('btnInlineNewCategory').addEventListener('click', () => openCatModal());
+      document.getElementById('btnOpenAddCategoryModal').addEventListener('click', () => openCatModal());
+      document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('modalCatName').value.trim();
+        const color = document.getElementById('modalCatColor').value;
+        const id = document.getElementById('modalCatId').value || `cat_${Date.now()}`;
+        if (!name) return;
+        const obj = { id, name, color };
+        await db.put('categories', obj);
+        const idx = state.categories.findIndex(c => c.id === id);
+        if (idx !== -1) state.categories[idx] = obj; else state.categories.push(obj);
+        document.getElementById('categoryModal').classList.add('hidden');
+        showToast('הקטגוריה נשמרה', 'success');
+        await notifyDataChanged();
+      });
+      document.getElementById('btnCloseCatModal').addEventListener('click', () => document.getElementById('categoryModal').classList.add('hidden'));
+
+      // עריכת מפתחות פרויקט Google Firebase
+      document.getElementById('btnToggleCloudConfig').addEventListener('click', () => {
+        const box = document.getElementById('cloudConfigBox');
+        box.classList.toggle('hidden');
+        const saved = localStorage.getItem('maaser_firebase_config');
+        if (saved) document.getElementById('firebaseConfigInput').value = saved;
+      });
+      document.getElementById('btnSaveFirebaseConfig').addEventListener('click', () => {
+        const val = document.getElementById('firebaseConfigInput').value.trim();
+        try {
+          if (val) JSON.parse(val);
+          localStorage.setItem('maaser_firebase_config', val);
+          showToast('המפתחות נשמרו! האפליקציה מתרעננת...', 'success');
+          setTimeout(() => location.reload(), 1000);
+        } catch(e) {
+          showToast('הטקסט שהוזן אינו JSON תקין', 'error');
+        }
+      });
+
+      // מסננים
+      document.getElementById('filterSearchBeneficiary').addEventListener('input', (e) => {
+        state.filters.beneficiary = e.target.value;
+        renderHistoryList();
+      });
+      document.getElementById('filterCategory').addEventListener('change', (e) => {
+        state.filters.category = e.target.value;
+        renderHistoryList();
+      });
+      document.getElementById('btnResetFilters').addEventListener('click', () => {
+        document.getElementById('filterSearchBeneficiary').value = '';
+        document.getElementById('filterCategory').value = '';
+        state.filters = { beneficiary: '', category: '' };
+        renderHistoryList();
+      });
+
+      // טעינת דוגמה
+      document.getElementById('btnLoadSampleSeptember').addEventListener('click', async () => {
+        const samples = [
+          { b: 'גרצברג', a: 200, c: 'גרצברג', d: '2026-09-02' },
+          { b: 'חמצני', a: 100, c: 'חמצני', d: '2026-09-08' },
+          { b: 'כללי', a: 15, c: 'כללי', d: '2026-09-12' },
+          { b: 'חמצני', a: 200, c: 'חמצני', d: '2026-09-18' },
+          { b: 'גרצברג', a: 425, c: 'גרצברג', d: '2026-09-24' }
+        ];
+        for (const s of samples) {
+          const item = { id: `don_${Date.now()}_${Math.random()}`, amount: s.a, beneficiary: s.b, date: s.d, category: s.c, paymentMethod: 'העברה בנקאית', notes: '', section46: false, createdAt: new Date().toISOString() };
+          await db.put('donations', item);
+          state.donations.push(item);
+        }
+        recalculateCascadeFromEarliest('2026-09');
+        showToast('נטענו נתוני ספטמבר (₪940)', 'success');
+        await notifyDataChanged();
+      });
+
+      // איפוס
+      document.getElementById('btnResetAllData').addEventListener('click', () => {
+        showConfirm('איפוס נתונים', 'האם למחוק הכל לצמיתות?', async () => {
+          await db.clear('donations'); await db.clear('monthlyData'); await db.clear('categories');
+          await db.seed(); await loadState();
+          showToast('הנתונים אופסו', 'info');
+          await notifyDataChanged();
+        });
+      });
+    }
+
+    function switchTab(tId) {
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById(tId).classList.add('active');
+      const navBtn = document.querySelector(`.bottom-nav [data-tab="${tId}"]`);
+      if (navBtn) navBtn.classList.add('active');
+      render();
+    }
+
+    function switchSubTab(sId) {
+      document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === sId));
+      document.querySelectorAll('.subtab-content').forEach(c => c.classList.toggle('active', c.id === sId));
+    }
+
+    function openNewDonation() {
+      state.editingId = null;
+      state.isDirty = false;
+      document.getElementById('donationForm').reset();
+      document.getElementById('donationId').value = '';
+      document.getElementById('donationDateDisplay').value = formatDateToDisplay(new Date());
+      document.getElementById('formScreenTitle').textContent = 'הוספת תרומה';
+      document.getElementById('btnDeleteDonation').classList.add('hidden');
+      switchTab('tab-donation-form');
+    }
+
+    window.openEditDonation = function(id) {
+      const d = state.donations.find(x => x.id === id);
+      if (!d) return;
+      state.editingId = d.id;
+      state.isDirty = false;
+      document.getElementById('donationId').value = d.id;
+      document.getElementById('donationAmount').value = d.amount;
+      document.getElementById('donationBeneficiary').value = d.beneficiary;
+      document.getElementById('donationDateDisplay').value = formatDateToDisplay(d.date);
+      document.getElementById('donationCategory').value = d.category || 'כללי';
+      document.getElementById('donationPaymentMethod').value = d.paymentMethod || 'העברה בנקאית';
+      document.getElementById('donationNotes').value = d.notes || '';
+      document.getElementById('donationSection46').checked = !!d.section46;
+      document.getElementById('formScreenTitle').textContent = 'עריכת תרומה';
+      document.getElementById('btnDeleteDonation').classList.remove('hidden');
+      switchTab('tab-donation-form');
+    };
+
+    function handleCancelForm() {
+      if (state.isDirty) {
+        document.getElementById('unsavedModal').classList.remove('hidden');
+        document.getElementById('btnConfirmLeave').onclick = () => {
+          state.isDirty = false;
+          document.getElementById('unsavedModal').classList.add('hidden');
+          switchTab('tab-dashboard');
+        };
+      } else {
+        switchTab('tab-dashboard');
+      }
+    }
+
+    window.openMonthModal = function(id) {
+      const m = state.monthlyData.find(x => x.id === id);
+      if (!m) return;
+      document.getElementById('monthDebtId').value = m.id;
+      document.getElementById('monthDebtSub').textContent = `${HEBREW_MONTHS[m.month - 1]} ${m.year}`;
+      document.getElementById('monthAdditionalDebtInput').value = m.additionalDebt || 0;
+      document.getElementById('monthDebtModal').classList.remove('hidden');
+    };
+
+    function openCatModal() {
+      document.getElementById('modalCatId').value = '';
+      document.getElementById('modalCatName').value = '';
+      document.getElementById('modalCatColor').value = '#1d4ed8';
+      document.getElementById('categoryModal').classList.remove('hidden');
+    }
+
+    window.deleteCategory = function(id) {
+      const c = state.categories.find(x => x.id === id);
+      if (!c || c.name === 'כללי') return;
+      showConfirm('מחיקת קטגוריה', `למחוק את "${c.name}"? התרומות יועברו ל"כללי".`, async () => {
+        for (const d of state.donations.filter(x => x.category === c.name)) {
+          d.category = 'כללי';
+          await db.put('donations', d);
+        }
+        await db.del('categories', id);
+        state.categories = state.categories.filter(x => x.id !== id);
+        showToast('הקטגוריה נמחקה', 'info');
+        await notifyDataChanged();
+      });
+    };
+
+    function showToast(msg, type = 'info') {
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.textContent = msg;
+      document.getElementById('toastContainer').appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 250); }, 3000);
+    }
+
+    function showConfirm(title, msg, onYes) {
+      document.getElementById('confirmModalTitle').textContent = title;
+      document.getElementById('confirmModalMsg').textContent = msg;
+      const modal = document.getElementById('confirmModal');
+      modal.classList.remove('hidden');
+      const yesBtn = document.getElementById('btnGenericConfirmYes');
+      const noBtn = document.getElementById('btnGenericConfirmCancel');
+      const clean = () => { modal.classList.add('hidden'); yesBtn.onclick = null; noBtn.onclick = null; };
+      yesBtn.onclick = () => { clean(); onYes(); };
+      noBtn.onclick = () => clean();
+    }
+
+    function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
