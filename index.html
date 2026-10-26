@@ -7,14 +7,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="מעשר">
-  <meta name="description" content="ניהול מעשר כספים מסונכרן אוטומטית עם גוגל">
-  <title>מעשר כספים - מסונכרן בענן</title>
+  <meta name="description" content="ניהול מעשר כספים חכם, מדויק ומסונכרן אישית בענן">
+  <title>מעשר כספים</title>
 
-  <!-- אייקון אפליקציה -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231d4ed8'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231d4ed8'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <!-- PWA Icons -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231d4ed8'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231d4ed8'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
 
-  <!-- טעינת ספריות Google Firebase הרשמיות לעבודה מול ענן גוגל -->
+  <!-- Google Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -24,43 +24,49 @@
       --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       --color-primary: #1d4ed8;
       --color-primary-hover: #1e40af;
-      --color-debt: #b91c1c;
-      --color-debt-bg: #fee2e2;
-      --color-excess: #15803d;
-      --color-excess-bg: #dcfce7;
+      --color-primary-light: #eff6ff;
+      --color-debt: #dc2626;
+      --color-debt-bg: #fef2f2;
+      --color-debt-border: #fecaca;
+      --color-excess: #16a34a;
+      --color-excess-bg: #f0fdf4;
+      --color-excess-border: #bbf7d0;
       --color-neutral: #475569;
       --color-neutral-bg: #f1f5f9;
       --bg-app: #f8fafc;
       --bg-card: #ffffff;
-      --bg-card-subtle: #f1f5f9;
-      --border-color: #cbd5e1;
+      --bg-card-subtle: #f8fafc;
+      --border-color: #e2e8f0;
       --border-focus: #3b82f6;
       --text-main: #0f172a;
       --text-muted: #64748b;
       --radius-sm: 8px;
-      --radius-md: 12px;
-      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
       --radius-full: 9999px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08);
-      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.12);
-      --transition: 200ms ease;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 20px -3px rgba(0,0,0,0.09);
+      --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     [data-theme="dark"] {
-      --bg-app: #0b1120;
-      --bg-card: #1e293b;
+      --bg-app: #090d16;
+      --bg-card: #131b2e;
       --bg-card-subtle: #0f172a;
-      --border-color: #334155;
+      --border-color: #1e293b;
       --border-focus: #60a5fa;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --color-primary: #3b82f6;
       --color-primary-hover: #60a5fa;
+      --color-primary-light: #1e293b;
       --color-debt: #f87171;
       --color-debt-bg: #450a0a;
+      --color-debt-border: #7f1d1d;
       --color-excess: #4ade80;
       --color-excess-bg: #052e16;
+      --color-excess-border: #14532d;
       --color-neutral: #cbd5e1;
       --color-neutral-bg: #1e293b;
     }
@@ -76,18 +82,22 @@
       flex-direction: column;
       padding-bottom: calc(75px + env(safe-area-inset-bottom));
       user-select: none;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* פס עליון */
+    /* פס עליון מעוצב */
     .app-header {
       position: sticky;
       top: 0;
       z-index: 40;
-      background-color: var(--bg-card);
+      background-color: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border-color);
       padding-top: env(safe-area-inset-top);
       box-shadow: var(--shadow-sm);
     }
+    [data-theme="dark"] .app-header { background-color: rgba(19, 27, 46, 0.92); }
     .header-inner {
       display: flex;
       align-items: center;
@@ -96,20 +106,24 @@
       max-width: 680px;
       margin: 0 auto;
     }
-    .header-title { font-size: 1.25rem; font-weight: 800; }
+    .header-title { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.3px; }
     .header-sync-status {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 700;
       margin-top: 2px;
       cursor: pointer;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
     }
     .sync-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #94a3b8; }
     .sync-dot.synced { background-color: #22c55e; }
     .sync-dot.syncing { background-color: #eab308; animation: pulse 1s infinite; }
-    @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
     .user-avatar-btn {
       width: 40px;
@@ -122,10 +136,13 @@
       align-items: center;
       justify-content: center;
       background: var(--bg-card-subtle);
+      font-size: 1rem;
+      transition: transform var(--transition);
     }
+    .user-avatar-btn:active { transform: scale(0.92); }
     .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* תוכן וכרטיסים */
+    /* תוכן ראשי */
     .main-content {
       width: 100%;
       max-width: 680px;
@@ -135,24 +152,25 @@
     }
     .tab-view { display: none; animation: fadeIn var(--transition); }
     .tab-view.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* כרטיסים */
     .card {
       background-color: var(--bg-card);
       border-radius: var(--radius-md);
       border: 1px solid var(--border-color);
       padding: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       box-shadow: var(--shadow-sm);
     }
-    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
 
     /* באנר התחברות לגוגל */
     .google-sync-banner {
       background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
       color: #fff;
       border-radius: var(--radius-md);
-      padding: 14px 16px;
+      padding: 16px;
       margin-bottom: 16px;
       display: flex;
       flex-direction: column;
@@ -172,36 +190,38 @@
       border: 1px solid #e5e7eb;
       font-weight: 700;
       font-size: 0.95rem;
-      padding: 10px 16px;
+      padding: 11px 16px;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-      transition: background 150ms;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), background-color var(--transition);
     }
-    .google-btn:active { background: #f3f4f6; }
+    .google-btn:active { transform: scale(0.98); background: #f3f4f6; }
     .google-btn svg { width: 18px; height: 18px; }
 
-    /* Hero Balance Card */
+    /* כרטיס יתרה Hero מרכזי */
     .hero-card {
+      position: relative;
       border-right: 6px solid var(--color-primary);
       background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-card-subtle) 100%);
+      overflow: hidden;
     }
-    .hero-card.is-debt { border-right-color: var(--color-debt); }
-    .hero-card.is-excess { border-right-color: var(--color-excess); }
+    .hero-card.is-debt { border-right-color: var(--color-debt); background: linear-gradient(180deg, var(--bg-card) 0%, var(--color-debt-bg) 100%); }
+    .hero-card.is-excess { border-right-color: var(--color-excess); background: linear-gradient(180deg, var(--bg-card) 0%, var(--color-excess-bg) 100%); }
     .hero-top { display: flex; justify-content: space-between; align-items: center; }
-    .hero-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+    .hero-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
     .status-badge {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      padding: 3px 10px;
+      padding: 4px 12px;
       border-radius: var(--radius-full);
       background-color: var(--color-neutral-bg);
       color: var(--color-neutral);
     }
-    .status-badge.debt { background-color: var(--color-debt-bg); color: var(--color-debt); }
-    .status-badge.excess { background-color: var(--color-excess-bg); color: var(--color-excess); }
-    .hero-amount { font-size: 2.3rem; font-weight: 900; margin: 4px 0; letter-spacing: -0.5px; }
-    .hero-status-desc { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); }
+    .status-badge.debt { background-color: var(--color-debt-bg); color: var(--color-debt); border: 1px solid var(--color-debt-border); }
+    .status-badge.excess { background-color: var(--color-excess-bg); color: var(--color-excess); border: 1px solid var(--color-excess-border); }
+    .hero-amount { font-size: 2.4rem; font-weight: 900; margin: 4px 0; letter-spacing: -1px; }
+    .hero-status-desc { font-size: 0.92rem; font-weight: 600; color: var(--text-muted); }
 
     .monthly-progress-block {
       margin-top: 14px;
@@ -209,7 +229,7 @@
       border-top: 1px dashed var(--border-color);
     }
     .progress-labels { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; }
-    .progress-percent { font-weight: 700; color: var(--color-primary); }
+    .progress-percent { font-weight: 800; color: var(--color-primary); }
     .progress-bar-track {
       width: 100%;
       height: 10px;
@@ -220,19 +240,19 @@
     .progress-bar-fill { height: 100%; background-color: var(--color-primary); border-radius: var(--radius-full); transition: width var(--transition); }
 
     /* רשת מדדים */
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
     .stat-card {
       background-color: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 12px;
+      padding: 12px 14px;
     }
     .stat-label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
-    .stat-val { font-size: 1.2rem; font-weight: 800; }
+    .stat-val { font-size: 1.25rem; font-weight: 800; }
     .stat-val.highlight { color: var(--color-primary); }
 
     /* Quick stats */
-    .quick-stats-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .quick-stats-row { display: flex; gap: 8px; margin-bottom: 14px; }
     .quick-stat-item {
       flex: 1;
       background-color: var(--bg-card);
@@ -244,20 +264,7 @@
     .qs-title { display: block; font-size: 0.72rem; color: var(--text-muted); }
     .qs-val { font-size: 0.95rem; font-weight: 800; margin-top: 2px; }
 
-    /* כרטיס שנתי */
-    .annual-grid { display: flex; justify-content: space-between; margin-bottom: 10px; }
-    .annual-val { font-size: 1.25rem; font-weight: 800; }
-    .annual-forecast-box {
-      background-color: var(--bg-card-subtle);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      font-size: 0.88rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* רשימות */
+    /* שורות תרומה */
     .donation-row-item {
       display: flex;
       justify-content: space-between;
@@ -269,7 +276,9 @@
       margin-bottom: 8px;
       cursor: pointer;
       min-height: 52px;
+      transition: transform var(--transition), background-color var(--transition);
     }
+    .donation-row-item:active { transform: scale(0.98); background-color: var(--bg-card-subtle); }
     .donation-beneficiary { font-weight: 700; font-size: 1rem; }
     .donation-meta {
       font-size: 0.78rem;
@@ -303,20 +312,59 @@
       color: var(--text-main);
       min-height: 48px;
       user-select: text;
+      transition: border-color var(--transition), box-shadow var(--transition);
     }
     .form-control:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
     .validation-msg { font-size: 0.8rem; color: var(--color-debt); margin-top: 4px; min-height: 18px; }
-    .quick-chips { display: flex; gap: 8px; margin-top: 6px; }
+
+    /* Date Picker Row המעודכן - לחיצה על כל השורה פותחת לוח שנה */
+    .date-input-field-wrap {
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .date-input-field-wrap .form-control {
+      cursor: pointer;
+      padding-left: 42px;
+      font-weight: 600;
+    }
+    .date-picker-icon-btn {
+      position: absolute;
+      left: 10px;
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      pointer-events: none;
+    }
+    .native-hidden-date {
+      position: absolute;
+      opacity: 0;
+      pointer-events: auto;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    /* צ'יפים לסכום ולתאריך */
+    .quick-chips { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
     .chip-btn {
       background-color: var(--bg-card-subtle);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-full);
       padding: 6px 14px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       cursor: pointer;
       color: var(--text-main);
       font-weight: 600;
+      transition: transform var(--transition), background-color var(--transition);
     }
+    .chip-btn:active { transform: scale(0.92); }
+    .chip-btn.active { background-color: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
     .checkbox-label {
       display: flex;
       align-items: center;
@@ -341,35 +389,40 @@
       cursor: pointer;
       min-height: 48px;
       text-decoration: none;
+      transition: transform var(--transition), opacity var(--transition);
     }
-    .btn:active { opacity: 0.8; }
+    .btn:active { transform: scale(0.98); opacity: 0.9; }
     .btn-sm { padding: 8px 14px; font-size: 0.85rem; min-height: 38px; }
     .btn-primary { background-color: var(--color-primary); color: #fff; }
     .btn-secondary { background-color: var(--bg-card-subtle); border-color: var(--border-color); color: var(--text-main); }
     .btn-danger { background-color: var(--color-debt); color: #fff; }
     .btn-outline { background: transparent; border-color: var(--border-color); color: var(--text-main); }
     .btn-danger-outline { background: transparent; border-color: var(--color-debt); color: var(--color-debt); }
-    .btn-link { background: none; border: none; color: var(--color-primary); font-size: 0.88rem; cursor: pointer; padding: 4px; font-weight: 600; }
+    .btn-link { background: none; border: none; color: var(--color-primary); font-size: 0.88rem; cursor: pointer; padding: 4px; font-weight: 700; }
     .btn-icon { background: none; border: none; font-size: 1.3rem; cursor: pointer; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-full); color: var(--text-main); }
     .w-100 { width: 100%; }
     .form-actions-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
     .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
 
-    /* סרגל תחתון */
+    /* סרגל ניווט תחתון */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: 64px;
-      background-color: var(--bg-card);
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: space-around;
       align-items: center;
       padding-bottom: env(safe-area-inset-bottom);
       z-index: 50;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
     }
+    [data-theme="dark"] .bottom-nav { background-color: rgba(19, 27, 46, 0.95); }
     .nav-item {
       flex: 1;
       display: flex;
@@ -382,8 +435,9 @@
       cursor: pointer;
       color: var(--text-muted);
       padding: 4px 0;
+      transition: color var(--transition);
     }
-    .nav-item.active { color: var(--color-primary); font-weight: 700; }
+    .nav-item.active { color: var(--color-primary); font-weight: 800; }
     .nav-icon { font-size: 1.3rem; line-height: 1; }
     .nav-label { font-size: 0.72rem; margin-top: 2px; }
 
@@ -407,7 +461,7 @@
       cursor: pointer;
       color: var(--text-muted);
     }
-    .seg-btn.active { background-color: var(--bg-card); color: var(--text-main); }
+    .seg-btn.active { background-color: var(--bg-card); color: var(--text-main); box-shadow: var(--shadow-sm); }
     .subtab-content { display: none; }
     .subtab-content.active { display: block; }
 
@@ -419,11 +473,38 @@
       padding: 14px;
       margin-bottom: 10px;
       cursor: pointer;
+      transition: transform var(--transition);
     }
+    .month-card:active { transform: scale(0.99); }
     .month-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .month-name { font-size: 1.05rem; font-weight: 800; }
     .month-details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 0.82rem; color: var(--text-muted); }
     .month-details-grid strong { display: block; color: var(--text-main); font-size: 0.95rem; }
+
+    /* מסך פתיחה ואשף הגדרות (Onboarding Wizard) */
+    .onboarding-card {
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .category-chip-select {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-card-subtle);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+    .category-chip-select.selected {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
 
     /* Toasts */
     .toast-container {
@@ -457,8 +538,9 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background-color: rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(2px);
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: 90;
       display: flex;
       align-items: center;
@@ -468,7 +550,7 @@
     .modal-card {
       background-color: var(--bg-card);
       border-radius: var(--radius-lg);
-      padding: 20px;
+      padding: 22px;
       width: 100%;
       max-width: 440px;
       box-shadow: var(--shadow-lg);
@@ -490,18 +572,18 @@
 </head>
 <body>
 
-  <!-- פס עליון עם אינדיקטור גוגל -->
+  <!-- פס עליון -->
   <header class="app-header">
     <div class="header-inner">
       <div>
         <h1 class="header-title" id="pageHeaderTitle">ניהול מעשר</h1>
-        <div class="header-sync-status" id="headerSyncStatus" title="מצב סנכרון עם ענן גוגל">
+        <div class="header-sync-status" id="headerSyncStatus" title="מצב סנכרון">
           <span class="sync-dot" id="syncDot"></span>
           <span id="syncText">מקומי (התחבר לסנכרון)</span>
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <button type="button" class="user-avatar-btn" id="userAvatarBtn" title="חשבון גוגל" aria-label="חשבון משתמש">
+        <button type="button" class="user-avatar-btn" id="userAvatarBtn" title="חשבון Google" aria-label="חשבון משתמש">
           <span id="userAvatarPlaceholder">👤</span>
         </button>
         <button type="button" class="btn-icon" id="quickAddBtn" aria-label="הוסף תרומה">➕</button>
@@ -509,7 +591,7 @@
     </div>
   </header>
 
-  <!-- התראות קופצות -->
+  <!-- הודעות קופצות -->
   <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
   <!-- תוכן ראשי -->
@@ -518,23 +600,23 @@
     <!-- מסך 1: ראשי (Dashboard) -->
     <section id="tab-dashboard" class="tab-view active">
       
-      <!-- באנר התחברות לגוגל (מוצג רק למי שעדיין לא מחובר) -->
+      <!-- באנר התחברות לגוגל -->
       <div class="google-sync-banner" id="googleLoginBanner">
         <h3>
           <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#ffffff" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/></svg>
-          סנכרון אוטומטי לחשבון Google שלך
+          שמירה וסנכרון אוטומטי בחשבון Google
         </h3>
-        <p>התחבר פעם אחת, וכל תרומה שתוסיף תישמר ישירות בחשבון גוגל הפרטי שלך ותסתנכרן לכל מכשיר.</p>
+        <p>התחבר פעם אחת כדי שכל תרומה ושינוי יישמרו ישירות בענן של גוגל ויהיו זמינים בכל מכשיר.</p>
         <button type="button" class="google-btn" id="btnGoogleSignInMain">
           <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-          התחבר עם Google לשמירה בענן
+          התחבר עם Google
         </button>
       </div>
 
-      <!-- כרטיס יתרה מרכזי -->
+      <!-- כרטיס יתרה Hero מרכזי -->
       <article class="card hero-card" id="heroCard">
         <div class="hero-top">
-          <span class="hero-label">יתרת חוב / זכות כוללת</span>
+          <span class="hero-label">יתרת מעשר לחודש זה</span>
           <span class="status-badge" id="heroStatusBadge">מעודכן</span>
         </div>
         <div class="hero-amount" id="heroBalanceAmount">₪0</div>
@@ -554,7 +636,7 @@
       <!-- רשת מדדים חודשיים -->
       <div class="stats-grid">
         <div class="stat-card">
-          <span class="stat-label">חוב חודשי מוגדר</span>
+          <span class="stat-label">חוב חודשי בסיס</span>
           <span class="stat-val" id="statBaseDebt">₪0</span>
         </div>
         <div class="stat-card">
@@ -587,31 +669,23 @@
         </div>
       </div>
 
-      <!-- יעד שנתי ותחזית קצב -->
+      <!-- יעד שנתי -->
       <article class="card">
-        <h2 class="card-title">יעד שנתי ותחזית קצב</h2>
-        <div class="annual-grid">
+        <h2 class="card-title">יעד שנתי ותחזית</h2>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
           <div>
             <div class="sub-label">סה״כ מתחילת השנה</div>
-            <div class="annual-val" id="annualYtdVal">₪0</div>
+            <div style="font-size:1.25rem; font-weight:800;" id="annualYtdVal">₪0</div>
           </div>
           <div>
             <div class="sub-label">יעד שנתי</div>
-            <div class="annual-val" id="annualTargetVal">₪12,000</div>
+            <div style="font-size:1.25rem; font-weight:800;" id="annualTargetVal">₪12,000</div>
           </div>
         </div>
-        <div class="annual-forecast-box">
+        <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:10px 14px; font-size:0.88rem; display:flex; justify-content:space-between;">
           <span class="text-muted">תחזית שנתית לפי קצב נוכחי:</span>
           <strong id="annualForecastVal">₪0</strong>
         </div>
-      </article>
-
-      <!-- 3 מוטבים מובילים -->
-      <article class="card">
-        <h2 class="card-title">3 המוטבים המובילים השנה</h2>
-        <ul id="topBeneficiariesList" style="list-style:none;">
-          <li class="text-muted">אין עדיין תרומות השנה</li>
-        </ul>
       </article>
 
       <!-- 5 תרומות אחרונות -->
@@ -637,12 +711,21 @@
         <form id="donationForm" novalidate>
           <input type="hidden" id="donationId" value="">
 
+          <!-- סכום התרומה עם צ'יפים מהירים -->
           <div class="form-group">
             <label for="donationAmount">סכום התרומה (₪) <span class="required-star">*</span></label>
             <input type="number" id="donationAmount" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" class="form-control" required>
+            <div class="quick-chips">
+              <button type="button" class="chip-btn chip-amount" data-amt="50">₪50</button>
+              <button type="button" class="chip-btn chip-amount" data-amt="100">₪100</button>
+              <button type="button" class="chip-btn chip-amount" data-amt="200">₪200</button>
+              <button type="button" class="chip-btn chip-amount" data-amt="500">₪500</button>
+              <button type="button" class="chip-btn chip-amount" data-amt="1000">₪1,000</button>
+            </div>
             <div class="validation-msg" id="valMsg-donationAmount"></div>
           </div>
 
+          <!-- שם המוטב -->
           <div class="form-group">
             <label for="donationBeneficiary">שם המוטב / הארגון <span class="required-star">*</span></label>
             <input type="text" id="donationBeneficiary" list="beneficiariesDataList" placeholder="למשל: יד עזרה, ישיבה..." class="form-control" required>
@@ -650,9 +733,15 @@
             <div class="validation-msg" id="valMsg-donationBeneficiary"></div>
           </div>
 
+          <!-- תאריך: לחיצה על כל השורה פותחת Date Picker -->
           <div class="form-group">
-            <label for="donationDateDisplay">תאריך (DD/MM/YYYY) <span class="required-star">*</span></label>
-            <input type="text" id="donationDateDisplay" placeholder="DD/MM/YYYY" maxlength="10" class="form-control" required>
+            <label for="donationDateDisplay">תאריך התרומה <span class="required-star">*</span></label>
+            <div class="date-input-field-wrap" id="datePickerRowWrapper">
+              <input type="text" id="donationDateDisplay" placeholder="DD/MM/YYYY" readonly class="form-control" required>
+              <button type="button" class="date-picker-icon-btn" aria-label="בחר תאריך">📅</button>
+              <!-- אינפוט תאריך טבעי שקוף שמכסה את כל השורה ומפעיל את הלוח הטבעי -->
+              <input type="date" id="nativeDatePickerInput" class="native-hidden-date">
+            </div>
             <div class="quick-chips">
               <button type="button" class="chip-btn" id="chipDateToday">היום</button>
               <button type="button" class="chip-btn" id="chipDateYesterday">אתמול</button>
@@ -660,6 +749,7 @@
             <div class="validation-msg" id="valMsg-donationDateDisplay"></div>
           </div>
 
+          <!-- קטגוריה -->
           <div class="form-group">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <label for="donationCategory">קטגוריה</label>
@@ -668,22 +758,26 @@
             <select id="donationCategory" class="form-control"></select>
           </div>
 
+          <!-- אמצעי תשלום -->
           <div class="form-group">
             <label for="donationPaymentMethod">אמצעי תשלום</label>
             <select id="donationPaymentMethod" class="form-control">
               <option value="העברה בנקאית">העברה בנקאית</option>
               <option value="אשראי">אשראי</option>
+              <option value="ביט / פייבוקס">ביט / פייבוקס</option>
               <option value="מזומן">מזומן</option>
               <option value="הוראת קבע">הוראת קבע</option>
               <option value="לא צוין">לא צוין</option>
             </select>
           </div>
 
+          <!-- הערות -->
           <div class="form-group">
             <label for="donationNotes">הערות</label>
             <textarea id="donationNotes" rows="2" class="form-control" placeholder="פרטים נוספים..."></textarea>
           </div>
 
+          <!-- סעיף 46 -->
           <div class="form-group">
             <label class="checkbox-label" for="donationSection46">
               <input type="checkbox" id="donationSection46">
@@ -692,7 +786,7 @@
           </div>
 
           <div class="form-actions-stack">
-            <button type="submit" class="btn btn-primary">✓ שמור (יסונכרן לגוגל)</button>
+            <button type="submit" class="btn btn-primary">✓ שמור תרומה</button>
             <button type="button" class="btn btn-secondary" id="btnCancelDonation">ביטול</button>
             <button type="button" class="btn btn-danger hidden" id="btnDeleteDonation">🗑️ מחק תרומה זו</button>
           </div>
@@ -708,17 +802,17 @@
         <button type="button" class="seg-btn" data-subtab="subtab-stats">סטטיסטיקה</button>
       </div>
 
-      <!-- תרומות -->
+      <!-- רשימת תרומות -->
       <div id="subtab-donations" class="subtab-content active">
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 class="card-title m-0">סינון מהיר</h3>
+            <h3 class="card-title m-0">חיפוש וסינון</h3>
             <button type="button" class="btn-link" id="btnResetFilters">נקה סינון</button>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0;">
             <div>
               <label for="filterSearchBeneficiary">מוטב</label>
-              <input type="text" id="filterSearchBeneficiary" class="form-control" placeholder="חיפוש...">
+              <input type="text" id="filterSearchBeneficiary" class="form-control" placeholder="חיפוש לפי שם...">
             </div>
             <div>
               <label for="filterCategory">קטגוריה</label>
@@ -748,16 +842,25 @@
       </div>
     </section>
 
-    <!-- מסך 4: הגדרות וחשבון Google -->
+    <!-- מסך 4: הגדרות ומערכת -->
     <section id="tab-settings" class="tab-view">
       
-      <!-- כרטיס סטטוס חשבון Google וסנכרון -->
+      <!-- חשבון Google וסנכרון -->
       <article class="card" style="border: 2px solid var(--color-primary);">
         <h2 class="card-title">חשבון Google וסנכרון ענן ☁️</h2>
-        <div id="accountStatusBox" style="margin-bottom: 12px;">
-          <!-- מתעדכן דינמית לפי מצב התחברות -->
-        </div>
+        <div id="accountStatusBox" style="margin-bottom: 12px;"></div>
         <button type="button" class="google-btn w-100" id="btnGoogleAction">התחבר עם חשבון Google</button>
+      </article>
+
+      <!-- כפתור להרצת אשף הפתיחה בכל עת -->
+      <article class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h3 class="card-title m-0">אשף הגדרות מהיר</h3>
+            <p class="text-muted" style="font-size:0.82rem;">הגדרת סכום בסיס, יום חיוב וקטגוריות מומלצות</p>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenOnboardingManually">פתח אשף</button>
+        </div>
       </article>
 
       <!-- הגדרות מעשר -->
@@ -798,23 +901,7 @@
         <h2 class="card-title">גיבוי ושחזור ידני</h2>
         <div style="display:flex; flex-direction:column; gap:8px;">
           <button type="button" class="btn btn-secondary" id="btnExportJson">הורד קובץ גיבוי (JSON)</button>
-          <button type="button" class="btn btn-outline" id="btnLoadSampleSeptember">טען נתוני ספטמבר לדוגמה</button>
           <button type="button" class="btn btn-danger-outline" id="btnResetAllData">איפוס מלא של כל הנתונים</button>
-        </div>
-      </article>
-
-      <!-- הגדרות חיבור ענן מתקדמות (פרויקט Firebase משלך) -->
-      <article class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h2 class="card-title m-0">הגדרות פרויקט Google (מתקדם)</h2>
-          <button type="button" class="btn-link" id="btnToggleCloudConfig">ערוך מפתחות</button>
-        </div>
-        <div id="cloudConfigBox" class="hidden" style="margin-top:10px;">
-          <p class="text-muted" style="font-size:0.8rem; margin-bottom:8px;">
-            כדי לחבר את הדומיין/אפליקציה שלך לפרויקט Google Firebase אישי, הדבק כאן את מפתחות ה-Firebase שלך (או השאר ריק לשימוש בברירת המחדל).
-          </p>
-          <textarea id="firebaseConfigInput" rows="5" class="form-control" style="font-family:monospace; font-size:12px;" placeholder='{"apiKey": "...", "authDomain": "...", "projectId": "..."}'></textarea>
-          <button type="button" class="btn btn-primary btn-sm mt-sm" id="btnSaveFirebaseConfig">שמור מפתחות פרויקט</button>
         </div>
       </article>
     </section>
@@ -840,7 +927,43 @@
     </button>
   </nav>
 
-  <!-- דיאלוגים מודאליים -->
+  <!-- ================= דיאלוגים מודאליים ================= -->
+
+  <!-- מודאל אשף פתיחה (Onboarding Wizard) -->
+  <div class="modal-backdrop hidden" id="onboardingModal">
+    <div class="modal-card onboarding-card">
+      <div style="text-align:center; margin-bottom:14px;">
+        <span style="font-size:2.4rem;">👋</span>
+        <h2 style="font-size:1.35rem; font-weight:800; margin-top:4px;">ברוכים הבאים למעשר כספים!</h2>
+        <p class="text-muted" style="font-size:0.85rem;">בוא נגדיר את החשבון שלך בכמה שניות:</p>
+      </div>
+
+      <form id="onboardingForm">
+        <div class="form-group">
+          <label for="obBaseAmount">סכום מעשר חודשי בסיסי (₪)</label>
+          <input type="number" id="obBaseAmount" class="form-control" value="1000" min="0" required>
+        </div>
+
+        <div class="form-group">
+          <label for="obMaaserDay">יום החיוב בחודש (1–28)</label>
+          <input type="number" id="obMaaserDay" class="form-control" value="10" min="1" max="28" required>
+        </div>
+
+        <div class="form-group">
+          <label>קטגוריות מומלצות לבחירה (לחץ להפעלה / כיבוי):</label>
+          <div id="obCategoriesChipList" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;">
+            <!-- נוצר דינמית -->
+          </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top:24px;">
+          <button type="submit" class="btn btn-primary w-100" style="font-size:1.05rem;">🚀 שמור והתחל לעקוב</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- מודאלים נוספים -->
   <div class="modal-backdrop hidden" id="unsavedModal">
     <div class="modal-card">
       <h3>לצאת בלי לשמור?</h3>
@@ -902,9 +1025,23 @@
     </div>
   </div>
 
-  <!-- קוד האפליקציה המלא -->
+  <!-- ================= קוד התוכנה ================= -->
   <script>
     const HEBREW_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+
+    // קטגוריות מומלצות לבחירה מהירה באשף
+    const RECOMMENDED_CATEGORIES = [
+      { name: "כללי", color: "#475569", default: true },
+      { name: "משפחות נזקקות", color: "#059669", default: true },
+      { name: "קמחא דפסחא", color: "#d97706", default: true },
+      { name: "הוראת קבע ישיבה", color: "#2563eb", default: true },
+      { name: "קרן חתנים", color: "#7c3aed", default: false },
+      { name: "עזר לרפואה", color: "#dc2626", default: false }
+    ];
+
+    function vibrate() {
+      if (navigator.vibrate) navigator.vibrate(10);
+    }
 
     function formatCurrency(val) {
       const num = Number(val) || 0;
@@ -1021,16 +1158,16 @@
       async seed() {
         const cats = await this.getAll('categories');
         if (cats.length === 0) {
-          await this.put('categories', { id: 'c1', name: 'כללי', color: '#4b5563' });
-          await this.put('categories', { id: 'c2', name: 'חמצני', color: '#1d4ed8' });
-          await this.put('categories', { id: 'c3', name: 'גרצברג', color: '#b91c1c' });
+          await this.put('categories', { id: 'c1', name: 'כללי', color: '#475569' });
+          await this.put('categories', { id: 'c2', name: 'משפחות נזקקות', color: '#059669' });
+          await this.put('categories', { id: 'c3', name: 'קמחא דפסחא', color: '#d97706' });
         }
         const defaults = [
           { key: 'baseMaaserAmount', value: 1000 },
           { key: 'maaserDay', value: 10 },
           { key: 'monthlyGoal', value: 1000 },
           { key: 'annualGoal', value: 12000 },
-          { key: 'theme', value: 'auto' }
+          { key: 'onboardingCompleted', value: false }
         ];
         for (const s of defaults) {
           if (!await this.get('settings', s.key)) await this.put('settings', s);
@@ -1078,35 +1215,27 @@
       }
     }
 
-    /* שכבת סנכרון עם ענן Google (Firebase) */
+    /* סנכרון עם ענן Google (Firebase) */
     class CloudSync {
       constructor() {
         this.currentUser = null;
         this.firestore = null;
         this.auth = null;
         this.isInitialized = false;
-        this.syncInProgress = false;
       }
 
       init() {
-        // מפתחות פרויקט מ-localStorage או ברירת מחדל
-        let cfg = null;
-        try {
-          const saved = localStorage.getItem('maaser_firebase_config');
-          if (saved) cfg = JSON.parse(saved);
-        } catch(e) {}
+        // מפתחות Firebase האמיתיים של הפרויקט שלך: maaser-studioai
+        const cfg = {
+          apiKey: "AIzaSyBDJ6R3vkns94xq01AwUzQzf77vWCKkY_0",
+          authDomain: "maaser-studioai.firebaseapp.com",
+          projectId: "maaser-studioai",
+          storageBucket: "maaser-studioai.firebasestorage.app",
+          messagingSenderId: "451265781770",
+          appId: "1:451265781770:web:a5cb5f5ee3665a19defff3",
+          measurementId: "G-X44KDZGCSW"
+        };
 
-        // ברירת מחדל אוטומטית שניתן לערוך דרך המסך
-        if (!cfg) {
-  cfg = {
-    apiKey: "AIzaSyBDJ6R3vkns94xq01AwUzQzf77vWCKkY_0",
-    authDomain: "maaser-studioai.firebaseapp.com",
-    projectId: "maaser-studioai",
-    storageBucket: "maaser-studioai.firebasestorage.app",
-    messagingSenderId: "451265781770",
-    appId: "1:451265781770:web:a5cb5f5ee3665a19defff3"
-  };
-}
         try {
           if (!firebase.apps.length) {
             firebase.initializeApp(cfg);
@@ -1115,7 +1244,6 @@
           this.firestore = firebase.firestore();
           this.isInitialized = true;
 
-          // האזנה לשינוי מצב כניסה של משתמש
           this.auth.onAuthStateChanged(async (user) => {
             this.currentUser = user;
             updateUserUi(user);
@@ -1127,18 +1255,14 @@
             }
           });
         } catch(err) {
-          console.warn('Firebase init deferred / config missing:', err);
+          console.warn('Firebase init error:', err);
           setSyncStatus('local', 'מקומי');
         }
       }
 
       async loginWithGoogle() {
-        if (!this.isInitialized) {
-          showToast('יש להזין מפתחות פרויקט Firebase בהגדרות כדי להתחבר', 'info');
-          document.getElementById('cloudConfigBox').classList.remove('hidden');
-          switchTab('tab-settings');
-          return;
-        }
+        if (!this.isInitialized) return;
+        vibrate();
         try {
           const provider = new firebase.auth.GoogleAuthProvider();
           provider.setCustomParameters({ prompt: 'select_account' });
@@ -1146,8 +1270,7 @@
           showToast('התחברת בהצלחה לחשבון Google!', 'success');
         } catch (err) {
           console.error(err);
-          // אם Popup נחסם במובייל - נסה Redirect
-          if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request') {
+          if (err.code === 'auth/popup-blocked') {
             const provider = new firebase.auth.GoogleAuthProvider();
             await this.auth.signInWithRedirect(provider);
           } else {
@@ -1158,12 +1281,12 @@
 
       async logout() {
         if (this.auth) {
+          vibrate();
           await this.auth.signOut();
           showToast('התנתקת מחשבון Google', 'info');
         }
       }
 
-      // שמירת כל הנתונים לענן גוגל (נקרא בכל עדכון/הוספה/מחיקה)
       async pushToCloud(dataState) {
         if (!this.currentUser || !this.firestore) return;
         setSyncStatus('syncing', 'שומר בגוגל...');
@@ -1184,7 +1307,6 @@
         }
       }
 
-      // משיכת נתונים מהענן בהתחברות
       async pullFromCloud() {
         if (!this.currentUser || !this.firestore) return;
         try {
@@ -1201,15 +1323,14 @@
               await loadState();
               render();
               showToast('הנתונים סונכרנו מחשבון Google שלך!', 'success');
-            } else {
-              // ענן ריק ויש מקומי - נדחוף לענן
-              if (state.donations.length > 0) {
-                await this.pushToCloud(state);
-              }
+            } else if (state.donations.length > 0) {
+              await this.pushToCloud(state);
             }
           } else {
-            // מסמך ראשון של המשתמש
-            if (state.donations.length > 0) {
+            // משתמש חדש לגמרי שנכנס לראשונה בענן! מציגים את אשף הפתיחה
+            if (!state.settings.onboardingCompleted) {
+              openOnboardingModal();
+            } else if (state.donations.length > 0) {
               await this.pushToCloud(state);
             }
           }
@@ -1285,6 +1406,11 @@
       bindEvents();
       render();
       cloud.init();
+
+      // אם מעולם לא הושלם אשף הפתיחה - נפתח אותו
+      if (!state.settings.onboardingCompleted && state.donations.length === 0) {
+        setTimeout(openOnboardingModal, 500);
+      }
     }
 
     async function loadState() {
@@ -1328,10 +1454,38 @@
       state.monthlyData.forEach(m => db.put('monthlyData', m));
     }
 
-    // פונקציה מרכזית שמעדכנת גם מקומית וגם ב-Google Cloud!
     async function notifyDataChanged() {
       render();
       await cloud.pushToCloud(state);
+    }
+
+    /* מסך פתיחה ואשף הגדרות ראשוני */
+    function openOnboardingModal() {
+      const modal = document.getElementById('onboardingModal');
+      const chipList = document.getElementById('obCategoriesChipList');
+      document.getElementById('obBaseAmount').value = state.settings.baseMaaserAmount || 1000;
+      document.getElementById('obMaaserDay').value = state.settings.maaserDay || 10;
+
+      // רינדור קטגוריות מומלצות לבחירה
+      chipList.innerHTML = RECOMMENDED_CATEGORIES.map(cat => {
+        const isSelected = state.categories.some(c => c.name === cat.name) || cat.default;
+        return `
+          <div class="category-chip-select ${isSelected ? 'selected' : ''}" data-name="${cat.name}" data-color="${cat.color}">
+            <span style="width:10px; height:10px; border-radius:50%; background:${cat.color};"></span>
+            <span>${cat.name}</span>
+          </div>
+        `;
+      }).join('');
+
+      // Toggle בלחיצה על צ'יפ
+      chipList.querySelectorAll('.category-chip-select').forEach(chip => {
+        chip.addEventListener('click', () => {
+          vibrate();
+          chip.classList.toggle('selected');
+        });
+      });
+
+      modal.classList.remove('hidden');
     }
 
     function render() {
@@ -1387,20 +1541,8 @@
       document.getElementById('annualTargetVal').textContent = formatCurrency(state.settings.annualGoal || 12000);
       document.getElementById('annualForecastVal').textContent = `${formatCurrency(Math.round((ytd / daysPassed) * 365))} (תחזית)`;
 
-      // מוטבים
-      const bMap = {};
-      ytdDons.forEach(d => bMap[d.beneficiary] = (bMap[d.beneficiary] || 0) + (Number(d.amount) || 0));
-      const top3 = Object.entries(bMap).sort((a,b) => b[1] - a[1]).slice(0, 3);
-      document.getElementById('topBeneficiariesList').innerHTML = top3.length ? top3.map(([n, s], i) => `
-        <li style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border-color);">
-          <span><strong>${i+1}.</strong> ${escapeHtml(n)}</span><strong>${formatCurrency(s)}</strong>
-        </li>
-      `).join('') : '<li class="text-muted">אין עדיין תרומות השנה</li>';
-
-      // 5 אחרונות
       document.getElementById('recentDonationsContainer').innerHTML = state.donations.slice(0, 5).map(renderDonationHtml).join('') || '<p class="empty-state">עדיין לא נרשמו תרומות</p>';
 
-      // סלקטים
       const catOpts = state.categories.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
       document.getElementById('donationCategory').innerHTML = catOpts;
       document.getElementById('filterCategory').innerHTML = '<option value="">כל הקטגוריות</option>' + catOpts;
@@ -1410,14 +1552,13 @@
       renderMonthsList();
       renderSvgChart();
 
-      // הגדרות
       document.getElementById('settingBaseMaaserAmount').value = state.settings.baseMaaserAmount || 1000;
       document.getElementById('settingMaaserDay').value = state.settings.maaserDay || 10;
       document.getElementById('settingMonthlyGoal').value = state.settings.monthlyGoal || 1000;
       document.getElementById('settingAnnualGoal').value = state.settings.annualGoal || 12000;
 
       document.getElementById('categoriesManageList').innerHTML = state.categories.map(c => `
-        <li style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border-color);">
+        <li style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border-color);">
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="width:14px; height:14px; border-radius:50%; background:${c.color};"></span>
             <strong>${escapeHtml(c.name)}</strong>
@@ -1430,7 +1571,7 @@
     }
 
     function renderDonationHtml(d) {
-      const cat = state.categories.find(c => c.name === d.category) || { color: '#64748b', name: d.category || 'כללי' };
+      const cat = state.categories.find(c => c.name === d.category) || { color: '#475569', name: d.category || 'כללי' };
       return `
         <div class="donation-row-item" onclick="openEditDonation('${d.id}')">
           <div>
@@ -1501,39 +1642,119 @@
       document.getElementById('barChartContainer').innerHTML = svg;
     }
 
-    /* אירועים */
+    /* אירועים ואינטראקציות */
     function bindEvents() {
       document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-        item.addEventListener('click', () => switchTab(item.getAttribute('data-tab')));
+        item.addEventListener('click', () => {
+          vibrate();
+          switchTab(item.getAttribute('data-tab'));
+        });
       });
 
-      document.getElementById('quickAddBtn').addEventListener('click', () => openNewDonation());
-      document.getElementById('dashAddDonationBtn').addEventListener('click', () => openNewDonation());
+      document.getElementById('quickAddBtn').addEventListener('click', () => { vibrate(); openNewDonation(); });
+      document.getElementById('dashAddDonationBtn').addEventListener('click', () => { vibrate(); openNewDonation(); });
       document.getElementById('viewAllDonationsLink').addEventListener('click', () => {
         switchTab('tab-history');
         switchSubTab('subtab-donations');
       });
 
       document.querySelectorAll('.seg-btn').forEach(b => {
-        b.addEventListener('click', () => switchSubTab(b.getAttribute('data-subtab')));
+        b.addEventListener('click', () => {
+          vibrate();
+          switchSubTab(b.getAttribute('data-subtab'));
+        });
       });
 
-      // התחברות לגוגל
       document.getElementById('btnGoogleSignInMain').addEventListener('click', () => cloud.loginWithGoogle());
-      document.getElementById('userAvatarBtn').addEventListener('click', () => {
-        switchTab('tab-settings');
+      document.getElementById('userAvatarBtn').addEventListener('click', () => switchTab('tab-settings'));
+      document.getElementById('btnOpenOnboardingManually').addEventListener('click', () => openOnboardingModal());
+
+      // שמירת אשף פתיחה
+      document.getElementById('onboardingForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        vibrate();
+        const base = parseFloat(document.getElementById('obBaseAmount').value) || 1000;
+        const day = parseInt(document.getElementById('obMaaserDay').value, 10) || 10;
+        
+        // שמירת קטגוריות נבחרות
+        const selectedChips = document.querySelectorAll('#obCategoriesChipList .category-chip-select.selected');
+        await db.clear('categories');
+        state.categories = [];
+        let idCounter = 1;
+        for (const chip of selectedChips) {
+          const cat = { id: `cat_${idCounter++}`, name: chip.dataset.name, color: chip.dataset.color };
+          await db.put('categories', cat);
+          state.categories.push(cat);
+        }
+
+        state.settings.baseMaaserAmount = base;
+        state.settings.maaserDay = day;
+        state.settings.monthlyGoal = base;
+        state.settings.annualGoal = base * 12;
+        state.settings.onboardingCompleted = true;
+
+        await Promise.all([
+          db.put('settings', { key: 'baseMaaserAmount', value: base }),
+          db.put('settings', { key: 'maaserDay', value: day }),
+          db.put('settings', { key: 'monthlyGoal', value: base }),
+          db.put('settings', { key: 'annualGoal', value: base * 12 }),
+          db.put('settings', { key: 'onboardingCompleted', value: true })
+        ]);
+
+        recalculateCascadeFromEarliest();
+        document.getElementById('onboardingModal').classList.add('hidden');
+        showToast('ההגדרות נשמרו בהצלחה!', 'success');
+        await notifyDataChanged();
       });
 
-      // שמירת תרומה (מעדכן גוגל!)
+      // צ'יפים מהירים לסכום תרומה
+      document.querySelectorAll('.chip-amount').forEach(btn => {
+        btn.addEventListener('click', () => {
+          vibrate();
+          document.getElementById('donationAmount').value = btn.dataset.amt;
+          state.isDirty = true;
+        });
+      });
+
+      // בחירת תאריך: פתיחת Date Picker טבעי בלחיצה על כל שורת התאריך
+      const nativeDate = document.getElementById('nativeDatePickerInput');
+      const displayDate = document.getElementById('donationDateDisplay');
+      
+      nativeDate.addEventListener('change', () => {
+        if (nativeDate.value) {
+          displayDate.value = formatDateToDisplay(nativeDate.value);
+          state.isDirty = true;
+          vibrate();
+        }
+      });
+
+      // כפתורי קיצור תאריך
+      document.getElementById('chipDateToday').addEventListener('click', () => {
+        vibrate();
+        const now = new Date();
+        displayDate.value = formatDateToDisplay(now);
+        nativeDate.value = now.toISOString().split('T')[0];
+        state.isDirty = true;
+      });
+      document.getElementById('chipDateYesterday').addEventListener('click', () => {
+        vibrate();
+        const y = new Date(); y.setDate(y.getDate() - 1);
+        displayDate.value = formatDateToDisplay(y);
+        nativeDate.value = y.toISOString().split('T')[0];
+        state.isDirty = true;
+      });
+
+      // שמירת תרומה
       document.getElementById('donationForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        vibrate();
         const amt = parseFloat(document.getElementById('donationAmount').value);
         const ben = document.getElementById('donationBeneficiary').value.trim();
-        const dateDisplay = document.getElementById('donationDateDisplay').value.trim();
+        const dateDisplay = displayDate.value.trim();
         const iso = parseDisplayDateToIso(dateDisplay);
 
         if (isNaN(amt) || amt <= 0 || !ben || !iso) {
-          showToast('נא למלא את כל שדות החובה', 'error');
+          showToast('נא למלא את כל שדות החובה כראוי', 'error');
           return;
         }
 
@@ -1561,7 +1782,7 @@
         const ym = getYearMonthFromIso(item.date);
         recalculateCascadeFromEarliest(getMonthKey(ym.year, ym.month));
         state.isDirty = false;
-        showToast('התרומה נשמרה וסונכרנה לגוגל!', 'success');
+        showToast('התרומה נשמרה וסונכרנה!', 'success');
         switchTab('tab-dashboard');
         await notifyDataChanged();
       });
@@ -1569,10 +1790,11 @@
       document.getElementById('btnCancelDonation').addEventListener('click', handleCancelForm);
       document.getElementById('formCloseBtn').addEventListener('click', handleCancelForm);
 
-      // מחיקת תרומה (מעדכן גוגל!)
+      // מחיקת תרומה
       document.getElementById('btnDeleteDonation').addEventListener('click', () => {
         if (!state.editingId) return;
-        showConfirm('מחיקת תרומה', 'האם למחוק תרומה זו?', async () => {
+        showConfirm('מחיקת תרומה', 'האם למחוק תרומה זו לצמיתות?', async () => {
+          vibrate();
           const id = state.editingId;
           const item = state.donations.find(d => d.id === id);
           await db.del('donations', id);
@@ -1588,20 +1810,10 @@
         });
       });
 
-      // כפתורי תאריך מהיר
-      document.getElementById('chipDateToday').addEventListener('click', () => {
-        document.getElementById('donationDateDisplay').value = formatDateToDisplay(new Date());
-        state.isDirty = true;
-      });
-      document.getElementById('chipDateYesterday').addEventListener('click', () => {
-        const y = new Date(); y.setDate(y.getDate() - 1);
-        document.getElementById('donationDateDisplay').value = formatDateToDisplay(y);
-        state.isDirty = true;
-      });
-
-      // שמירת הגדרות מעשר (מעדכן גוגל!)
+      // הגדרות מעשר
       document.getElementById('settingsMaaserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        vibrate();
         const base = parseFloat(document.getElementById('settingBaseMaaserAmount').value) || 1000;
         const day = parseInt(document.getElementById('settingMaaserDay').value, 10) || 10;
         const mGoal = parseFloat(document.getElementById('settingMonthlyGoal').value) || 1000;
@@ -1619,9 +1831,10 @@
         await notifyDataChanged();
       });
 
-      // חוב נוסף לחודש (מעדכן גוגל!)
+      // חוב חודש
       document.getElementById('monthDebtForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        vibrate();
         const id = document.getElementById('monthDebtId').value;
         const add = parseFloat(document.getElementById('monthAdditionalDebtInput').value) || 0;
         const m = state.monthlyData.find(x => x.id === id);
@@ -1636,11 +1849,12 @@
       });
       document.getElementById('btnCloseMonthDebtModal').addEventListener('click', () => document.getElementById('monthDebtModal').classList.add('hidden'));
 
-      // קטגוריות (מעדכן גוגל!)
+      // קטגוריות
       document.getElementById('btnInlineNewCategory').addEventListener('click', () => openCatModal());
       document.getElementById('btnOpenAddCategoryModal').addEventListener('click', () => openCatModal());
       document.getElementById('categoryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        vibrate();
         const name = document.getElementById('modalCatName').value.trim();
         const color = document.getElementById('modalCatColor').value;
         const id = document.getElementById('modalCatId').value || `cat_${Date.now()}`;
@@ -1655,26 +1869,7 @@
       });
       document.getElementById('btnCloseCatModal').addEventListener('click', () => document.getElementById('categoryModal').classList.add('hidden'));
 
-      // עריכת מפתחות פרויקט Google Firebase
-      document.getElementById('btnToggleCloudConfig').addEventListener('click', () => {
-        const box = document.getElementById('cloudConfigBox');
-        box.classList.toggle('hidden');
-        const saved = localStorage.getItem('maaser_firebase_config');
-        if (saved) document.getElementById('firebaseConfigInput').value = saved;
-      });
-      document.getElementById('btnSaveFirebaseConfig').addEventListener('click', () => {
-        const val = document.getElementById('firebaseConfigInput').value.trim();
-        try {
-          if (val) JSON.parse(val);
-          localStorage.setItem('maaser_firebase_config', val);
-          showToast('המפתחות נשמרו! האפליקציה מתרעננת...', 'success');
-          setTimeout(() => location.reload(), 1000);
-        } catch(e) {
-          showToast('הטקסט שהוזן אינו JSON תקין', 'error');
-        }
-      });
-
-      // מסננים
+      // סינונים
       document.getElementById('filterSearchBeneficiary').addEventListener('input', (e) => {
         state.filters.beneficiary = e.target.value;
         renderHistoryList();
@@ -1688,25 +1883,6 @@
         document.getElementById('filterCategory').value = '';
         state.filters = { beneficiary: '', category: '' };
         renderHistoryList();
-      });
-
-      // טעינת דוגמה
-      document.getElementById('btnLoadSampleSeptember').addEventListener('click', async () => {
-        const samples = [
-          { b: 'גרצברג', a: 200, c: 'גרצברג', d: '2026-09-02' },
-          { b: 'חמצני', a: 100, c: 'חמצני', d: '2026-09-08' },
-          { b: 'כללי', a: 15, c: 'כללי', d: '2026-09-12' },
-          { b: 'חמצני', a: 200, c: 'חמצני', d: '2026-09-18' },
-          { b: 'גרצברג', a: 425, c: 'גרצברג', d: '2026-09-24' }
-        ];
-        for (const s of samples) {
-          const item = { id: `don_${Date.now()}_${Math.random()}`, amount: s.a, beneficiary: s.b, date: s.d, category: s.c, paymentMethod: 'העברה בנקאית', notes: '', section46: false, createdAt: new Date().toISOString() };
-          await db.put('donations', item);
-          state.donations.push(item);
-        }
-        recalculateCascadeFromEarliest('2026-09');
-        showToast('נטענו נתוני ספטמבר (₪940)', 'success');
-        await notifyDataChanged();
       });
 
       // איפוס
@@ -1739,7 +1915,11 @@
       state.isDirty = false;
       document.getElementById('donationForm').reset();
       document.getElementById('donationId').value = '';
-      document.getElementById('donationDateDisplay').value = formatDateToDisplay(new Date());
+      
+      const today = new Date();
+      document.getElementById('donationDateDisplay').value = formatDateToDisplay(today);
+      document.getElementById('nativeDatePickerInput').value = today.toISOString().split('T')[0];
+      
       document.getElementById('formScreenTitle').textContent = 'הוספת תרומה';
       document.getElementById('btnDeleteDonation').classList.add('hidden');
       switchTab('tab-donation-form');
@@ -1748,12 +1928,14 @@
     window.openEditDonation = function(id) {
       const d = state.donations.find(x => x.id === id);
       if (!d) return;
+      vibrate();
       state.editingId = d.id;
       state.isDirty = false;
       document.getElementById('donationId').value = d.id;
       document.getElementById('donationAmount').value = d.amount;
       document.getElementById('donationBeneficiary').value = d.beneficiary;
       document.getElementById('donationDateDisplay').value = formatDateToDisplay(d.date);
+      document.getElementById('nativeDatePickerInput').value = d.date;
       document.getElementById('donationCategory').value = d.category || 'כללי';
       document.getElementById('donationPaymentMethod').value = d.paymentMethod || 'העברה בנקאית';
       document.getElementById('donationNotes').value = d.notes || '';
@@ -1779,6 +1961,7 @@
     window.openMonthModal = function(id) {
       const m = state.monthlyData.find(x => x.id === id);
       if (!m) return;
+      vibrate();
       document.getElementById('monthDebtId').value = m.id;
       document.getElementById('monthDebtSub').textContent = `${HEBREW_MONTHS[m.month - 1]} ${m.year}`;
       document.getElementById('monthAdditionalDebtInput').value = m.additionalDebt || 0;
@@ -1796,6 +1979,7 @@
       const c = state.categories.find(x => x.id === id);
       if (!c || c.name === 'כללי') return;
       showConfirm('מחיקת קטגוריה', `למחוק את "${c.name}"? התרומות יועברו ל"כללי".`, async () => {
+        vibrate();
         for (const d of state.donations.filter(x => x.category === c.name)) {
           d.category = 'כללי';
           await db.put('donations', d);
