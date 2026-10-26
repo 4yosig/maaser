@@ -1098,13 +1098,15 @@
 
         // ברירת מחדל אוטומטית שניתן לערוך דרך המסך
         if (!cfg) {
-          cfg = {
-            apiKey: "AIzaSyD-dummyDefaultKeyForMaaserApp99",
-            authDomain: "maaser-kesafim-app.firebaseapp.com",
-            projectId: "maaser-kesafim-app"
-          };
-        }
-
+  cfg = {
+    apiKey: "AIzaSyBDJ6R3vkns94xq01AwUzQzf77vWCKkY_0",
+    authDomain: "maaser-studioai.firebaseapp.com",
+    projectId: "maaser-studioai",
+    storageBucket: "maaser-studioai.firebasestorage.app",
+    messagingSenderId: "451265781770",
+    appId: "1:451265781770:web:a5cb5f5ee3665a19defff3"
+  };
+}
         try {
           if (!firebase.apps.length) {
             firebase.initializeApp(cfg);
