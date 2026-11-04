@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <meta name="theme-color" content="#1e3a8a">
+  <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="מעשר כספים">
   <title>מעשר כספים</title>
 
-  <!-- PWA Web Icons -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231e3a8a'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231e3a8a'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <!-- PWA Web Icons (מטבע צדקה יהודי יוקרתי) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231e293b' stroke='%23d97706' stroke-width='4'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23d97706' stroke-width='1.5' stroke-dasharray='4 2'/><text x='50' y='65' font-size='42' font-weight='bold' fill='%23fbbf24' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231e293b' stroke='%23d97706' stroke-width='4'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23d97706' stroke-width='1.5' stroke-dasharray='4 2'/><text x='50' y='65' font-size='42' font-weight='bold' fill='%23fbbf24' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
 
   <!-- Google Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -21,15 +21,14 @@
   <style>
     :root {
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      --primary: #1e3a8a;
-      --primary-light: #eff6ff;
-      --primary-accent: #3b82f6;
+      --primary: #1e293b;
+      --primary-accent: #2563eb;
+      --gold: #d97706;
+      --gold-light: #fef3c7;
       --emerald: #059669;
       --emerald-bg: #ecfdf5;
-      --amber: #d97706;
-      --amber-bg: #fffbeb;
       --rose: #e11d48;
-      --rose-bg: #fff1f2;
+      --rose-soft: #fb7185;
       --slate-50: #f8fafc;
       --slate-100: #f1f5f9;
       --slate-200: #e2e8f0;
@@ -42,7 +41,7 @@
       --bg-card: #ffffff;
       --border: #e2e8f0;
       --shadow-soft: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-      --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.07);
       --radius-sm: 10px;
       --radius-md: 16px;
       --radius-lg: 24px;
@@ -59,9 +58,6 @@
       --slate-800: #f1f5f9;
       --slate-900: #ffffff;
       --slate-600: #94a3b8;
-      --primary-light: #1e293b;
-      --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
-      --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -83,13 +79,13 @@
       position: sticky;
       top: 0;
       z-index: 40;
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
       padding-top: env(safe-area-inset-top);
     }
-    [data-theme="dark"] .top-bar { background: rgba(19, 29, 49, 0.88); }
+    [data-theme="dark"] .top-bar { background: rgba(19, 29, 49, 0.9); }
     
     .top-bar-inner {
       max-width: 650px;
@@ -107,7 +103,17 @@
       color: var(--slate-900);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+    }
+
+    /* לוגו מטבע צדקה יהודי וקטורי */
+    .logo-coin-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .header-sub-badge {
@@ -159,74 +165,81 @@
     .tab-section.active { display: block; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* כרטיס Hero מודרני מרווח */
+    /* כרטיס Hero משודרג - פלטת Slate-Navy הרמונית */
     .hero-summary-card {
-      background: linear-gradient(145deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #334155 100%);
       color: #ffffff;
       border-radius: var(--radius-lg);
-      padding: 22px 20px;
+      padding: 24px 22px;
       margin-bottom: 16px;
-      box-shadow: 0 12px 30px -6px rgba(30, 58, 138, 0.35);
+      box-shadow: 0 14px 30px -6px rgba(15, 23, 42, 0.35);
       position: relative;
       overflow: hidden;
-    }
-
-    .hero-summary-card::after {
-      content: '';
-      position: absolute;
-      top: -40px;
-      left: -40px;
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);
-      border-radius: 50%;
-      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .hero-card-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
     .hero-card-label {
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.85);
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero-current-month-badge {
+      color: #f8fafc;
+      font-weight: 700;
     }
 
     .hero-state-pill {
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       font-weight: 700;
       padding: 4px 12px;
       border-radius: var(--radius-full);
-      background: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
     }
 
     .hero-main-amount {
-      font-size: 2.5rem;
+      font-size: 2.6rem;
       font-weight: 900;
       letter-spacing: -1px;
       line-height: 1.1;
       margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .hero-main-amount.has-remainder {
+      color: #fecdd3; /* אפרסק-ורוד רך שזורם בהרמוניה עם הרקע הכהה */
+    }
+
+    .hero-main-amount.is-excess {
+      color: #a7f3d0; /* מנטה עדין */
     }
 
     .hero-explanation {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.9);
+      color: #cbd5e1;
       margin-bottom: 18px;
     }
 
-    /* מד התקדמות פרימיום */
+    /* מד התקדמות יעד */
     .progress-box {
-      background: rgba(0, 0, 0, 0.15);
+      background: rgba(0, 0, 0, 0.25);
       border-radius: var(--radius-md);
       padding: 12px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .progress-labels-row {
@@ -235,24 +248,25 @@
       font-size: 0.82rem;
       font-weight: 600;
       margin-bottom: 8px;
+      color: #e2e8f0;
     }
 
     .progress-track-bg {
       width: 100%;
       height: 8px;
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.16);
       border-radius: var(--radius-full);
       overflow: hidden;
     }
 
     .progress-bar-fill-bar {
       height: 100%;
-      background: #10b981;
+      background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
       border-radius: var(--radius-full);
-      transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition: width 400ms ease;
     }
 
-    /* כרטיסיות מידע (Stats Grid) */
+    /* כרטיסיות מדדים (2x2) */
     .stats-card-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -284,7 +298,7 @@
 
     .micro-value.accent { color: var(--emerald); }
 
-    /* רשימת תרומות אחרונות נקייה */
+    /* כרטיסים כלליים */
     .section-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -355,7 +369,6 @@
       direction: ltr;
     }
 
-    /* כרטיס הוראות קבע (Recurring) */
     .recurring-item-row {
       display: flex;
       justify-content: space-between;
@@ -367,7 +380,7 @@
       margin-bottom: 10px;
     }
 
-    /* טפסים */
+    /* שדות קלט */
     .input-block { margin-bottom: 16px; }
     .input-label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
     
@@ -381,15 +394,20 @@
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--slate-900);
-      transition: border-color var(--transition), box-shadow var(--transition);
+      transition: border-color var(--transition);
     }
     .text-input-field:focus {
       outline: none;
       border-color: var(--primary-accent);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     }
 
-    /* בחירת תאריך נוחה בלחיצה מלאה */
+    .text-input-field:read-only {
+      background: var(--slate-100);
+      cursor: not-allowed;
+      color: var(--slate-600);
+    }
+
     .date-row-picker-wrap {
       position: relative;
       cursor: pointer;
@@ -408,7 +426,6 @@
       z-index: 2;
     }
 
-    /* צ'יפים מהירים */
     .quick-pill-group {
       display: flex;
       gap: 8px;
@@ -427,11 +444,11 @@
     }
     .quick-pill-btn:hover { background: var(--border); }
 
-    /* כפתורים מודרניים */
+    /* כפתורים ראשיים */
     .action-button-main {
       width: 100%;
       height: 50px;
-      background: var(--primary);
+      background: var(--slate-900);
       color: #ffffff;
       border: none;
       border-radius: var(--radius-md);
@@ -442,7 +459,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
     }
     .action-button-main:active { transform: scale(0.98); }
 
@@ -458,7 +475,7 @@
       cursor: pointer;
     }
 
-    /* סרגל ניווט צף תחתון (Floating Navigation) */
+    /* סרגל ניווט צף תחתון */
     .floating-bottom-nav {
       position: fixed;
       bottom: 12px;
@@ -497,8 +514,7 @@
       gap: 2px;
       transition: color var(--transition);
     }
-    .nav-tab-btn.active { color: var(--primary); }
-    [data-theme="dark"] .nav-tab-btn.active { color: #60a5fa; }
+    .nav-tab-btn.active { color: var(--primary-accent); }
     .nav-tab-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
     /* דיאלוגים מודאליים */
@@ -536,12 +552,9 @@
       font-weight: 700;
       box-shadow: var(--shadow-card);
       z-index: 100;
-      animation: fadeIn 200ms ease;
     }
 
     .hidden { display: none !important; }
-    .text-emerald { color: var(--emerald); }
-    .text-rose { color: var(--rose); }
     .text-muted { color: var(--slate-600); }
   </style>
 </head>
@@ -552,8 +565,15 @@
     <div class="top-bar-inner">
       <div>
         <div class="brand-title">
+          <!-- לוגו מטבע מעשר וצדקה מוזהב -->
+          <div class="logo-coin-icon">
+            <svg viewBox="0 0 36 36" width="32" height="32">
+              <circle cx="18" cy="18" r="16" fill="#1e293b" stroke="#d97706" stroke-width="2"/>
+              <circle cx="18" cy="18" r="13" fill="none" stroke="#d97706" stroke-width="0.8" stroke-dasharray="3 1.5"/>
+              <text x="18" y="24" font-size="16" font-weight="900" fill="#fbbf24" text-anchor="middle" font-family="system-ui">₪</text>
+            </svg>
+          </div>
           <span>מעשר כספים</span>
-          <span style="font-size:1.1rem;">🕊️</span>
         </div>
         <div class="header-sub-badge" id="headerSyncStatusBadge">
           <span class="sync-indicator" id="headerSyncDot"></span>
@@ -561,7 +581,7 @@
         </div>
       </div>
       <div>
-        <button type="button" class="user-profile-btn" id="btnTopProfileAvatar" aria-label="פרופיל משתמש">
+        <button type="button" class="user-profile-btn" id="btnTopProfileAvatar" aria-label="פרופיל">
           <span id="topAvatarLetter">👤</span>
         </button>
       </div>
@@ -571,24 +591,27 @@
   <!-- התראה צפה -->
   <div id="toastContainer" class="hidden toast-msg-box"></div>
 
-  <!-- תוכן ראשי -->
+  <!-- תוכן מרכזי -->
   <main class="content-area">
 
     <!-- מסך 1: ראשי (Dashboard) -->
     <section id="view-dashboard" class="tab-section active">
       
-      <!-- באנר התחברות Google (אם עדיין לא מחובר) -->
+      <!-- באנר התחברות Google (אם טרם התחבר) -->
       <div id="bannerGoogleConnect" class="section-card hidden" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-color: #bfdbfe;">
         <h3 style="font-size:1rem; font-weight:800; color:#1e3a8a; margin-bottom:4px;">סנכרון ענן אישי עם Google ☁️</h3>
         <p style="font-size:0.84rem; color:#1e40af; margin-bottom:12px;">התחבר כדי שהתרומות והמעשרות שלך יגובו ויתעדכנו בכל מכשיר.</p>
-        <button type="button" class="action-button-main" id="btnQuickGoogleLogin" style="height:44px; font-size:0.9rem;">התחבר עם חשבון Google</button>
+        <button type="button" class="action-button-main" id="btnQuickGoogleLogin" style="height:44px; font-size:0.9rem; background:#1e3a8a;">התחבר עם חשבון Google</button>
       </div>
 
-      <!-- כרטיס מעשר מרכזי מעוצב -->
+      <!-- כרטיס Hero ראשי מעודכן עם צבעים זורמים ושם החודש -->
       <div class="hero-summary-card" id="heroSummaryContainer">
         <div class="hero-card-header">
-          <span class="hero-card-label" id="heroBalanceLabel">מאזן מעשרות עדכני</span>
-          <span class="hero-state-pill" id="heroBalanceStatePill">חודש נוכחי</span>
+          <span class="hero-card-label">
+            <span>מעשר חודש:</span>
+            <strong class="hero-current-month-badge" id="heroCurrentMonthName">מרץ 2026</strong>
+          </span>
+          <span class="hero-state-pill" id="heroBalanceStatePill">מעודכן</span>
         </div>
         <div class="hero-main-amount" id="heroMainAmountDisplay">₪0</div>
         <div class="hero-explanation" id="heroMainDescription">הכל מעודכן ומסודר</div>
@@ -597,7 +620,7 @@
         <div class="progress-box">
           <div class="progress-labels-row">
             <span>הופרש החודש: <strong id="progressDonatedSum">₪0</strong></span>
-            <span id="progressGoalSum">יעד: ₪1,000</span>
+            <span id="progressGoalSum">חיוב חודש זה: ₪1,000</span>
           </div>
           <div class="progress-track-bg">
             <div class="progress-bar-fill-bar" id="progressBarFill" style="width: 0%;"></div>
@@ -616,7 +639,7 @@
           <span class="micro-value accent" id="statDonatedThisMonth">₪0</span>
         </div>
         <div class="micro-stat-card">
-          <span class="micro-label">מספר תרומות</span>
+          <span class="micro-label">מספר תרומות החודש</span>
           <span class="micro-value" id="statCountThisMonth">0</span>
         </div>
         <div class="micro-stat-card">
@@ -635,7 +658,7 @@
         <button type="button" class="action-button-main" id="btnOpenNewDonation" style="margin-top:14px;">➕ הוסף תרומה חדשה</button>
       </div>
 
-      <!-- כרטיס יעד שנתי מרווח -->
+      <!-- יעד שנתי (מחושב אוטומטית) -->
       <div class="section-card">
         <h2 class="section-headline" style="margin-bottom:10px;">יעד שנתי ומעקב</h2>
         <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
@@ -644,7 +667,7 @@
             <span style="font-size:1.3rem; font-weight:800;" id="annualYtdSum">₪0</span>
           </div>
           <div>
-            <span class="micro-label">יעד שנתי מוגדר</span>
+            <span class="micro-label">יעד שנתי כולל (מחושב)</span>
             <span style="font-size:1.3rem; font-weight:800;" id="annualGoalSum">₪12,000</span>
           </div>
         </div>
@@ -666,7 +689,6 @@
         <form id="donationEntryForm" novalidate style="margin-top:14px;">
           <input type="hidden" id="editDonationId" value="">
 
-          <!-- סכום התרומה -->
           <div class="input-block">
             <label class="input-label" for="inpDonationAmount">סכום התרומה (₪) *</label>
             <input type="number" id="inpDonationAmount" inputmode="decimal" step="0.01" min="0.01" class="text-input-field" placeholder="0.00" required>
@@ -679,14 +701,12 @@
             </div>
           </div>
 
-          <!-- שם המוטב -->
           <div class="input-block">
             <label class="input-label" for="inpDonationBeneficiary">שם הארגון / המוטב *</label>
             <input type="text" id="inpDonationBeneficiary" list="beneficiarySuggestions" class="text-input-field" placeholder="למשל: קופת העיר, עזר מציון, ישיבה..." required>
             <datalist id="beneficiarySuggestions"></datalist>
           </div>
 
-          <!-- תאריך (לחיצה מלאה על השורה פותחת לוח שנה) -->
           <div class="input-block">
             <label class="input-label">תאריך התרומה *</label>
             <div class="date-row-picker-wrap">
@@ -699,13 +719,11 @@
             </div>
           </div>
 
-          <!-- קטגוריה -->
           <div class="input-block">
             <label class="input-label" for="selectDonationCategory">קטגוריה</label>
             <select id="selectDonationCategory" class="text-input-field"></select>
           </div>
 
-          <!-- אמצעי תשלום -->
           <div class="input-block">
             <label class="input-label" for="selectPaymentMethod">אמצעי תשלום</label>
             <select id="selectPaymentMethod" class="text-input-field">
@@ -719,15 +737,13 @@
             </select>
           </div>
 
-          <!-- סעיף 46 -->
           <div class="input-block">
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-              <input type="checkbox" id="chkSection46" style="width:18px; height:18px; accent-color:var(--primary);">
+              <input type="checkbox" id="chkSection46" style="width:18px; height:18px; accent-color:var(--primary-accent);">
               <span style="font-size:0.9rem; font-weight:600;">מוכר לפי סעיף 46 (זיכוי מס)</span>
             </label>
           </div>
 
-          <!-- כפתורי פעולה -->
           <div style="display:flex; flex-direction:column; gap:10px; margin-top:24px;">
             <button type="submit" class="action-button-main">✓ שמור תרומה</button>
             <button type="button" class="action-button-secondary" id="btnCancelFormAction">ביטול</button>
@@ -737,7 +753,7 @@
       </div>
     </section>
 
-    <!-- מסך 3: הוראות קבע (תרומות אוטומטיות בכל חודש) -->
+    <!-- מסך 3: הוראות קבע -->
     <section id="view-recurring" class="tab-section">
       <div class="section-card">
         <div class="section-header-row">
@@ -777,12 +793,23 @@
       </div>
 
       <div class="section-card">
-        <h2 class="section-headline">הגדרות מעשר אישיות</h2>
+        <h2 class="section-headline">הגדרות מעשר וחישוב</h2>
         <form id="settingsMaaserForm" style="margin-top:12px;">
+          
+          <!-- הגדרת חודש ושנת התחלה לחישוב המעשרות -->
+          <div class="input-block">
+            <label class="input-label">חישוב מעשרות החל מחודש ושנה:</label>
+            <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px;">
+              <select id="cfgStartMonth" class="text-input-field"></select>
+              <input type="number" id="cfgStartYear" class="text-input-field" min="2020" max="2035" required>
+            </div>
+            <small class="text-muted">חישובי החיובים יחלו אך ורק מחודש זה (ולא מחודשים קודמים).</small>
+          </div>
+
           <div class="input-block">
             <label class="input-label">סכום מעשר חודשי בסיסי (₪)</label>
             <input type="number" id="cfgBaseMaaserAmount" class="text-input-field" min="0" required>
-            <small class="text-muted">סכום זה מתווסף לחיוב בכל חודש.</small>
+            <small class="text-muted">סכום זה יחויב בכל חודש החל מחודש ההתחלה.</small>
           </div>
 
           <div class="input-block">
@@ -790,9 +817,11 @@
             <input type="number" id="cfgMaaserDay" class="text-input-field" min="1" max="28" required>
           </div>
 
+          <!-- יעד שנתי מחושב אוטומטית (לקריאה בלבד) -->
           <div class="input-block">
             <label class="input-label">יעד תרומה שנתי כולל (₪)</label>
-            <input type="number" id="cfgAnnualGoal" class="text-input-field" min="0" required>
+            <input type="text" id="cfgAnnualGoalDisplay" class="text-input-field" readonly>
+            <small class="text-muted">מחושב אוטומטית: סכום חודשי × 12.</small>
           </div>
 
           <button type="submit" class="action-button-main" style="height:44px;">שמור שינויים בהגדרות</button>
@@ -808,7 +837,7 @@
 
   </main>
 
-  <!-- סרגל תחתון צף מודרני (5 טאבים) -->
+  <!-- סרגל תחתון צף מודרני -->
   <nav class="floating-bottom-nav">
     <button type="button" class="nav-tab-btn active" data-tab="view-dashboard">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
@@ -832,7 +861,7 @@
     </button>
   </nav>
 
-  <!-- מודאל הוספת הוראת קבע חדשה -->
+  <!-- מודאל הוראת קבע -->
   <div class="dialog-backdrop hidden" id="recurringModal">
     <div class="dialog-card-box">
       <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:12px;">הוראת קבע חודשית</h3>
@@ -872,7 +901,7 @@
         </div>
         <div class="input-block">
           <label class="input-label">צבע תגית</label>
-          <input type="color" id="newCatColor" class="text-input-field" style="height:48px;" value="#1e3a8a">
+          <input type="color" id="newCatColor" class="text-input-field" style="height:48px;" value="#1e293b">
         </div>
         <div style="display:flex; gap:8px; margin-top:20px;">
           <button type="submit" class="action-button-main">שמור</button>
@@ -882,7 +911,7 @@
     </div>
   </div>
 
-  <!-- ================= קוד התוכנה ================= -->
+  <!-- קוד האפליקציה -->
   <script>
     const HEBREW_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
 
@@ -921,17 +950,16 @@
     }
     function getMonthKey(y, m) { return `${y}-${String(m).padStart(2, '0')}`; }
 
-    /* שכבת מסד נתונים מקומית (Offline-First) */
+    /* שכבת מסד נתונים מקומית */
     class LocalDB {
       constructor() { this.db = null; }
       async init() {
         return new Promise((resolve, reject) => {
-          const req = indexedDB.open('MaaserAppDB_v3', 1);
+          const req = indexedDB.open('MaaserAppDB_v4', 1);
           req.onupgradeneeded = (e) => {
             const db = e.target.result;
             if (!db.objectStoreNames.contains('donations')) db.createObjectStore('donations', { keyPath: 'id' });
             if (!db.objectStoreNames.contains('recurring')) db.createObjectStore('recurring', { keyPath: 'id' });
-            if (!db.objectStoreNames.contains('monthlyData')) db.createObjectStore('monthlyData', { keyPath: 'id' });
             if (!db.objectStoreNames.contains('categories')) db.createObjectStore('categories', { keyPath: 'id' });
             if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings', { keyPath: 'key' });
           };
@@ -948,12 +976,14 @@
         if (cats.length === 0) {
           await this.put('categories', { id: 'c1', name: 'כללי', color: '#475569' });
           await this.put('categories', { id: 'c2', name: 'נזקקים', color: '#059669' });
-          await this.put('categories', { id: 'c3', name: 'הוראת קבע ישיבה', color: '#1e3a8a' });
+          await this.put('categories', { id: 'c3', name: 'הוראת קבע ישיבה', color: '#1e293b' });
         }
+        const now = new Date();
         const defaults = [
           { key: 'baseMaaserAmount', value: 1000 },
           { key: 'maaserDay', value: 10 },
-          { key: 'annualGoal', value: 12000 }
+          { key: 'startMonth', value: now.getMonth() + 1 }, // ברירת מחדל: החודש הנוכחי
+          { key: 'startYear', value: now.getFullYear() }    // ברירת מחדל: השנה הנוכחית
         ];
         for (const s of defaults) {
           if (!await this.get('settings', s.key)) await this.put('settings', s);
@@ -1001,7 +1031,7 @@
       }
     }
 
-    /* סנכרון Firebase עם הפרויקט שלך: maaser-studioai */
+    /* סנכרון Firebase עם הפרויקט maaser-studioai */
     class CloudSync {
       constructor() {
         this.currentUser = null;
@@ -1027,7 +1057,7 @@
             if (u) await this.pull();
           });
         } catch(e) {
-          console.warn('Firebase sync offline');
+          console.warn('Firebase offline');
         }
       }
       async login() {
@@ -1081,6 +1111,11 @@
               await db.clear('categories');
               for (const c of d.categories) await db.put('categories', c);
             }
+            if (d.settings) {
+              for (const [k, v] of Object.entries(d.settings)) {
+                await db.put('settings', { key: k, value: v });
+              }
+            }
             await loadState();
             render();
             showToast('הנתונים סונכרנו מהענן!');
@@ -1126,7 +1161,7 @@
             <div>
               <strong>${u.displayName || 'משתמש Google'}</strong>
               <div class="text-muted" style="font-size:0.8rem;">${u.email || ''}</div>
-              <div class="text-emerald" style="font-size:0.78rem; font-weight:700;">● מחובר ומסונכרן אוטומטית</div>
+              <div style="color:var(--emerald); font-size:0.78rem; font-weight:700;">● מחובר ומסונכרן אוטומטית</div>
             </div>
           </div>
         `;
@@ -1143,49 +1178,57 @@
       }
     }
 
-    /* חישוב חודשים ומפל חישוב (כולל פריסת הוראות קבע!) */
+    /* חישוב מדויק החל מחודש ושנת ההתחלה שהוגדרו בלבד */
     function recalculateAllMonths() {
       const now = new Date();
       const currentYear = now.getFullYear();
       const currentMonth = now.getMonth() + 1;
       const baseDebt = Number(state.settings.baseMaaserAmount) || 1000;
 
-      // 1. פריסת הוראות קבע כרונולוגית (אם טרם נוספה תרומה לאותו חודש מהקבע)
-      const virtualDonations = [...state.donations];
-      
-      // איסוף כל החודשים מ-2026 עד החודש הנוכחי
-      const mKeys = [];
-      for (let m = 1; m <= currentMonth; m++) {
-        mKeys.push(getMonthKey(currentYear, m));
+      // קריאת חודש ושנת ההתחלה מההגדרות
+      const startYear = Number(state.settings.startYear) || currentYear;
+      const startMonth = Number(state.settings.startMonth) || currentMonth;
+
+      // בניית רשימת החודשים מחודש ההתחלה ועד החודש הנוכחי
+      const monthKeys = [];
+      let y = startYear;
+      let m = startMonth;
+
+      while (y < currentYear || (y === currentYear && m <= currentMonth)) {
+        monthKeys.push({ year: y, month: m, key: getMonthKey(y, m) });
+        m++;
+        if (m > 12) {
+          m = 1;
+          y++;
+        }
       }
 
-      // הוספת סכומי הוראות קבע לכל חודש פעיל
-      const recurringMonthlyTotal = state.recurring.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
+      // אם חודש ההתחלה בעתיד - לפחות נציג את החודש הנוכחי
+      if (monthKeys.length === 0) {
+        monthKeys.push({ year: currentYear, month: currentMonth, key: getMonthKey(currentYear, currentMonth) });
+      }
 
+      const recurringMonthlyTotal = state.recurring.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
       const monthsMap = new Map();
       let runningOpening = 0;
 
-      mKeys.forEach(k => {
-        const [yStr, mStr] = k.split('-');
-        const y = parseInt(yStr, 10);
-        const m = parseInt(mStr, 10);
-
+      monthKeys.forEach(item => {
         // תרומות רגילות לחודש זה
-        const monthDons = virtualDonations.filter(d => {
+        const monthDons = state.donations.filter(d => {
           const ym = getYearMonthFromIso(d.date);
-          return ym.year === y && ym.month === m;
+          return ym.year === item.year && ym.month === item.month;
         });
 
         const manualTotal = monthDons.reduce((s, d) => s + (Number(d.amount) || 0), 0);
         const totalDonated = manualTotal + recurringMonthlyTotal;
 
-        // סגירה = פתיחה + חוב בסיס - תרומות
+        // סגירה = יתרת פתיחה + חיוב חודש זה - תרומות
         const closing = Math.round((runningOpening + baseDebt - totalDonated) * 100) / 100;
 
-        monthsMap.set(k, {
-          key: k,
-          year: y,
-          month: m,
+        monthsMap.set(item.key, {
+          key: item.key,
+          year: item.year,
+          month: item.month,
           openingBalance: runningOpening,
           baseDebt: baseDebt,
           totalDonated: totalDonated,
@@ -1227,57 +1270,64 @@
       const currentMonth = now.getMonth() + 1;
       const curKey = getMonthKey(currentYear, currentMonth);
 
+      // חודש נוכחי ב-KPI
+      document.getElementById('heroCurrentMonthName').textContent = `${HEBREW_MONTHS[currentMonth - 1]} ${currentYear}`;
+
       const curM = state.monthlyData.find(m => m.key === curKey) || state.monthlyData[state.monthlyData.length - 1] || {
         closingBalance: 0, openingBalance: 0, totalDonated: 0, donationCount: 0, baseDebt: 1000
       };
 
       const closing = curM.closingBalance;
-      const heroContainer = document.getElementById('heroSummaryContainer');
       const heroAmount = document.getElementById('heroMainAmountDisplay');
       const heroDesc = document.getElementById('heroMainDescription');
       const heroStatePill = document.getElementById('heroBalanceStatePill');
 
-      // ניסוחים מעודנים ומדויקים (בלי המילה "חוב")
+      heroAmount.classList.remove('has-remainder', 'is-excess');
+
       if (closing > 0) {
         heroAmount.textContent = formatCurrency(closing);
-        heroAmount.className = 'hero-main-amount text-rose';
-        heroDesc.textContent = `סכום שנותר להפרשת מעשר החודש: ${formatCurrency(closing)}`;
+        heroAmount.classList.add('has-remainder');
+        heroDesc.textContent = `סכום שנותר להפרשת מעשר לחודש זה: ${formatCurrency(closing)}`;
         heroStatePill.textContent = 'נותר להפריש';
-        heroStatePill.style.background = 'rgba(225, 29, 72, 0.25)';
+        heroStatePill.style.background = 'rgba(244, 63, 94, 0.2)';
+        heroStatePill.style.color = '#fecdd3';
       } else if (closing < 0) {
         heroAmount.textContent = formatCurrency(Math.abs(closing));
-        heroAmount.className = 'hero-main-amount text-emerald';
+        heroAmount.classList.add('is-excess');
         heroDesc.textContent = `זכות מעשר מוקדמת! עודף של ${formatCurrency(Math.abs(closing))} המועבר לחודש הבא`;
         heroStatePill.textContent = 'זכות עודפת ✨';
-        heroStatePill.style.background = 'rgba(16, 185, 129, 0.25)';
+        heroStatePill.style.background = 'rgba(16, 185, 129, 0.2)';
+        heroStatePill.style.color = '#a7f3d0';
       } else {
         heroAmount.textContent = '₪0';
-        heroAmount.className = 'hero-main-amount';
         heroDesc.textContent = 'השלמת את מעשרות החודש ברווח! כל הסכום שולם במלואו ✨';
-        heroStatePill.textContent = 'מושלם ומאוזן';
-        heroStatePill.style.background = 'rgba(255, 255, 255, 0.2)';
+        heroStatePill.textContent = 'מאוזן ומדויק';
+        heroStatePill.style.background = 'rgba(255, 255, 255, 0.15)';
+        heroStatePill.style.color = '#ffffff';
       }
 
       // מד התקדמות יעד
-      const monthlyGoal = Number(state.settings.baseMaaserAmount) || 1000;
-      const pct = Math.min(Math.round((curM.totalDonated / (monthlyGoal || 1)) * 100), 100);
+      const monthlyBase = Number(state.settings.baseMaaserAmount) || 1000;
+      const pct = Math.min(Math.round((curM.totalDonated / (monthlyBase || 1)) * 100), 100);
       document.getElementById('progressDonatedSum').textContent = formatCurrency(curM.totalDonated);
-      document.getElementById('progressGoalSum').textContent = `חיוב חודשי: ${formatCurrency(monthlyGoal)}`;
+      document.getElementById('progressGoalSum').textContent = `חיוב חודש זה: ${formatCurrency(monthlyBase)}`;
       document.getElementById('progressBarFill').style.width = `${pct}%`;
 
-      // 4 קוביות מדדים
+      // 4 קוביות מדדים (כולל "מספר תרומות החודש")
       document.getElementById('statBaseMaaserAmount').textContent = formatCurrency(curM.baseDebt);
       document.getElementById('statDonatedThisMonth').textContent = formatCurrency(curM.totalDonated);
       document.getElementById('statCountThisMonth').textContent = curM.donationCount;
       document.getElementById('statOpeningBalance').textContent = formatCurrency(curM.openingBalance);
 
-      // יעד שנתי
+      // יעד שנתי (מחושב מ-חודשי × 12)
+      const calculatedAnnualGoal = monthlyBase * 12;
+      document.getElementById('annualGoalSum').textContent = formatCurrency(calculatedAnnualGoal);
+      document.getElementById('cfgAnnualGoalDisplay').value = formatCurrency(calculatedAnnualGoal);
+
       const ytdDons = state.donations.filter(d => getYearMonthFromIso(d.date).year === currentYear);
       const recSumYear = state.recurring.reduce((s, r) => s + (Number(r.amount) || 0), 0) * currentMonth;
       const ytdTotal = ytdDons.reduce((s, d) => s + (Number(d.amount) || 0), 0) + recSumYear;
-      const annualGoal = Number(state.settings.annualGoal) || 12000;
       document.getElementById('annualYtdSum').textContent = formatCurrency(ytdTotal);
-      document.getElementById('annualGoalSum').textContent = formatCurrency(annualGoal);
 
       const daysPassed = Math.max(Math.ceil((now - new Date(currentYear, 0, 1)) / (1000 * 60 * 60 * 24)), 1);
       document.getElementById('annualPaceForecast').textContent = `${formatCurrency(Math.round((ytdTotal / daysPassed) * 365))} (קצב צפוי)`;
@@ -1286,24 +1336,25 @@
       document.getElementById('recentDonationsListContainer').innerHTML = state.donations.slice(0, 4).map(renderDonationItemHtml).join('') || '<p class="text-muted" style="text-align:center; padding:14px 0;">אין עדיין תרומות החודש</p>';
       document.getElementById('allDonationsListContainer').innerHTML = state.donations.map(renderDonationItemHtml).join('') || '<p class="text-muted">אין תרומות רשומות</p>';
 
-      // רשימת הוראות קבע
       renderRecurringList();
-
-      // רשימת חודשים
       renderMonthsList();
 
-      // סלקט קטגוריות
+      // סלקטים
       const catOpts = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
       document.getElementById('selectDonationCategory').innerHTML = catOpts;
       document.getElementById('recCategory').innerHTML = catOpts;
-
-      // רשימת הצעות למוטבים
       document.getElementById('beneficiarySuggestions').innerHTML = Array.from(new Set(state.donations.map(d => d.beneficiary))).map(b => `<option value="${b}">`).join('');
 
-      // הגדרות
+      // מילוי סלקט חודש התחלה בהגדרות
+      const startMonthSelect = document.getElementById('cfgStartMonth');
+      startMonthSelect.innerHTML = HEBREW_MONTHS.map((name, i) => `
+        <option value="${i + 1}" ${Number(state.settings.startMonth || currentMonth) === (i + 1) ? 'selected' : ''}>${name}</option>
+      `).join('');
+
+      document.getElementById('cfgStartYear').value = state.settings.startYear || currentYear;
       document.getElementById('cfgBaseMaaserAmount').value = state.settings.baseMaaserAmount || 1000;
       document.getElementById('cfgMaaserDay').value = state.settings.maaserDay || 10;
-      document.getElementById('cfgAnnualGoal').value = state.settings.annualGoal || 12000;
+
       document.getElementById('settingsCategoriesList').innerHTML = state.categories.map(c => `
         <li style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
           <div style="display:flex; align-items:center; gap:8px;">
@@ -1354,7 +1405,7 @@
             </div>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
-            <strong style="font-size:1.15rem; color:var(--primary);">${formatCurrency(r.amount)}</strong>
+            <strong style="font-size:1.15rem; color:var(--primary-accent);">${formatCurrency(r.amount)}</strong>
             <button type="button" class="link-action-btn" style="color:var(--rose);" onclick="deleteRecurring('${r.id}')">הסר</button>
           </div>
         </div>
@@ -1383,7 +1434,6 @@
       }).join('');
     }
 
-    /* אירועים וניווט */
     function switchTab(targetId) {
       document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1406,25 +1456,19 @@
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
       });
 
-      document.getElementById('btnOpenNewDonation').addEventListener('click', () => {
-        openNewDonationForm();
-      });
-      document.getElementById('btnSeeAllDonations').addEventListener('click', () => {
-        switchTab('view-history');
-      });
+      document.getElementById('btnOpenNewDonation').addEventListener('click', () => openNewDonationForm());
+      document.getElementById('btnSeeAllDonations').addEventListener('click', () => switchTab('view-history'));
       document.getElementById('btnDismissForm').addEventListener('click', () => switchTab('view-dashboard'));
       document.getElementById('btnCancelFormAction').addEventListener('click', () => switchTab('view-dashboard'));
       document.getElementById('btnTopProfileAvatar').addEventListener('click', () => switchTab('view-settings'));
       document.getElementById('btnQuickGoogleLogin').addEventListener('click', () => cloud.login());
 
-      // כפתורי סכום מהיר
       document.querySelectorAll('.pill-amt').forEach(b => {
         b.addEventListener('click', () => {
           document.getElementById('inpDonationAmount').value = b.dataset.val;
         });
       });
 
-      // בחירת תאריך נוחה בלחיצה מלאה
       const nativePicker = document.getElementById('inpNativeDate');
       const displayPicker = document.getElementById('inpDisplayDate');
       nativePicker.addEventListener('change', () => {
@@ -1491,7 +1535,7 @@
         await notifyChanges();
       });
 
-      // מודאל הוראת קבע
+      // הוראת קבע
       document.getElementById('btnOpenNewRecurringModal').addEventListener('click', () => {
         document.getElementById('recurringForm').reset();
         document.getElementById('recurringModal').classList.remove('hidden');
@@ -1522,24 +1566,27 @@
         await notifyChanges();
       });
 
-      // שמירת הגדרות מעשר
+      // שמירת הגדרות מעשר (כולל חודש ושנת התחלה)
       document.getElementById('settingsMaaserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        const startMonth = parseInt(document.getElementById('cfgStartMonth').value, 10);
+        const startYear = parseInt(document.getElementById('cfgStartYear').value, 10);
         const base = parseFloat(document.getElementById('cfgBaseMaaserAmount').value) || 1000;
         const day = parseInt(document.getElementById('cfgMaaserDay').value, 10) || 10;
-        const aGoal = parseFloat(document.getElementById('cfgAnnualGoal').value) || 12000;
 
+        state.settings.startMonth = startMonth;
+        state.settings.startYear = startYear;
         state.settings.baseMaaserAmount = base;
         state.settings.maaserDay = day;
-        state.settings.annualGoal = aGoal;
 
         await Promise.all([
+          db.put('settings', { key: 'startMonth', value: startMonth }),
+          db.put('settings', { key: 'startYear', value: startYear }),
           db.put('settings', { key: 'baseMaaserAmount', value: base }),
-          db.put('settings', { key: 'maaserDay', value: day }),
-          db.put('settings', { key: 'annualGoal', value: aGoal })
+          db.put('settings', { key: 'maaserDay', value: day })
         ]);
 
-        showToast('ההגדרות עודכנו בהצלחה');
+        showToast('ההגדרות עודכנו, והחישובים סודרו מחדש!');
         await notifyChanges();
       });
 
@@ -1564,7 +1611,7 @@
         await notifyChanges();
       });
 
-      // ייצוא אקסל CSV
+      // ייצוא CSV
       document.getElementById('btnExportToExcel').addEventListener('click', () => {
         const headers = ['תאריך', 'מוטב', 'סכום', 'קטגוריה', 'אמצעי תשלום', 'סעיף 46'];
         const rows = state.donations.map(d => [
