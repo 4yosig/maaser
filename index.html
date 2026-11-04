@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <meta name="theme-color" content="#1d4ed8">
+  <meta name="theme-color" content="#1e3a8a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="מעשר">
-  <meta name="description" content="ניהול מעשר כספים חכם, מדויק ומסונכרן אישית בענן">
+  <meta name="apple-mobile-web-app-title" content="מעשר כספים">
   <title>מעשר כספים</title>
 
-  <!-- PWA Icons -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231d4ed8'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231d4ed8'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <!-- PWA Web Icons -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231e3a8a'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%231e3a8a'/><text x='50' y='68' font-size='55' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
 
   <!-- Google Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -21,1005 +20,863 @@
 
   <style>
     :root {
-      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      --color-primary: #1d4ed8;
-      --color-primary-hover: #1e40af;
-      --color-primary-light: #eff6ff;
-      --color-debt: #dc2626;
-      --color-debt-bg: #fef2f2;
-      --color-debt-border: #fecaca;
-      --color-excess: #16a34a;
-      --color-excess-bg: #f0fdf4;
-      --color-excess-border: #bbf7d0;
-      --color-neutral: #475569;
-      --color-neutral-bg: #f1f5f9;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --primary-accent: #3b82f6;
+      --emerald: #059669;
+      --emerald-bg: #ecfdf5;
+      --amber: #d97706;
+      --amber-bg: #fffbeb;
+      --rose: #e11d48;
+      --rose-bg: #fff1f2;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-400: #94a3b8;
+      --slate-600: #475569;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      
       --bg-app: #f8fafc;
       --bg-card: #ffffff;
-      --bg-card-subtle: #f8fafc;
-      --border-color: #e2e8f0;
-      --border-focus: #3b82f6;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
+      --border: #e2e8f0;
+      --shadow-soft: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+      --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
       --radius-full: 9999px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
-      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.04);
-      --shadow-lg: 0 10px 20px -3px rgba(0,0,0,0.09);
-      --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: 200ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     [data-theme="dark"] {
       --bg-app: #090d16;
-      --bg-card: #131b2e;
-      --bg-card-subtle: #0f172a;
-      --border-color: #1e293b;
-      --border-focus: #60a5fa;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --color-primary: #3b82f6;
-      --color-primary-hover: #60a5fa;
-      --color-primary-light: #1e293b;
-      --color-debt: #f87171;
-      --color-debt-bg: #450a0a;
-      --color-debt-border: #7f1d1d;
-      --color-excess: #4ade80;
-      --color-excess-bg: #052e16;
-      --color-excess-border: #14532d;
-      --color-neutral: #cbd5e1;
-      --color-neutral-bg: #1e293b;
+      --bg-card: #131d31;
+      --border: #1e293b;
+      --slate-100: #1e293b;
+      --slate-50: #0f172a;
+      --slate-800: #f1f5f9;
+      --slate-900: #ffffff;
+      --slate-600: #94a3b8;
+      --primary-light: #1e293b;
+      --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+      --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
-      font-family: var(--font);
+      font-family: var(--font-family);
       background-color: var(--bg-app);
-      color: var(--text-main);
-      line-height: 1.5;
+      color: var(--slate-900);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: calc(75px + env(safe-area-inset-bottom));
+      padding-bottom: calc(85px + env(safe-area-inset-bottom));
       user-select: none;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* פס עליון מעוצב */
-    .app-header {
+    /* פס עליון מעוצב (Header) */
+    .top-bar {
       position: sticky;
       top: 0;
       z-index: 40;
-      background-color: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
       padding-top: env(safe-area-inset-top);
-      box-shadow: var(--shadow-sm);
     }
-    [data-theme="dark"] .app-header { background-color: rgba(19, 27, 46, 0.92); }
-    .header-inner {
+    [data-theme="dark"] .top-bar { background: rgba(19, 29, 49, 0.88); }
+    
+    .top-bar-inner {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--slate-900);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      max-width: 680px;
-      margin: 0 auto;
+      gap: 8px;
     }
-    .header-title { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.3px; }
-    .header-sync-status {
+
+    .header-sub-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-size: 0.74rem;
       font-weight: 700;
-      margin-top: 2px;
-      cursor: pointer;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: var(--radius-full);
-      background: var(--bg-card-subtle);
-      border: 1px solid var(--border-color);
+      background: var(--slate-100);
+      color: var(--slate-600);
+      border: 1px solid var(--border);
+      margin-top: 3px;
     }
-    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #94a3b8; }
-    .sync-dot.synced { background-color: #22c55e; }
-    .sync-dot.syncing { background-color: #eab308; animation: pulse 1s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-    .user-avatar-btn {
-      width: 40px;
-      height: 40px;
+    .sync-indicator {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      border: 2px solid var(--border-color);
-      overflow: hidden;
-      cursor: pointer;
+      background: #94a3b8;
+    }
+    .sync-indicator.active { background: #10b981; }
+
+    .user-profile-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: var(--slate-100);
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg-card-subtle);
-      font-size: 1rem;
-      transition: transform var(--transition);
+      overflow: hidden;
+      cursor: pointer;
     }
-    .user-avatar-btn:active { transform: scale(0.92); }
-    .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+    .user-profile-btn img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* תוכן ראשי */
-    .main-content {
+    /* תוכן מרכזי */
+    .content-area {
       width: 100%;
-      max-width: 680px;
+      max-width: 650px;
       margin: 0 auto;
       padding: 16px;
       flex: 1;
     }
-    .tab-view { display: none; animation: fadeIn var(--transition); }
-    .tab-view.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* כרטיסים */
-    .card {
-      background-color: var(--bg-card);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow-sm);
-    }
-    .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .tab-section { display: none; animation: slideUp 240ms ease-out forwards; }
+    .tab-section.active { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* באנר התחברות לגוגל */
-    .google-sync-banner {
-      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-      color: #fff;
-      border-radius: var(--radius-md);
-      padding: 16px;
+    /* כרטיס Hero מודרני מרווח */
+    .hero-summary-card {
+      background: linear-gradient(145deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
       margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      box-shadow: var(--shadow-md);
-    }
-    .google-sync-banner.hidden { display: none; }
-    .google-sync-banner h3 { font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
-    .google-sync-banner p { font-size: 0.85rem; opacity: 0.95; line-height: 1.4; }
-    .google-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: #ffffff;
-      color: #1f2937;
-      border: 1px solid #e5e7eb;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 11px 16px;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      box-shadow: var(--shadow-sm);
-      transition: transform var(--transition), background-color var(--transition);
-    }
-    .google-btn:active { transform: scale(0.98); background: #f3f4f6; }
-    .google-btn svg { width: 18px; height: 18px; }
-
-    /* כרטיס יתרה Hero מרכזי */
-    .hero-card {
+      box-shadow: 0 12px 30px -6px rgba(30, 58, 138, 0.35);
       position: relative;
-      border-right: 6px solid var(--color-primary);
-      background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-card-subtle) 100%);
       overflow: hidden;
     }
-    .hero-card.is-debt { border-right-color: var(--color-debt); background: linear-gradient(180deg, var(--bg-card) 0%, var(--color-debt-bg) 100%); }
-    .hero-card.is-excess { border-right-color: var(--color-excess); background: linear-gradient(180deg, var(--bg-card) 0%, var(--color-excess-bg) 100%); }
-    .hero-top { display: flex; justify-content: space-between; align-items: center; }
-    .hero-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-    .status-badge {
-      font-size: 0.78rem;
+
+    .hero-summary-card::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      left: -40px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .hero-card-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .hero-state-pill {
+      font-size: 0.76rem;
       font-weight: 700;
       padding: 4px 12px;
       border-radius: var(--radius-full);
-      background-color: var(--color-neutral-bg);
-      color: var(--color-neutral);
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
-    .status-badge.debt { background-color: var(--color-debt-bg); color: var(--color-debt); border: 1px solid var(--color-debt-border); }
-    .status-badge.excess { background-color: var(--color-excess-bg); color: var(--color-excess); border: 1px solid var(--color-excess-border); }
-    .hero-amount { font-size: 2.4rem; font-weight: 900; margin: 4px 0; letter-spacing: -1px; }
-    .hero-status-desc { font-size: 0.92rem; font-weight: 600; color: var(--text-muted); }
 
-    .monthly-progress-block {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px dashed var(--border-color);
+    .hero-main-amount {
+      font-size: 2.5rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 8px;
     }
-    .progress-labels { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; }
-    .progress-percent { font-weight: 800; color: var(--color-primary); }
-    .progress-bar-track {
+
+    .hero-explanation {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 18px;
+    }
+
+    /* מד התקדמות פרימיום */
+    .progress-box {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .progress-labels-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .progress-track-bg {
       width: 100%;
-      height: 10px;
-      background-color: var(--border-color);
+      height: 8px;
+      background: rgba(255, 255, 255, 0.22);
       border-radius: var(--radius-full);
       overflow: hidden;
     }
-    .progress-bar-fill { height: 100%; background-color: var(--color-primary); border-radius: var(--radius-full); transition: width var(--transition); }
 
-    /* רשת מדדים */
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .stat-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 12px 14px;
+    .progress-bar-fill-bar {
+      height: 100%;
+      background: #10b981;
+      border-radius: var(--radius-full);
+      transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .stat-label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
-    .stat-val { font-size: 1.25rem; font-weight: 800; }
-    .stat-val.highlight { color: var(--color-primary); }
 
-    /* Quick stats */
-    .quick-stats-row { display: flex; gap: 8px; margin-bottom: 14px; }
-    .quick-stat-item {
-      flex: 1;
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 10px 6px;
-      text-align: center;
+    /* כרטיסיות מידע (Stats Grid) */
+    .stats-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
     }
-    .qs-title { display: block; font-size: 0.72rem; color: var(--text-muted); }
-    .qs-val { font-size: 0.95rem; font-weight: 800; margin-top: 2px; }
 
-    /* שורות תרומה */
-    .donation-row-item {
+    .micro-stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .micro-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--slate-600);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .micro-value {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .micro-value.accent { color: var(--emerald); }
+
+    /* רשימת תרומות אחרונות נקייה */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .section-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .section-headline {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .link-action-btn {
+      background: none;
+      border: none;
+      color: var(--primary-accent);
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .donation-item-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 12px 14px;
       border-radius: var(--radius-md);
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-card);
+      background: var(--slate-50);
+      border: 1px solid var(--border);
       margin-bottom: 8px;
       cursor: pointer;
-      min-height: 52px;
-      transition: transform var(--transition), background-color var(--transition);
+      transition: background var(--transition);
     }
-    .donation-row-item:active { transform: scale(0.98); background-color: var(--bg-card-subtle); }
-    .donation-beneficiary { font-weight: 700; font-size: 1rem; }
-    .donation-meta {
-      font-size: 0.78rem;
-      color: var(--text-muted);
+    .donation-item-row:hover { background: var(--slate-100); }
+
+    .donation-title { font-size: 0.95rem; font-weight: 700; color: var(--slate-900); }
+    .donation-tags {
       display: flex;
-      gap: 8px;
       align-items: center;
-      margin-top: 3px;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 0.76rem;
+      color: var(--slate-600);
     }
-    .cat-pill {
-      padding: 2px 8px;
+
+    .category-bubble {
+      padding: 1px 8px;
       border-radius: var(--radius-full);
-      font-size: 0.75rem;
+      font-size: 0.72rem;
+      font-weight: 700;
       color: #fff;
-      font-weight: 600;
     }
-    .donation-sum { font-size: 1.15rem; font-weight: 800; }
+
+    .donation-amount-sum {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--slate-900);
+      direction: ltr;
+    }
+
+    /* כרטיס הוראות קבע (Recurring) */
+    .recurring-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      border: 1.5px dashed var(--border);
+      margin-bottom: 10px;
+    }
 
     /* טפסים */
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
-    .required-star { color: var(--color-debt); }
-    .form-control {
+    .input-block { margin-bottom: 16px; }
+    .input-label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
+    
+    .text-input-field {
       width: 100%;
-      padding: 12px 14px;
+      height: 48px;
+      padding: 10px 14px;
       font-size: 16px;
       font-family: inherit;
-      border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      background-color: var(--bg-card);
-      color: var(--text-main);
-      min-height: 48px;
-      user-select: text;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--slate-900);
       transition: border-color var(--transition), box-shadow var(--transition);
     }
-    .form-control:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-    .validation-msg { font-size: 0.8rem; color: var(--color-debt); margin-top: 4px; min-height: 18px; }
+    .text-input-field:focus {
+      outline: none;
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+    }
 
-    /* Date Picker Row המעודכן - לחיצה על כל השורה פותחת לוח שנה */
-    .date-input-field-wrap {
+    /* בחירת תאריך נוחה בלחיצה מלאה */
+    .date-row-picker-wrap {
       position: relative;
       cursor: pointer;
-      display: flex;
-      align-items: center;
     }
-    .date-input-field-wrap .form-control {
+    .date-row-picker-wrap .text-input-field {
       cursor: pointer;
-      padding-left: 42px;
-      font-weight: 600;
+      font-weight: 700;
     }
-    .date-picker-icon-btn {
+    .hidden-native-date-picker {
       position: absolute;
-      left: 10px;
-      background: none;
-      border: none;
-      font-size: 1.25rem;
-      cursor: pointer;
-      pointer-events: none;
-    }
-    .native-hidden-date {
-      position: absolute;
-      opacity: 0;
-      pointer-events: auto;
       inset: 0;
       width: 100%;
       height: 100%;
+      opacity: 0;
       cursor: pointer;
       z-index: 2;
     }
 
-    /* צ'יפים לסכום ולתאריך */
-    .quick-chips { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-    .chip-btn {
-      background-color: var(--bg-card-subtle);
-      border: 1px solid var(--border-color);
+    /* צ'יפים מהירים */
+    .quick-pill-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .quick-pill-btn {
+      background: var(--slate-100);
+      border: 1px solid var(--border);
       border-radius: var(--radius-full);
       padding: 6px 14px;
       font-size: 0.82rem;
-      cursor: pointer;
-      color: var(--text-main);
-      font-weight: 600;
-      transition: transform var(--transition), background-color var(--transition);
-    }
-    .chip-btn:active { transform: scale(0.92); }
-    .chip-btn.active { background-color: var(--color-primary); color: #fff; border-color: var(--color-primary); }
-
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      min-height: 44px;
-    }
-    .checkbox-label input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--color-primary); }
-
-    /* כפתורים */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-family: inherit;
       font-weight: 700;
+      color: var(--slate-800);
+      cursor: pointer;
+    }
+    .quick-pill-btn:hover { background: var(--border); }
+
+    /* כפתורים מודרניים */
+    .action-button-main {
+      width: 100%;
+      height: 50px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
       font-size: 1rem;
-      padding: 12px 20px;
-      border-radius: var(--radius-md);
-      border: 1px solid transparent;
+      font-weight: 800;
       cursor: pointer;
-      min-height: 48px;
-      text-decoration: none;
-      transition: transform var(--transition), opacity var(--transition);
-    }
-    .btn:active { transform: scale(0.98); opacity: 0.9; }
-    .btn-sm { padding: 8px 14px; font-size: 0.85rem; min-height: 38px; }
-    .btn-primary { background-color: var(--color-primary); color: #fff; }
-    .btn-secondary { background-color: var(--bg-card-subtle); border-color: var(--border-color); color: var(--text-main); }
-    .btn-danger { background-color: var(--color-debt); color: #fff; }
-    .btn-outline { background: transparent; border-color: var(--border-color); color: var(--text-main); }
-    .btn-danger-outline { background: transparent; border-color: var(--color-debt); color: var(--color-debt); }
-    .btn-link { background: none; border: none; color: var(--color-primary); font-size: 0.88rem; cursor: pointer; padding: 4px; font-weight: 700; }
-    .btn-icon { background: none; border: none; font-size: 1.3rem; cursor: pointer; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-full); color: var(--text-main); }
-    .w-100 { width: 100%; }
-    .form-actions-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
-    .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
-
-    /* סרגל ניווט תחתון */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 64px;
-      background-color: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding-bottom: env(safe-area-inset-bottom);
-      z-index: 50;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
-    }
-    [data-theme="dark"] .bottom-nav { background-color: rgba(19, 27, 46, 0.95); }
-    .nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: none;
-      border: none;
-      height: 100%;
-      cursor: pointer;
-      color: var(--text-muted);
-      padding: 4px 0;
-      transition: color var(--transition);
-    }
-    .nav-item.active { color: var(--color-primary); font-weight: 800; }
-    .nav-icon { font-size: 1.3rem; line-height: 1; }
-    .nav-label { font-size: 0.72rem; margin-top: 2px; }
-
-    /* Segmented Control */
-    .segmented-control {
-      display: flex;
-      background-color: var(--bg-card-subtle);
-      padding: 4px;
-      border-radius: var(--radius-md);
-      margin-bottom: 16px;
-      border: 1px solid var(--border-color);
-    }
-    .seg-btn {
-      flex: 1;
-      border: none;
-      background: none;
-      padding: 8px;
-      border-radius: var(--radius-sm);
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      color: var(--text-muted);
-    }
-    .seg-btn.active { background-color: var(--bg-card); color: var(--text-main); box-shadow: var(--shadow-sm); }
-    .subtab-content { display: none; }
-    .subtab-content.active { display: block; }
-
-    /* חודשים */
-    .month-card {
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-card);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: transform var(--transition);
-    }
-    .month-card:active { transform: scale(0.99); }
-    .month-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .month-name { font-size: 1.05rem; font-weight: 800; }
-    .month-details-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 0.82rem; color: var(--text-muted); }
-    .month-details-grid strong { display: block; color: var(--text-main); font-size: 0.95rem; }
-
-    /* מסך פתיחה ואשף הגדרות (Onboarding Wizard) */
-    .onboarding-card {
-      max-width: 480px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .category-chip-select {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: var(--radius-full);
-      border: 1.5px solid var(--border-color);
-      background: var(--bg-card-subtle);
-      cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all var(--transition);
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(30, 58, 138, 0.25);
     }
-    .category-chip-select.selected {
-      background: var(--color-primary-light);
-      border-color: var(--color-primary);
-      color: var(--color-primary);
+    .action-button-main:active { transform: scale(0.98); }
+
+    .action-button-secondary {
+      width: 100%;
+      height: 48px;
+      background: var(--slate-100);
+      color: var(--slate-800);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    /* Toasts */
-    .toast-container {
+    /* סרגל ניווט צף תחתון (Floating Navigation) */
+    .floating-bottom-nav {
       position: fixed;
-      top: calc(env(safe-area-inset-top) + 14px);
+      bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
-      width: 90%;
-      max-width: 380px;
-      z-index: 100;
+      width: calc(100% - 24px);
+      max-width: 500px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      box-shadow: var(--shadow-card);
+      z-index: 50;
+      padding: 0 8px;
+    }
+    [data-theme="dark"] .floating-bottom-nav { background: rgba(19, 29, 49, 0.94); }
+
+    .nav-tab-btn {
+      flex: 1;
+      height: 100%;
+      background: none;
+      border: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      pointer-events: none;
-    }
-    .toast {
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      font-size: 0.9rem;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate-400);
+      cursor: pointer;
+      font-size: 0.72rem;
       font-weight: 700;
-      color: #fff;
-      box-shadow: var(--shadow-lg);
-      animation: slideDown 250ms ease;
+      gap: 2px;
+      transition: color var(--transition);
     }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-    .toast.success { background-color: var(--color-excess); }
-    .toast.error { background-color: var(--color-debt); }
-    .toast.info { background-color: var(--color-primary); }
+    .nav-tab-btn.active { color: var(--primary); }
+    [data-theme="dark"] .nav-tab-btn.active { color: #60a5fa; }
+    .nav-tab-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-    /* Modals */
-    .modal-backdrop {
+    /* דיאלוגים מודאליים */
+    .dialog-backdrop {
       position: fixed;
       inset: 0;
-      background-color: rgba(0, 0, 0, 0.6);
+      background: rgba(15, 23, 42, 0.6);
       backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      z-index: 90;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      z-index: 90;
     }
-    .modal-card {
-      background-color: var(--bg-card);
+    .dialog-card-box {
+      background: var(--bg-card);
       border-radius: var(--radius-lg);
-      padding: 22px;
+      padding: 24px;
       width: 100%;
       max-width: 440px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border);
     }
-    .modal-actions { display: flex; gap: 8px; margin-top: 20px; justify-content: flex-end; }
+
+    .toast-msg-box {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--slate-900);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-weight: 700;
+      box-shadow: var(--shadow-card);
+      z-index: 100;
+      animation: fadeIn 200ms ease;
+    }
 
     .hidden { display: none !important; }
-    .text-muted { color: var(--text-muted); }
-    .m-0 { margin: 0; }
-    .mt-xs { margin-top: 4px; }
-    .mt-sm { margin-top: 8px; }
-    .mt-md { margin-top: 14px; }
-    .sub-label { font-size: 0.75rem; color: var(--text-muted); }
-    .empty-state { text-align: center; padding: 24px 16px; color: var(--text-muted); }
-    .chart-container { width: 100%; overflow-x: auto; }
-    .chart-svg { width: 100%; height: 210px; display: block; }
+    .text-emerald { color: var(--emerald); }
+    .text-rose { color: var(--rose); }
+    .text-muted { color: var(--slate-600); }
   </style>
 </head>
 <body>
 
   <!-- פס עליון -->
-  <header class="app-header">
-    <div class="header-inner">
+  <header class="top-bar">
+    <div class="top-bar-inner">
       <div>
-        <h1 class="header-title" id="pageHeaderTitle">ניהול מעשר</h1>
-        <div class="header-sync-status" id="headerSyncStatus" title="מצב סנכרון">
-          <span class="sync-dot" id="syncDot"></span>
-          <span id="syncText">מקומי (התחבר לסנכרון)</span>
+        <div class="brand-title">
+          <span>מעשר כספים</span>
+          <span style="font-size:1.1rem;">🕊️</span>
+        </div>
+        <div class="header-sub-badge" id="headerSyncStatusBadge">
+          <span class="sync-indicator" id="headerSyncDot"></span>
+          <span id="headerSyncText">מקומי</span>
         </div>
       </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <button type="button" class="user-avatar-btn" id="userAvatarBtn" title="חשבון Google" aria-label="חשבון משתמש">
-          <span id="userAvatarPlaceholder">👤</span>
+      <div>
+        <button type="button" class="user-profile-btn" id="btnTopProfileAvatar" aria-label="פרופיל משתמש">
+          <span id="topAvatarLetter">👤</span>
         </button>
-        <button type="button" class="btn-icon" id="quickAddBtn" aria-label="הוסף תרומה">➕</button>
       </div>
     </div>
   </header>
 
-  <!-- הודעות קופצות -->
-  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+  <!-- התראה צפה -->
+  <div id="toastContainer" class="hidden toast-msg-box"></div>
 
   <!-- תוכן ראשי -->
-  <main class="main-content">
+  <main class="content-area">
 
     <!-- מסך 1: ראשי (Dashboard) -->
-    <section id="tab-dashboard" class="tab-view active">
+    <section id="view-dashboard" class="tab-section active">
       
-      <!-- באנר התחברות לגוגל -->
-      <div class="google-sync-banner" id="googleLoginBanner">
-        <h3>
-          <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#ffffff" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/></svg>
-          שמירה וסנכרון אוטומטי בחשבון Google
-        </h3>
-        <p>התחבר פעם אחת כדי שכל תרומה ושינוי יישמרו ישירות בענן של גוגל ויהיו זמינים בכל מכשיר.</p>
-        <button type="button" class="google-btn" id="btnGoogleSignInMain">
-          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-          התחבר עם Google
-        </button>
+      <!-- באנר התחברות Google (אם עדיין לא מחובר) -->
+      <div id="bannerGoogleConnect" class="section-card hidden" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-color: #bfdbfe;">
+        <h3 style="font-size:1rem; font-weight:800; color:#1e3a8a; margin-bottom:4px;">סנכרון ענן אישי עם Google ☁️</h3>
+        <p style="font-size:0.84rem; color:#1e40af; margin-bottom:12px;">התחבר כדי שהתרומות והמעשרות שלך יגובו ויתעדכנו בכל מכשיר.</p>
+        <button type="button" class="action-button-main" id="btnQuickGoogleLogin" style="height:44px; font-size:0.9rem;">התחבר עם חשבון Google</button>
       </div>
 
-      <!-- כרטיס יתרה Hero מרכזי -->
-      <article class="card hero-card" id="heroCard">
-        <div class="hero-top">
-          <span class="hero-label">יתרת מעשר לחודש זה</span>
-          <span class="status-badge" id="heroStatusBadge">מעודכן</span>
+      <!-- כרטיס מעשר מרכזי מעוצב -->
+      <div class="hero-summary-card" id="heroSummaryContainer">
+        <div class="hero-card-header">
+          <span class="hero-card-label" id="heroBalanceLabel">מאזן מעשרות עדכני</span>
+          <span class="hero-state-pill" id="heroBalanceStatePill">חודש נוכחי</span>
         </div>
-        <div class="hero-amount" id="heroBalanceAmount">₪0</div>
-        <div class="hero-status-desc" id="heroStatusDesc">אין חוב פעיל לחודש זה</div>
-        
-        <div class="monthly-progress-block">
-          <div class="progress-labels">
-            <span>יעד חודשי: <strong id="progressDonatedTxt">₪0</strong> מתוך <span id="progressGoalTxt">₪1,000</span></span>
-            <span id="progressPercentTxt" class="progress-percent">0%</span>
+        <div class="hero-main-amount" id="heroMainAmountDisplay">₪0</div>
+        <div class="hero-explanation" id="heroMainDescription">הכל מעודכן ומסודר</div>
+
+        <!-- מד התקדמות יעד חודשי -->
+        <div class="progress-box">
+          <div class="progress-labels-row">
+            <span>הופרש החודש: <strong id="progressDonatedSum">₪0</strong></span>
+            <span id="progressGoalSum">יעד: ₪1,000</span>
           </div>
-          <div class="progress-bar-track">
-            <div class="progress-bar-fill" id="monthlyProgressFill" style="width: 0%;"></div>
+          <div class="progress-track-bg">
+            <div class="progress-bar-fill-bar" id="progressBarFill" style="width: 0%;"></div>
           </div>
         </div>
-      </article>
+      </div>
 
-      <!-- רשת מדדים חודשיים -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <span class="stat-label">חוב חודשי בסיס</span>
-          <span class="stat-val" id="statBaseDebt">₪0</span>
+      <!-- רשת מדדים (2x2) -->
+      <div class="stats-card-grid">
+        <div class="micro-stat-card">
+          <span class="micro-label">חיוב מעשר מוגדר</span>
+          <span class="micro-value" id="statBaseMaaserAmount">₪1,000</span>
         </div>
-        <div class="stat-card">
-          <span class="stat-label">נתרם החודש</span>
-          <span class="stat-val highlight" id="statTotalDonated">₪0</span>
+        <div class="micro-stat-card">
+          <span class="micro-label">הופרש בפועל החודש</span>
+          <span class="micro-value accent" id="statDonatedThisMonth">₪0</span>
         </div>
-        <div class="stat-card">
-          <span class="stat-label">מספר תרומות</span>
-          <span class="stat-val" id="statDonationCount">0</span>
+        <div class="micro-stat-card">
+          <span class="micro-label">מספר תרומות</span>
+          <span class="micro-value" id="statCountThisMonth">0</span>
         </div>
-        <div class="stat-card">
-          <span class="stat-label">יתרת פתיחה</span>
-          <span class="stat-val" id="statOpeningBalance">₪0</span>
+        <div class="micro-stat-card">
+          <span class="micro-label">יתרה מחודש קודם</span>
+          <span class="micro-value" id="statOpeningBalance">₪0</span>
         </div>
       </div>
 
-      <!-- מדדים מהירים -->
-      <div class="quick-stats-row">
-        <div class="quick-stat-item">
-          <span class="qs-title">ממוצע לתרומה</span>
-          <span class="qs-val" id="qsAverage">₪0</span>
+      <!-- תרומות אחרונות -->
+      <div class="section-card">
+        <div class="section-header-row">
+          <h2 class="section-headline">הפרשות ותרומות אחרונות</h2>
+          <button type="button" class="link-action-btn" id="btnSeeAllDonations">לכל הרשימה ←</button>
         </div>
-        <div class="quick-stat-item">
-          <span class="qs-title">תרומה מקסימלית</span>
-          <span class="qs-val" id="qsMax">₪0</span>
-        </div>
-        <div class="quick-stat-item">
-          <span class="qs-title">רצף (ימים)</span>
-          <span class="qs-val" id="qsStreak">0 ימים</span>
-        </div>
+        <div id="recentDonationsListContainer"></div>
+        <button type="button" class="action-button-main" id="btnOpenNewDonation" style="margin-top:14px;">➕ הוסף תרומה חדשה</button>
       </div>
 
-      <!-- יעד שנתי -->
-      <article class="card">
-        <h2 class="card-title">יעד שנתי ותחזית</h2>
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+      <!-- כרטיס יעד שנתי מרווח -->
+      <div class="section-card">
+        <h2 class="section-headline" style="margin-bottom:10px;">יעד שנתי ומעקב</h2>
+        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
           <div>
-            <div class="sub-label">סה״כ מתחילת השנה</div>
-            <div style="font-size:1.25rem; font-weight:800;" id="annualYtdVal">₪0</div>
+            <span class="micro-label">סה״כ השנה מתחילתה</span>
+            <span style="font-size:1.3rem; font-weight:800;" id="annualYtdSum">₪0</span>
           </div>
           <div>
-            <div class="sub-label">יעד שנתי</div>
-            <div style="font-size:1.25rem; font-weight:800;" id="annualTargetVal">₪12,000</div>
+            <span class="micro-label">יעד שנתי מוגדר</span>
+            <span style="font-size:1.3rem; font-weight:800;" id="annualGoalSum">₪12,000</span>
           </div>
         </div>
-        <div style="background:var(--bg-card-subtle); border-radius:var(--radius-sm); padding:10px 14px; font-size:0.88rem; display:flex; justify-content:space-between;">
-          <span class="text-muted">תחזית שנתית לפי קצב נוכחי:</span>
-          <strong id="annualForecastVal">₪0</strong>
+        <div style="background:var(--slate-50); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 14px; font-size:0.85rem; display:flex; justify-content:space-between;">
+          <span class="text-muted">קצב הפרשה שנתי משוער:</span>
+          <strong id="annualPaceForecast">₪0</strong>
         </div>
-      </article>
-
-      <!-- 5 תרומות אחרונות -->
-      <article class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-          <h2 class="card-title m-0">תרומות אחרונות</h2>
-          <button type="button" class="btn-link" id="viewAllDonationsLink">לכל התרומות ←</button>
-        </div>
-        <div id="recentDonationsContainer"></div>
-        <button type="button" class="btn btn-primary w-100 mt-md" id="dashAddDonationBtn">➕ הוסף תרומה</button>
-      </article>
+      </div>
     </section>
 
     <!-- מסך 2: הוספת / עריכת תרומה -->
-    <section id="tab-donation-form" class="tab-view">
-      <div class="card">
-        <div class="form-header">
-          <button type="button" class="btn-icon" id="formCloseBtn">✕</button>
-          <h2 class="card-title m-0" id="formScreenTitle">הוספת תרומה</h2>
-          <div style="width: 44px;"></div>
+    <section id="view-donation-form" class="tab-section">
+      <div class="section-card">
+        <div class="section-header-row" style="border-bottom:1px solid var(--border); padding-bottom:10px;">
+          <h2 class="section-headline" id="formHeaderTitle">הוספת תרומה למעשר</h2>
+          <button type="button" class="link-action-btn" id="btnDismissForm">✕ סגור</button>
         </div>
 
-        <form id="donationForm" novalidate>
-          <input type="hidden" id="donationId" value="">
+        <form id="donationEntryForm" novalidate style="margin-top:14px;">
+          <input type="hidden" id="editDonationId" value="">
 
-          <!-- סכום התרומה עם צ'יפים מהירים -->
-          <div class="form-group">
-            <label for="donationAmount">סכום התרומה (₪) <span class="required-star">*</span></label>
-            <input type="number" id="donationAmount" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" class="form-control" required>
-            <div class="quick-chips">
-              <button type="button" class="chip-btn chip-amount" data-amt="50">₪50</button>
-              <button type="button" class="chip-btn chip-amount" data-amt="100">₪100</button>
-              <button type="button" class="chip-btn chip-amount" data-amt="200">₪200</button>
-              <button type="button" class="chip-btn chip-amount" data-amt="500">₪500</button>
-              <button type="button" class="chip-btn chip-amount" data-amt="1000">₪1,000</button>
+          <!-- סכום התרומה -->
+          <div class="input-block">
+            <label class="input-label" for="inpDonationAmount">סכום התרומה (₪) *</label>
+            <input type="number" id="inpDonationAmount" inputmode="decimal" step="0.01" min="0.01" class="text-input-field" placeholder="0.00" required>
+            <div class="quick-pill-group">
+              <button type="button" class="quick-pill-btn pill-amt" data-val="50">₪50</button>
+              <button type="button" class="quick-pill-btn pill-amt" data-val="100">₪100</button>
+              <button type="button" class="quick-pill-btn pill-amt" data-val="200">₪200</button>
+              <button type="button" class="quick-pill-btn pill-amt" data-val="500">₪500</button>
+              <button type="button" class="quick-pill-btn pill-amt" data-val="1000">₪1,000</button>
             </div>
-            <div class="validation-msg" id="valMsg-donationAmount"></div>
           </div>
 
           <!-- שם המוטב -->
-          <div class="form-group">
-            <label for="donationBeneficiary">שם המוטב / הארגון <span class="required-star">*</span></label>
-            <input type="text" id="donationBeneficiary" list="beneficiariesDataList" placeholder="למשל: יד עזרה, ישיבה..." class="form-control" required>
-            <datalist id="beneficiariesDataList"></datalist>
-            <div class="validation-msg" id="valMsg-donationBeneficiary"></div>
+          <div class="input-block">
+            <label class="input-label" for="inpDonationBeneficiary">שם הארגון / המוטב *</label>
+            <input type="text" id="inpDonationBeneficiary" list="beneficiarySuggestions" class="text-input-field" placeholder="למשל: קופת העיר, עזר מציון, ישיבה..." required>
+            <datalist id="beneficiarySuggestions"></datalist>
           </div>
 
-          <!-- תאריך: לחיצה על כל השורה פותחת Date Picker -->
-          <div class="form-group">
-            <label for="donationDateDisplay">תאריך התרומה <span class="required-star">*</span></label>
-            <div class="date-input-field-wrap" id="datePickerRowWrapper">
-              <input type="text" id="donationDateDisplay" placeholder="DD/MM/YYYY" readonly class="form-control" required>
-              <button type="button" class="date-picker-icon-btn" aria-label="בחר תאריך">📅</button>
-              <!-- אינפוט תאריך טבעי שקוף שמכסה את כל השורה ומפעיל את הלוח הטבעי -->
-              <input type="date" id="nativeDatePickerInput" class="native-hidden-date">
+          <!-- תאריך (לחיצה מלאה על השורה פותחת לוח שנה) -->
+          <div class="input-block">
+            <label class="input-label">תאריך התרומה *</label>
+            <div class="date-row-picker-wrap">
+              <input type="text" id="inpDisplayDate" class="text-input-field" placeholder="DD/MM/YYYY" readonly required>
+              <input type="date" id="inpNativeDate" class="hidden-native-date-picker">
             </div>
-            <div class="quick-chips">
-              <button type="button" class="chip-btn" id="chipDateToday">היום</button>
-              <button type="button" class="chip-btn" id="chipDateYesterday">אתמול</button>
+            <div class="quick-pill-group">
+              <button type="button" class="quick-pill-btn" id="btnQuickDateToday">היום</button>
+              <button type="button" class="quick-pill-btn" id="btnQuickDateYesterday">אתמול</button>
             </div>
-            <div class="validation-msg" id="valMsg-donationDateDisplay"></div>
           </div>
 
           <!-- קטגוריה -->
-          <div class="form-group">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <label for="donationCategory">קטגוריה</label>
-              <button type="button" class="btn-link" id="btnInlineNewCategory">+ קטגוריה חדשה</button>
-            </div>
-            <select id="donationCategory" class="form-control"></select>
+          <div class="input-block">
+            <label class="input-label" for="selectDonationCategory">קטגוריה</label>
+            <select id="selectDonationCategory" class="text-input-field"></select>
           </div>
 
           <!-- אמצעי תשלום -->
-          <div class="form-group">
-            <label for="donationPaymentMethod">אמצעי תשלום</label>
-            <select id="donationPaymentMethod" class="form-control">
+          <div class="input-block">
+            <label class="input-label" for="selectPaymentMethod">אמצעי תשלום</label>
+            <select id="selectPaymentMethod" class="text-input-field">
+              <option value="הוראת קבע">הוראת קבע</option>
               <option value="העברה בנקאית">העברה בנקאית</option>
-              <option value="אשראי">אשראי</option>
+              <option value="אשראי">כרטיס אשראי</option>
               <option value="ביט / פייבוקס">ביט / פייבוקס</option>
               <option value="מזומן">מזומן</option>
-              <option value="הוראת קבע">הוראת קבע</option>
-              <option value="לא צוין">לא צוין</option>
+              <option value="צ'ק">המחאה (צ'ק)</option>
+              <option value="לא צוין">אחר / לא צוין</option>
             </select>
           </div>
 
-          <!-- הערות -->
-          <div class="form-group">
-            <label for="donationNotes">הערות</label>
-            <textarea id="donationNotes" rows="2" class="form-control" placeholder="פרטים נוספים..."></textarea>
-          </div>
-
           <!-- סעיף 46 -->
-          <div class="form-group">
-            <label class="checkbox-label" for="donationSection46">
-              <input type="checkbox" id="donationSection46">
-              <span>תרומה מוכרת לפי סעיף 46 (זיכוי מס)</span>
+          <div class="input-block">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="chkSection46" style="width:18px; height:18px; accent-color:var(--primary);">
+              <span style="font-size:0.9rem; font-weight:600;">מוכר לפי סעיף 46 (זיכוי מס)</span>
             </label>
           </div>
 
-          <div class="form-actions-stack">
-            <button type="submit" class="btn btn-primary">✓ שמור תרומה</button>
-            <button type="button" class="btn btn-secondary" id="btnCancelDonation">ביטול</button>
-            <button type="button" class="btn btn-danger hidden" id="btnDeleteDonation">🗑️ מחק תרומה זו</button>
+          <!-- כפתורי פעולה -->
+          <div style="display:flex; flex-direction:column; gap:10px; margin-top:24px;">
+            <button type="submit" class="action-button-main">✓ שמור תרומה</button>
+            <button type="button" class="action-button-secondary" id="btnCancelFormAction">ביטול</button>
+            <button type="button" class="action-button-secondary hidden" id="btnDeleteDonationRecord" style="color:var(--rose); border-color:#fecaca;">🗑️ מחק תרומה זו</button>
           </div>
         </form>
       </div>
     </section>
 
-    <!-- מסך 3: היסטוריה, חודשים וסטטיסטיקה -->
-    <section id="tab-history" class="tab-view">
-      <div class="segmented-control">
-        <button type="button" class="seg-btn active" data-subtab="subtab-donations">תרומות</button>
-        <button type="button" class="seg-btn" data-subtab="subtab-months">חודשים</button>
-        <button type="button" class="seg-btn" data-subtab="subtab-stats">סטטיסטיקה</button>
-      </div>
-
-      <!-- רשימת תרומות -->
-      <div id="subtab-donations" class="subtab-content active">
-        <div class="card">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h3 class="card-title m-0">חיפוש וסינון</h3>
-            <button type="button" class="btn-link" id="btnResetFilters">נקה סינון</button>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0;">
-            <div>
-              <label for="filterSearchBeneficiary">מוטב</label>
-              <input type="text" id="filterSearchBeneficiary" class="form-control" placeholder="חיפוש לפי שם...">
-            </div>
-            <div>
-              <label for="filterCategory">קטגוריה</label>
-              <select id="filterCategory" class="form-control"></select>
-            </div>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-color); padding-top:8px;">
-            <span id="filterResultsCount" class="text-muted">מציג 0 תרומות</span>
-            <button type="button" class="btn btn-secondary btn-sm" id="btnExportCsv">ייצוא ל-Excel</button>
-          </div>
-        </div>
-        <div id="donationsListContainer"></div>
-      </div>
-
-      <!-- חודשים -->
-      <div id="subtab-months" class="subtab-content">
-        <p class="text-muted" style="font-size:0.85rem; margin-bottom:8px;">לחץ על חודש כדי להוסיף חוב נוסף ידני.</p>
-        <div id="monthsListContainer"></div>
-      </div>
-
-      <!-- גרפים -->
-      <div id="subtab-stats" class="subtab-content">
-        <article class="card">
-          <h3 class="card-title">תרומות ב-12 החודשים האחרונים</h3>
-          <div class="chart-container" id="barChartContainer"></div>
-        </article>
-      </div>
-    </section>
-
-    <!-- מסך 4: הגדרות ומערכת -->
-    <section id="tab-settings" class="tab-view">
-      
-      <!-- חשבון Google וסנכרון -->
-      <article class="card" style="border: 2px solid var(--color-primary);">
-        <h2 class="card-title">חשבון Google וסנכרון ענן ☁️</h2>
-        <div id="accountStatusBox" style="margin-bottom: 12px;"></div>
-        <button type="button" class="google-btn w-100" id="btnGoogleAction">התחבר עם חשבון Google</button>
-      </article>
-
-      <!-- כפתור להרצת אשף הפתיחה בכל עת -->
-      <article class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+    <!-- מסך 3: הוראות קבע (תרומות אוטומטיות בכל חודש) -->
+    <section id="view-recurring" class="tab-section">
+      <div class="section-card">
+        <div class="section-header-row">
           <div>
-            <h3 class="card-title m-0">אשף הגדרות מהיר</h3>
-            <p class="text-muted" style="font-size:0.82rem;">הגדרת סכום בסיס, יום חיוב וקטגוריות מומלצות</p>
+            <h2 class="section-headline">הוראות קבע ותרומות קבועות</h2>
+            <p class="text-muted" style="font-size:0.82rem;">תרומות שיורדות אוטומטית בכל חודש בלי צורך להזין מחדש.</p>
           </div>
-          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenOnboardingManually">פתח אשף</button>
+          <button type="button" class="action-button-main" id="btnOpenNewRecurringModal" style="width:auto; height:38px; padding:0 14px; font-size:0.85rem;">+ הוסף קבע</button>
         </div>
-      </article>
 
-      <!-- הגדרות מעשר -->
-      <article class="card">
-        <h2 class="card-title">הגדרות מעשר</h2>
-        <form id="settingsMaaserForm">
-          <div class="form-group">
-            <label for="settingBaseMaaserAmount">סכום מעשר חודשי בסיסי (₪)</label>
-            <input type="number" id="settingBaseMaaserAmount" class="form-control" min="0" required>
-          </div>
-          <div class="form-group">
-            <label for="settingMaaserDay">יום חיוב מעשר בחודש (1–28)</label>
-            <input type="number" id="settingMaaserDay" class="form-control" min="1" max="28" required>
-          </div>
-          <div class="form-group">
-            <label for="settingMonthlyGoal">יעד תרומה חודשי (₪)</label>
-            <input type="number" id="settingMonthlyGoal" class="form-control" min="0" required>
-          </div>
-          <div class="form-group">
-            <label for="settingAnnualGoal">יעד תרומה שנתי (₪)</label>
-            <input type="number" id="settingAnnualGoal" class="form-control" min="0" required>
-          </div>
-          <button type="submit" class="btn btn-primary">שמור הגדרות מעשר</button>
-        </form>
-      </article>
-
-      <!-- ניהול קטגוריות -->
-      <article class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h2 class="card-title m-0">ניהול קטגוריות</h2>
-          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenAddCategoryModal">+ הוסף קטגוריה</button>
-        </div>
-        <ul id="categoriesManageList" style="list-style:none; margin-top:12px;"></ul>
-      </article>
-
-      <!-- גיבוי ידני נוסף -->
-      <article class="card">
-        <h2 class="card-title">גיבוי ושחזור ידני</h2>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <button type="button" class="btn btn-secondary" id="btnExportJson">הורד קובץ גיבוי (JSON)</button>
-          <button type="button" class="btn btn-danger-outline" id="btnResetAllData">איפוס מלא של כל הנתונים</button>
-        </div>
-      </article>
+        <div id="recurringListContainer"></div>
+      </div>
     </section>
+
+    <!-- מסך 4: היסטוריה ומאזן חודשים -->
+    <section id="view-history" class="tab-section">
+      <div class="section-card">
+        <h2 class="section-headline" style="margin-bottom:12px;">סיכום מעשרות לפי חודשים</h2>
+        <div id="monthsHistoryListContainer"></div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-header-row">
+          <h2 class="section-headline">כל התרומות</h2>
+          <button type="button" class="link-action-btn" id="btnExportToExcel">ייצוא ל-Excel</button>
+        </div>
+        <div id="allDonationsListContainer"></div>
+      </div>
+    </section>
+
+    <!-- מסך 5: הגדרות וסנכרון ענן -->
+    <section id="view-settings" class="tab-section">
+      <div class="section-card" style="border:1.5px solid var(--primary-accent);">
+        <h2 class="section-headline">חשבון Google וגיבוי ענן ☁️</h2>
+        <div id="settingsGoogleProfileBox" style="margin:12px 0;"></div>
+        <button type="button" class="action-button-main" id="btnAuthGoogleAction">התחבר עם חשבון Google</button>
+      </div>
+
+      <div class="section-card">
+        <h2 class="section-headline">הגדרות מעשר אישיות</h2>
+        <form id="settingsMaaserForm" style="margin-top:12px;">
+          <div class="input-block">
+            <label class="input-label">סכום מעשר חודשי בסיסי (₪)</label>
+            <input type="number" id="cfgBaseMaaserAmount" class="text-input-field" min="0" required>
+            <small class="text-muted">סכום זה מתווסף לחיוב בכל חודש.</small>
+          </div>
+
+          <div class="input-block">
+            <label class="input-label">יום החיוב בחודש (1–28)</label>
+            <input type="number" id="cfgMaaserDay" class="text-input-field" min="1" max="28" required>
+          </div>
+
+          <div class="input-block">
+            <label class="input-label">יעד תרומה שנתי כולל (₪)</label>
+            <input type="number" id="cfgAnnualGoal" class="text-input-field" min="0" required>
+          </div>
+
+          <button type="submit" class="action-button-main" style="height:44px;">שמור שינויים בהגדרות</button>
+        </form>
+      </div>
+
+      <div class="section-card">
+        <h2 class="section-headline">ניהול קטגוריות</h2>
+        <ul id="settingsCategoriesList" style="list-style:none; margin-top:12px;"></ul>
+        <button type="button" class="action-button-secondary" id="btnAddNewCategoryModal" style="margin-top:10px;">+ קטגוריה חדשה</button>
+      </div>
+    </section>
+
   </main>
 
-  <!-- סרגל תחתון -->
-  <nav class="bottom-nav">
-    <button type="button" class="nav-item active" data-tab="tab-dashboard">
-      <span class="nav-icon">📊</span>
-      <span class="nav-label">ראשי</span>
+  <!-- סרגל תחתון צף מודרני (5 טאבים) -->
+  <nav class="floating-bottom-nav">
+    <button type="button" class="nav-tab-btn active" data-tab="view-dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      <span>ראשי</span>
     </button>
-    <button type="button" class="nav-item" data-tab="tab-donation-form">
-      <span class="nav-icon">➕</span>
-      <span class="nav-label">תרומה</span>
+    <button type="button" class="nav-tab-btn" data-tab="view-donation-form">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      <span>תרומה</span>
     </button>
-    <button type="button" class="nav-item" data-tab="tab-history">
-      <span class="nav-icon">📜</span>
-      <span class="nav-label">היסטוריה</span>
+    <button type="button" class="nav-tab-btn" data-tab="view-recurring">
+      <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+      <span>הוראות קבע</span>
     </button>
-    <button type="button" class="nav-item" data-tab="tab-settings">
-      <span class="nav-icon">⚙️</span>
-      <span class="nav-label">הגדרות</span>
+    <button type="button" class="nav-tab-btn" data-tab="view-history">
+      <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+      <span>היסטוריה</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-tab="view-settings">
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      <span>הגדרות</span>
     </button>
   </nav>
 
-  <!-- ================= דיאלוגים מודאליים ================= -->
-
-  <!-- מודאל אשף פתיחה (Onboarding Wizard) -->
-  <div class="modal-backdrop hidden" id="onboardingModal">
-    <div class="modal-card onboarding-card">
-      <div style="text-align:center; margin-bottom:14px;">
-        <span style="font-size:2.4rem;">👋</span>
-        <h2 style="font-size:1.35rem; font-weight:800; margin-top:4px;">ברוכים הבאים למעשר כספים!</h2>
-        <p class="text-muted" style="font-size:0.85rem;">בוא נגדיר את החשבון שלך בכמה שניות:</p>
-      </div>
-
-      <form id="onboardingForm">
-        <div class="form-group">
-          <label for="obBaseAmount">סכום מעשר חודשי בסיסי (₪)</label>
-          <input type="number" id="obBaseAmount" class="form-control" value="1000" min="0" required>
+  <!-- מודאל הוספת הוראת קבע חדשה -->
+  <div class="dialog-backdrop hidden" id="recurringModal">
+    <div class="dialog-card-box">
+      <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:12px;">הוראת קבע חודשית</h3>
+      <form id="recurringForm">
+        <div class="input-block">
+          <label class="input-label">סכום חודשי קבוע (₪) *</label>
+          <input type="number" id="recAmount" class="text-input-field" step="0.01" min="1" placeholder="0.00" required>
         </div>
-
-        <div class="form-group">
-          <label for="obMaaserDay">יום החיוב בחודש (1–28)</label>
-          <input type="number" id="obMaaserDay" class="form-control" value="10" min="1" max="28" required>
+        <div class="input-block">
+          <label class="input-label">שם הארגון / המוטב *</label>
+          <input type="text" id="recBeneficiary" class="text-input-field" placeholder="למשל: ישיבה, עמותת חסד..." required>
         </div>
-
-        <div class="form-group">
-          <label>קטגוריות מומלצות לבחירה (לחץ להפעלה / כיבוי):</label>
-          <div id="obCategoriesChipList" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;">
-            <!-- נוצר דינמית -->
-          </div>
+        <div class="input-block">
+          <label class="input-label">יום החיוב בחודש (1–28)</label>
+          <input type="number" id="recDay" class="text-input-field" value="10" min="1" max="28" required>
         </div>
-
-        <div class="modal-actions" style="margin-top:24px;">
-          <button type="submit" class="btn btn-primary w-100" style="font-size:1.05rem;">🚀 שמור והתחל לעקוב</button>
+        <div class="input-block">
+          <label class="input-label">קטגוריה</label>
+          <select id="recCategory" class="text-input-field"></select>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:20px;">
+          <button type="submit" class="action-button-main">שמור הוראת קבע</button>
+          <button type="button" class="action-button-secondary" id="btnCloseRecurringModal">ביטול</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- מודאלים נוספים -->
-  <div class="modal-backdrop hidden" id="unsavedModal">
-    <div class="modal-card">
-      <h3>לצאת בלי לשמור?</h3>
-      <p style="margin-top:8px;">השינויים שהזנת יאבדו. האם ברצונך לצאת בכל זאת?</p>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-danger" id="btnConfirmLeave">צא</button>
-        <button type="button" class="btn btn-secondary" id="btnStayInForm">הישאר</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-backdrop hidden" id="confirmModal">
-    <div class="modal-card">
-      <h3 id="confirmModalTitle">אישור פעולה</h3>
-      <p id="confirmModalMsg" style="margin-top:8px;"></p>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-danger" id="btnGenericConfirmYes">אישור</button>
-        <button type="button" class="btn btn-secondary" id="btnGenericConfirmCancel">ביטול</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-backdrop hidden" id="categoryModal">
-    <div class="modal-card">
-      <h3 id="catModalTitle">קטגוריה</h3>
-      <form id="categoryForm" style="margin-top:12px;">
-        <input type="hidden" id="modalCatId" value="">
-        <div class="form-group">
-          <label for="modalCatName">שם הקטגוריה</label>
-          <input type="text" id="modalCatName" class="form-control" required>
+  <!-- מודאל קטגוריה -->
+  <div class="dialog-backdrop hidden" id="categoryDialog">
+    <div class="dialog-card-box">
+      <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:12px;">קטגוריה חדשה</h3>
+      <form id="categoryAddForm">
+        <div class="input-block">
+          <label class="input-label">שם הקטגוריה</label>
+          <input type="text" id="newCatName" class="text-input-field" required>
         </div>
-        <div class="form-group">
-          <label for="modalCatColor">צבע תגית</label>
-          <input type="color" id="modalCatColor" class="form-control" style="height:48px;" value="#1d4ed8">
+        <div class="input-block">
+          <label class="input-label">צבע תגית</label>
+          <input type="color" id="newCatColor" class="text-input-field" style="height:48px;" value="#1e3a8a">
         </div>
-        <div class="modal-actions">
-          <button type="submit" class="btn btn-primary">שמור</button>
-          <button type="button" class="btn btn-secondary" id="btnCloseCatModal">ביטול</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal-backdrop hidden" id="monthDebtModal">
-    <div class="modal-card">
-      <h3>עדכון חוב חודשי נוסף</h3>
-      <p id="monthDebtSub" class="text-muted" style="margin-top:4px;"></p>
-      <form id="monthDebtForm" style="margin-top:12px;">
-        <input type="hidden" id="monthDebtId" value="">
-        <div class="form-group">
-          <label for="monthAdditionalDebtInput">חוב נוסף ידני (₪)</label>
-          <input type="number" id="monthAdditionalDebtInput" step="0.01" min="0" class="form-control">
-        </div>
-        <div class="modal-actions">
-          <button type="submit" class="btn btn-primary">שמור</button>
-          <button type="button" class="btn btn-secondary" id="btnCloseMonthDebtModal">ביטול</button>
+        <div style="display:flex; gap:8px; margin-top:20px;">
+          <button type="submit" class="action-button-main">שמור</button>
+          <button type="button" class="action-button-secondary" id="btnCloseCatDialog">ביטול</button>
         </div>
       </form>
     </div>
@@ -1028,20 +885,6 @@
   <!-- ================= קוד התוכנה ================= -->
   <script>
     const HEBREW_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
-
-    // קטגוריות מומלצות לבחירה מהירה באשף
-    const RECOMMENDED_CATEGORIES = [
-      { name: "כללי", color: "#475569", default: true },
-      { name: "משפחות נזקקות", color: "#059669", default: true },
-      { name: "קמחא דפסחא", color: "#d97706", default: true },
-      { name: "הוראת קבע ישיבה", color: "#2563eb", default: true },
-      { name: "קרן חתנים", color: "#7c3aed", default: false },
-      { name: "עזר לרפואה", color: "#dc2626", default: false }
-    ];
-
-    function vibrate() {
-      if (navigator.vibrate) navigator.vibrate(10);
-    }
 
     function formatCurrency(val) {
       const num = Number(val) || 0;
@@ -1078,71 +921,16 @@
     }
     function getMonthKey(y, m) { return `${y}-${String(m).padStart(2, '0')}`; }
 
-    function calculateClosing(op, base, add, don) {
-      return Math.round(((Number(op)||0) + (Number(base)||0) + (Number(add)||0) - (Number(don)||0)) * 100) / 100;
-    }
-
-    function recalculateCascade(months, donations, startKey, settings) {
-      const mMap = new Map();
-      months.forEach(m => mMap.set(getMonthKey(m.year, m.month), { ...m }));
-
-      const dSums = new Map();
-      const dCounts = new Map();
-      donations.forEach(d => {
-        const ym = getYearMonthFromIso(d.date);
-        const k = getMonthKey(ym.year, ym.month);
-        dSums.set(k, (dSums.get(k) || 0) + (Number(d.amount) || 0));
-        dCounts.set(k, (dCounts.get(k) || 0) + 1);
-      });
-
-      const keys = Array.from(new Set([...mMap.keys(), ...dSums.keys()])).sort();
-      if (keys.length === 0) return [];
-
-      let idx = keys.indexOf(startKey);
-      if (idx === -1) idx = 0;
-
-      let runningOpening = 0;
-      if (idx > 0) {
-        const prev = mMap.get(keys[idx - 1]);
-        runningOpening = prev ? prev.closingBalance : 0;
-      } else {
-        const first = mMap.get(keys[0]);
-        runningOpening = first ? (first.openingBalance || 0) : 0;
-      }
-
-      for (let i = idx; i < keys.length; i++) {
-        const k = keys[i];
-        const [yStr, mStr] = k.split('-');
-        const y = parseInt(yStr, 10);
-        const m = parseInt(mStr, 10);
-
-        let rec = mMap.get(k) || {
-          id: `m_${k}`, year: y, month: m, openingBalance: runningOpening,
-          baseDebt: settings.baseMaaserAmount || 1000, additionalDebt: 0,
-          totalDonations: 0, donationCount: 0, closingBalance: 0, createdAt: new Date().toISOString()
-        };
-
-        rec.openingBalance = runningOpening;
-        rec.totalDonations = Math.round((dSums.get(k) || 0) * 100) / 100;
-        rec.donationCount = dCounts.get(k) || 0;
-        rec.closingBalance = calculateClosing(rec.openingBalance, rec.baseDebt, rec.additionalDebt, rec.totalDonations);
-
-        mMap.set(k, rec);
-        runningOpening = rec.closingBalance;
-      }
-
-      return Array.from(mMap.values()).sort((a,b) => a.year !== b.year ? a.year - b.year : a.month - b.month);
-    }
-
     /* שכבת מסד נתונים מקומית (Offline-First) */
     class LocalDB {
       constructor() { this.db = null; }
       async init() {
         return new Promise((resolve, reject) => {
-          const req = indexedDB.open('MaaserAppDB_v2', 1);
+          const req = indexedDB.open('MaaserAppDB_v3', 1);
           req.onupgradeneeded = (e) => {
             const db = e.target.result;
             if (!db.objectStoreNames.contains('donations')) db.createObjectStore('donations', { keyPath: 'id' });
+            if (!db.objectStoreNames.contains('recurring')) db.createObjectStore('recurring', { keyPath: 'id' });
             if (!db.objectStoreNames.contains('monthlyData')) db.createObjectStore('monthlyData', { keyPath: 'id' });
             if (!db.objectStoreNames.contains('categories')) db.createObjectStore('categories', { keyPath: 'id' });
             if (!db.objectStoreNames.contains('settings')) db.createObjectStore('settings', { keyPath: 'key' });
@@ -1159,15 +947,13 @@
         const cats = await this.getAll('categories');
         if (cats.length === 0) {
           await this.put('categories', { id: 'c1', name: 'כללי', color: '#475569' });
-          await this.put('categories', { id: 'c2', name: 'משפחות נזקקות', color: '#059669' });
-          await this.put('categories', { id: 'c3', name: 'קמחא דפסחא', color: '#d97706' });
+          await this.put('categories', { id: 'c2', name: 'נזקקים', color: '#059669' });
+          await this.put('categories', { id: 'c3', name: 'הוראת קבע ישיבה', color: '#1e3a8a' });
         }
         const defaults = [
           { key: 'baseMaaserAmount', value: 1000 },
           { key: 'maaserDay', value: 10 },
-          { key: 'monthlyGoal', value: 1000 },
-          { key: 'annualGoal', value: 12000 },
-          { key: 'onboardingCompleted', value: false }
+          { key: 'annualGoal', value: 12000 }
         ];
         for (const s of defaults) {
           if (!await this.get('settings', s.key)) await this.put('settings', s);
@@ -1215,130 +1001,94 @@
       }
     }
 
-    /* סנכרון עם ענן Google (Firebase) */
+    /* סנכרון Firebase עם הפרויקט שלך: maaser-studioai */
     class CloudSync {
       constructor() {
         this.currentUser = null;
         this.firestore = null;
         this.auth = null;
-        this.isInitialized = false;
       }
-
       init() {
-        // מפתחות Firebase האמיתיים של הפרויקט שלך: maaser-studioai
         const cfg = {
           apiKey: "AIzaSyBDJ6R3vkns94xq01AwUzQzf77vWCKkY_0",
           authDomain: "maaser-studioai.firebaseapp.com",
           projectId: "maaser-studioai",
           storageBucket: "maaser-studioai.firebasestorage.app",
           messagingSenderId: "451265781770",
-          appId: "1:451265781770:web:a5cb5f5ee3665a19defff3",
-          measurementId: "G-X44KDZGCSW"
+          appId: "1:451265781770:web:a5cb5f5ee3665a19defff3"
         };
-
         try {
-          if (!firebase.apps.length) {
-            firebase.initializeApp(cfg);
-          }
+          if (!firebase.apps.length) firebase.initializeApp(cfg);
           this.auth = firebase.auth();
           this.firestore = firebase.firestore();
-          this.isInitialized = true;
-
-          this.auth.onAuthStateChanged(async (user) => {
-            this.currentUser = user;
-            updateUserUi(user);
-            if (user) {
-              setSyncStatus('syncing', 'מסנכרן עם Google...');
-              await this.pullFromCloud();
-            } else {
-              setSyncStatus('local', 'מקומי (התחבר לסנכרון)');
-            }
+          this.auth.onAuthStateChanged(async (u) => {
+            this.currentUser = u;
+            updateUserUi(u);
+            if (u) await this.pull();
           });
-        } catch(err) {
-          console.warn('Firebase init error:', err);
-          setSyncStatus('local', 'מקומי');
+        } catch(e) {
+          console.warn('Firebase sync offline');
         }
       }
-
-      async loginWithGoogle() {
-        if (!this.isInitialized) return;
-        vibrate();
+      async login() {
+        if (!this.auth) return;
         try {
           const provider = new firebase.auth.GoogleAuthProvider();
           provider.setCustomParameters({ prompt: 'select_account' });
           await this.auth.signInWithPopup(provider);
-          showToast('התחברת בהצלחה לחשבון Google!', 'success');
-        } catch (err) {
-          console.error(err);
-          if (err.code === 'auth/popup-blocked') {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            await this.auth.signInWithRedirect(provider);
-          } else {
-            showToast('שגיאה בהתחברות לגוגל: ' + (err.message || ''), 'error');
-          }
+          showToast('התחברת בהצלחה לחשבון Google!');
+        } catch(e) {
+          showToast('שגיאה בהתחברות לגוגל');
         }
       }
-
       async logout() {
         if (this.auth) {
-          vibrate();
           await this.auth.signOut();
-          showToast('התנתקת מחשבון Google', 'info');
+          showToast('התנתקת מחשבון Google');
         }
       }
-
-      async pushToCloud(dataState) {
+      async push(dataState) {
         if (!this.currentUser || !this.firestore) return;
-        setSyncStatus('syncing', 'שומר בגוגל...');
+        setSyncUi('syncing', 'שומר בענן...');
         try {
-          const userDoc = this.firestore.collection('users').doc(this.currentUser.uid);
-          const payload = {
+          await this.firestore.collection('users').doc(this.currentUser.uid).set({
             donations: dataState.donations,
-            monthlyData: dataState.monthlyData,
+            recurring: dataState.recurring,
             categories: dataState.categories,
             settings: dataState.settings,
             lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-          };
-          await userDoc.set(payload, { merge: true });
-          setSyncStatus('synced', 'מסונכרן עם Google 🟢');
-        } catch (err) {
-          console.error('Push error:', err);
-          setSyncStatus('error', 'שגיאת סנכרון לגוגל');
+          }, { merge: true });
+          setSyncUi('active', 'מסונכרן עם Google 🟢');
+        } catch(e) {
+          setSyncUi('error', 'שגיאת שמירה בענן');
         }
       }
-
-      async pullFromCloud() {
+      async pull() {
         if (!this.currentUser || !this.firestore) return;
         try {
-          const userDoc = await this.firestore.collection('users').doc(this.currentUser.uid).get();
-          if (userDoc.exists) {
-            const data = userDoc.data();
-            if (data.donations && data.donations.length > 0) {
+          const doc = await this.firestore.collection('users').doc(this.currentUser.uid).get();
+          if (doc.exists) {
+            const d = doc.data();
+            if (d.donations) {
               await db.clear('donations');
-              await db.clear('monthlyData');
+              for (const item of d.donations) await db.put('donations', item);
+            }
+            if (d.recurring) {
+              await db.clear('recurring');
+              for (const r of d.recurring) await db.put('recurring', r);
+            }
+            if (d.categories) {
               await db.clear('categories');
-              for (const d of data.donations) await db.put('donations', d);
-              for (const m of (data.monthlyData || [])) await db.put('monthlyData', m);
-              for (const c of (data.categories || [])) await db.put('categories', c);
-              await loadState();
-              render();
-              showToast('הנתונים סונכרנו מחשבון Google שלך!', 'success');
-            } else if (state.donations.length > 0) {
-              await this.pushToCloud(state);
+              for (const c of d.categories) await db.put('categories', c);
             }
-          } else {
-            // משתמש חדש לגמרי שנכנס לראשונה בענן! מציגים את אשף הפתיחה
-            if (!state.settings.onboardingCompleted) {
-              openOnboardingModal();
-            } else if (state.donations.length > 0) {
-              await this.pushToCloud(state);
-            }
+            await loadState();
+            render();
+            showToast('הנתונים סונכרנו מהענן!');
+          } else if (state.donations.length > 0) {
+            await this.push(state);
           }
-          setSyncStatus('synced', 'מסונכרן עם Google 🟢');
-        } catch(err) {
-          console.error('Pull error:', err);
-          setSyncStatus('error', 'סנכרון לא פעיל כעת');
-        }
+          setSyncUi('active', 'מסונכרן עם Google 🟢');
+        } catch(e) {}
       }
     }
 
@@ -1347,414 +1097,362 @@
 
     const state = {
       donations: [],
+      recurring: [],
       monthlyData: [],
       categories: [],
       settings: {},
-      editingId: null,
-      isDirty: false,
-      filters: { beneficiary: '', category: '' }
+      editingId: null
     };
 
-    function setSyncStatus(status, text) {
-      const dot = document.getElementById('syncDot');
-      const txt = document.getElementById('syncText');
-      dot.className = 'sync-dot';
-      if (status === 'synced') dot.classList.add('synced');
-      if (status === 'syncing') dot.classList.add('syncing');
-      txt.textContent = text;
+    function setSyncUi(status, txt) {
+      const dot = document.getElementById('headerSyncDot');
+      const text = document.getElementById('headerSyncText');
+      dot.className = 'sync-indicator ' + (status === 'active' ? 'active' : '');
+      text.textContent = txt;
     }
 
-    function updateUserUi(user) {
-      const placeholder = document.getElementById('userAvatarPlaceholder');
-      const banner = document.getElementById('googleLoginBanner');
-      const accBox = document.getElementById('accountStatusBox');
-      const actionBtn = document.getElementById('btnGoogleAction');
+    function updateUserUi(u) {
+      const avatar = document.getElementById('topAvatarLetter');
+      const banner = document.getElementById('bannerGoogleConnect');
+      const sBox = document.getElementById('settingsGoogleProfileBox');
+      const sBtn = document.getElementById('btnAuthGoogleAction');
 
-      if (user) {
+      if (u) {
         banner.classList.add('hidden');
-        placeholder.innerHTML = user.photoURL 
-          ? `<img src="${user.photoURL}" alt="${user.displayName}">` 
-          : user.displayName ? user.displayName.slice(0, 1) : '👤';
-
-        accBox.innerHTML = `
+        avatar.innerHTML = u.photoURL ? `<img src="${u.photoURL}" alt="">` : (u.displayName ? u.displayName.slice(0, 1) : '👤');
+        sBox.innerHTML = `
           <div style="display:flex; align-items:center; gap:10px;">
-            ${user.photoURL ? `<img src="${user.photoURL}" style="width:44px; height:44px; border-radius:50%;">` : ''}
+            ${u.photoURL ? `<img src="${u.photoURL}" style="width:40px; height:40px; border-radius:50%;">` : ''}
             <div>
-              <strong>${user.displayName || 'משתמש מחובר'}</strong>
-              <div class="text-muted" style="font-size:0.82rem;">${user.email || ''}</div>
-              <div style="color:var(--color-excess); font-size:0.8rem; font-weight:700;">● מחובר ומסונכרן לגוגל</div>
+              <strong>${u.displayName || 'משתמש Google'}</strong>
+              <div class="text-muted" style="font-size:0.8rem;">${u.email || ''}</div>
+              <div class="text-emerald" style="font-size:0.78rem; font-weight:700;">● מחובר ומסונכרן אוטומטית</div>
             </div>
           </div>
         `;
-        actionBtn.textContent = 'התנתק מחשבון Google';
-        actionBtn.className = 'btn btn-secondary w-100';
-        actionBtn.onclick = () => cloud.logout();
+        sBtn.textContent = 'התנתק מחשבון Google';
+        sBtn.className = 'action-button-secondary';
+        sBtn.onclick = () => cloud.logout();
       } else {
         banner.classList.remove('hidden');
-        placeholder.textContent = '👤';
-        accBox.innerHTML = `<p class="text-muted">אינך מחובר לחשבון Google. הנתונים נשמרים כרגע במכשיר זה בלבד.</p>`;
-        actionBtn.textContent = 'התחבר עם חשבון Google';
-        actionBtn.className = 'google-btn w-100';
-        actionBtn.onclick = () => cloud.loginWithGoogle();
+        avatar.textContent = '👤';
+        sBox.innerHTML = '<p class="text-muted" style="font-size:0.85rem;">אינך מחובר לחשבון Google. הנתונים נשמרים כרגע במכשירך בלבד.</p>';
+        sBtn.textContent = 'התחבר עם חשבון Google';
+        sBtn.className = 'action-button-main';
+        sBtn.onclick = () => cloud.login();
       }
     }
 
-    async function init() {
-      await db.init();
-      await loadState();
-      ensureCurrentMonth();
-      bindEvents();
-      render();
-      cloud.init();
+    /* חישוב חודשים ומפל חישוב (כולל פריסת הוראות קבע!) */
+    function recalculateAllMonths() {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth() + 1;
+      const baseDebt = Number(state.settings.baseMaaserAmount) || 1000;
 
-      // אם מעולם לא הושלם אשף הפתיחה - נפתח אותו
-      if (!state.settings.onboardingCompleted && state.donations.length === 0) {
-        setTimeout(openOnboardingModal, 500);
+      // 1. פריסת הוראות קבע כרונולוגית (אם טרם נוספה תרומה לאותו חודש מהקבע)
+      const virtualDonations = [...state.donations];
+      
+      // איסוף כל החודשים מ-2026 עד החודש הנוכחי
+      const mKeys = [];
+      for (let m = 1; m <= currentMonth; m++) {
+        mKeys.push(getMonthKey(currentYear, m));
       }
+
+      // הוספת סכומי הוראות קבע לכל חודש פעיל
+      const recurringMonthlyTotal = state.recurring.reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
+
+      const monthsMap = new Map();
+      let runningOpening = 0;
+
+      mKeys.forEach(k => {
+        const [yStr, mStr] = k.split('-');
+        const y = parseInt(yStr, 10);
+        const m = parseInt(mStr, 10);
+
+        // תרומות רגילות לחודש זה
+        const monthDons = virtualDonations.filter(d => {
+          const ym = getYearMonthFromIso(d.date);
+          return ym.year === y && ym.month === m;
+        });
+
+        const manualTotal = monthDons.reduce((s, d) => s + (Number(d.amount) || 0), 0);
+        const totalDonated = manualTotal + recurringMonthlyTotal;
+
+        // סגירה = פתיחה + חוב בסיס - תרומות
+        const closing = Math.round((runningOpening + baseDebt - totalDonated) * 100) / 100;
+
+        monthsMap.set(k, {
+          key: k,
+          year: y,
+          month: m,
+          openingBalance: runningOpening,
+          baseDebt: baseDebt,
+          totalDonated: totalDonated,
+          donationCount: monthDons.length + state.recurring.length,
+          closingBalance: closing
+        });
+
+        runningOpening = closing;
+      });
+
+      state.monthlyData = Array.from(monthsMap.values());
     }
 
     async function loadState() {
-      const [dons, mData, cats, setts] = await Promise.all([
-        db.getAll('donations'), db.getAll('monthlyData'),
-        db.getAll('categories'), db.getAll('settings')
+      const [dons, recs, cats, setts] = await Promise.all([
+        db.getAll('donations'),
+        db.getAll('recurring'),
+        db.getAll('categories'),
+        db.getAll('settings')
       ]);
       state.donations = dons.sort((a,b) => new Date(b.date) - new Date(a.date));
+      state.recurring = recs;
       state.categories = cats;
       const sMap = {}; setts.forEach(s => sMap[s.key] = s.value);
       state.settings = sMap;
-      state.monthlyData = mData.sort((a,b) => a.year !== b.year ? a.year - b.year : a.month - b.month);
-      recalculateCascadeFromEarliest();
+      recalculateAllMonths();
     }
 
-    function ensureCurrentMonth() {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = now.getMonth() + 1;
-      const k = getMonthKey(y, m);
-      if (!state.monthlyData.find(x => x.year === y && x.month === m)) {
-        let op = 0;
-        if (state.monthlyData.length > 0) op = state.monthlyData[state.monthlyData.length - 1].closingBalance;
-        const base = state.settings.baseMaaserAmount || 1000;
-        const newM = {
-          id: `m_${k}`, year: y, month: m, openingBalance: op, baseDebt: base,
-          additionalDebt: 0, totalDonations: 0, donationCount: 0,
-          closingBalance: calculateClosing(op, base, 0, 0), createdAt: new Date().toISOString()
-        };
-        state.monthlyData.push(newM);
-        db.put('monthlyData', newM);
-        recalculateCascadeFromEarliest();
-      }
-    }
-
-    function recalculateCascadeFromEarliest(startKey = null) {
-      if (!startKey && state.monthlyData.length > 0) {
-        startKey = getMonthKey(state.monthlyData[0].year, state.monthlyData[0].month);
-      }
-      state.monthlyData = recalculateCascade(state.monthlyData, state.donations, startKey || '2026-01', state.settings);
-      state.monthlyData.forEach(m => db.put('monthlyData', m));
-    }
-
-    async function notifyDataChanged() {
+    async function notifyChanges() {
+      recalculateAllMonths();
       render();
-      await cloud.pushToCloud(state);
+      await cloud.push(state);
     }
 
-    /* מסך פתיחה ואשף הגדרות ראשוני */
-    function openOnboardingModal() {
-      const modal = document.getElementById('onboardingModal');
-      const chipList = document.getElementById('obCategoriesChipList');
-      document.getElementById('obBaseAmount').value = state.settings.baseMaaserAmount || 1000;
-      document.getElementById('obMaaserDay').value = state.settings.maaserDay || 10;
-
-      // רינדור קטגוריות מומלצות לבחירה
-      chipList.innerHTML = RECOMMENDED_CATEGORIES.map(cat => {
-        const isSelected = state.categories.some(c => c.name === cat.name) || cat.default;
-        return `
-          <div class="category-chip-select ${isSelected ? 'selected' : ''}" data-name="${cat.name}" data-color="${cat.color}">
-            <span style="width:10px; height:10px; border-radius:50%; background:${cat.color};"></span>
-            <span>${cat.name}</span>
-          </div>
-        `;
-      }).join('');
-
-      // Toggle בלחיצה על צ'יפ
-      chipList.querySelectorAll('.category-chip-select').forEach(chip => {
-        chip.addEventListener('click', () => {
-          vibrate();
-          chip.classList.toggle('selected');
-        });
-      });
-
-      modal.classList.remove('hidden');
-    }
-
+    /* רינדור המסכים וה-UI */
     function render() {
       const now = new Date();
-      const curM = state.monthlyData.find(m => m.year === now.getFullYear() && m.month === (now.getMonth() + 1)) || state.monthlyData[state.monthlyData.length - 1] || {};
-      const closing = curM.closingBalance || 0;
-      const heroCard = document.getElementById('heroCard');
-      const heroBadge = document.getElementById('heroStatusBadge');
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth() + 1;
+      const curKey = getMonthKey(currentYear, currentMonth);
 
-      document.getElementById('heroBalanceAmount').textContent = formatCurrency(closing);
-      heroCard.classList.remove('is-debt', 'is-excess');
+      const curM = state.monthlyData.find(m => m.key === curKey) || state.monthlyData[state.monthlyData.length - 1] || {
+        closingBalance: 0, openingBalance: 0, totalDonated: 0, donationCount: 0, baseDebt: 1000
+      };
 
+      const closing = curM.closingBalance;
+      const heroContainer = document.getElementById('heroSummaryContainer');
+      const heroAmount = document.getElementById('heroMainAmountDisplay');
+      const heroDesc = document.getElementById('heroMainDescription');
+      const heroStatePill = document.getElementById('heroBalanceStatePill');
+
+      // ניסוחים מעודנים ומדויקים (בלי המילה "חוב")
       if (closing > 0) {
-        heroCard.classList.add('is-debt');
-        heroBadge.className = 'status-badge debt';
-        heroBadge.textContent = 'חוב לתרומה';
-        document.getElementById('heroStatusDesc').textContent = `יש להפריש עוד ${formatCurrency(closing)} לסגירת החוב`;
+        heroAmount.textContent = formatCurrency(closing);
+        heroAmount.className = 'hero-main-amount text-rose';
+        heroDesc.textContent = `סכום שנותר להפרשת מעשר החודש: ${formatCurrency(closing)}`;
+        heroStatePill.textContent = 'נותר להפריש';
+        heroStatePill.style.background = 'rgba(225, 29, 72, 0.25)';
       } else if (closing < 0) {
-        heroCard.classList.add('is-excess');
-        heroBadge.className = 'status-badge excess';
-        heroBadge.textContent = 'עודף זכות';
-        document.getElementById('heroStatusDesc').textContent = `עודף של ${formatCurrency(Math.abs(closing))} מועבר לחודש הבא`;
+        heroAmount.textContent = formatCurrency(Math.abs(closing));
+        heroAmount.className = 'hero-main-amount text-emerald';
+        heroDesc.textContent = `זכות מעשר מוקדמת! עודף של ${formatCurrency(Math.abs(closing))} המועבר לחודש הבא`;
+        heroStatePill.textContent = 'זכות עודפת ✨';
+        heroStatePill.style.background = 'rgba(16, 185, 129, 0.25)';
       } else {
-        heroBadge.className = 'status-badge';
-        heroBadge.textContent = 'מאוזן';
-        document.getElementById('heroStatusDesc').textContent = 'כל חובות המעשר שולמו במלואם';
+        heroAmount.textContent = '₪0';
+        heroAmount.className = 'hero-main-amount';
+        heroDesc.textContent = 'השלמת את מעשרות החודש ברווח! כל הסכום שולם במלואו ✨';
+        heroStatePill.textContent = 'מושלם ומאוזן';
+        heroStatePill.style.background = 'rgba(255, 255, 255, 0.2)';
       }
 
-      const mGoal = Number(state.settings.monthlyGoal) || 1000;
-      const donMonth = curM.totalDonations || 0;
-      const pct = Math.min(Math.round((donMonth / (mGoal || 1)) * 100), 100);
-      document.getElementById('progressDonatedTxt').textContent = formatCurrency(donMonth);
-      document.getElementById('progressGoalTxt').textContent = formatCurrency(mGoal);
-      document.getElementById('progressPercentTxt').textContent = `${pct}%`;
-      document.getElementById('monthlyProgressFill').style.width = `${pct}%`;
+      // מד התקדמות יעד
+      const monthlyGoal = Number(state.settings.baseMaaserAmount) || 1000;
+      const pct = Math.min(Math.round((curM.totalDonated / (monthlyGoal || 1)) * 100), 100);
+      document.getElementById('progressDonatedSum').textContent = formatCurrency(curM.totalDonated);
+      document.getElementById('progressGoalSum').textContent = `חיוב חודשי: ${formatCurrency(monthlyGoal)}`;
+      document.getElementById('progressBarFill').style.width = `${pct}%`;
 
-      document.getElementById('statBaseDebt').textContent = formatCurrency(curM.baseDebt || 1000);
-      document.getElementById('statTotalDonated').textContent = formatCurrency(donMonth);
-      document.getElementById('statDonationCount').textContent = curM.donationCount || 0;
-      document.getElementById('statOpeningBalance').textContent = formatCurrency(curM.openingBalance || 0);
+      // 4 קוביות מדדים
+      document.getElementById('statBaseMaaserAmount').textContent = formatCurrency(curM.baseDebt);
+      document.getElementById('statDonatedThisMonth').textContent = formatCurrency(curM.totalDonated);
+      document.getElementById('statCountThisMonth').textContent = curM.donationCount;
+      document.getElementById('statOpeningBalance').textContent = formatCurrency(curM.openingBalance);
 
-      const totalCount = state.donations.length;
-      const sumAll = state.donations.reduce((a, b) => a + (Number(b.amount) || 0), 0);
-      document.getElementById('qsAverage').textContent = formatCurrency(totalCount > 0 ? (sumAll / totalCount) : 0);
-      document.getElementById('qsMax').textContent = formatCurrency(totalCount > 0 ? Math.max(...state.donations.map(d => Number(d.amount)||0)) : 0);
-      document.getElementById('qsStreak').textContent = `0 ימים`;
+      // יעד שנתי
+      const ytdDons = state.donations.filter(d => getYearMonthFromIso(d.date).year === currentYear);
+      const recSumYear = state.recurring.reduce((s, r) => s + (Number(r.amount) || 0), 0) * currentMonth;
+      const ytdTotal = ytdDons.reduce((s, d) => s + (Number(d.amount) || 0), 0) + recSumYear;
+      const annualGoal = Number(state.settings.annualGoal) || 12000;
+      document.getElementById('annualYtdSum').textContent = formatCurrency(ytdTotal);
+      document.getElementById('annualGoalSum').textContent = formatCurrency(annualGoal);
 
-      const ytdDons = state.donations.filter(d => getYearMonthFromIso(d.date).year === now.getFullYear());
-      const ytd = ytdDons.reduce((a, b) => a + (Number(b.amount) || 0), 0);
-      const startOfYear = new Date(now.getFullYear(), 0, 1);
-      const daysPassed = Math.max(Math.ceil((now - startOfYear) / (1000 * 60 * 60 * 24)), 1);
-      document.getElementById('annualYtdVal').textContent = formatCurrency(ytd);
-      document.getElementById('annualTargetVal').textContent = formatCurrency(state.settings.annualGoal || 12000);
-      document.getElementById('annualForecastVal').textContent = `${formatCurrency(Math.round((ytd / daysPassed) * 365))} (תחזית)`;
+      const daysPassed = Math.max(Math.ceil((now - new Date(currentYear, 0, 1)) / (1000 * 60 * 60 * 24)), 1);
+      document.getElementById('annualPaceForecast').textContent = `${formatCurrency(Math.round((ytdTotal / daysPassed) * 365))} (קצב צפוי)`;
 
-      document.getElementById('recentDonationsContainer').innerHTML = state.donations.slice(0, 5).map(renderDonationHtml).join('') || '<p class="empty-state">עדיין לא נרשמו תרומות</p>';
+      // רשימת תרומות אחרונות
+      document.getElementById('recentDonationsListContainer').innerHTML = state.donations.slice(0, 4).map(renderDonationItemHtml).join('') || '<p class="text-muted" style="text-align:center; padding:14px 0;">אין עדיין תרומות החודש</p>';
+      document.getElementById('allDonationsListContainer').innerHTML = state.donations.map(renderDonationItemHtml).join('') || '<p class="text-muted">אין תרומות רשומות</p>';
 
-      const catOpts = state.categories.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
-      document.getElementById('donationCategory').innerHTML = catOpts;
-      document.getElementById('filterCategory').innerHTML = '<option value="">כל הקטגוריות</option>' + catOpts;
-      document.getElementById('beneficiariesDataList').innerHTML = Array.from(new Set(state.donations.map(d => d.beneficiary))).map(b => `<option value="${escapeHtml(b)}">`).join('');
+      // רשימת הוראות קבע
+      renderRecurringList();
 
-      renderHistoryList();
+      // רשימת חודשים
       renderMonthsList();
-      renderSvgChart();
 
-      document.getElementById('settingBaseMaaserAmount').value = state.settings.baseMaaserAmount || 1000;
-      document.getElementById('settingMaaserDay').value = state.settings.maaserDay || 10;
-      document.getElementById('settingMonthlyGoal').value = state.settings.monthlyGoal || 1000;
-      document.getElementById('settingAnnualGoal').value = state.settings.annualGoal || 12000;
+      // סלקט קטגוריות
+      const catOpts = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      document.getElementById('selectDonationCategory').innerHTML = catOpts;
+      document.getElementById('recCategory').innerHTML = catOpts;
 
-      document.getElementById('categoriesManageList').innerHTML = state.categories.map(c => `
-        <li style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border-color);">
+      // רשימת הצעות למוטבים
+      document.getElementById('beneficiarySuggestions').innerHTML = Array.from(new Set(state.donations.map(d => d.beneficiary))).map(b => `<option value="${b}">`).join('');
+
+      // הגדרות
+      document.getElementById('cfgBaseMaaserAmount').value = state.settings.baseMaaserAmount || 1000;
+      document.getElementById('cfgMaaserDay').value = state.settings.maaserDay || 10;
+      document.getElementById('cfgAnnualGoal').value = state.settings.annualGoal || 12000;
+      document.getElementById('settingsCategoriesList').innerHTML = state.categories.map(c => `
+        <li style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span style="width:14px; height:14px; border-radius:50%; background:${c.color};"></span>
-            <strong>${escapeHtml(c.name)}</strong>
+            <span style="width:12px; height:12px; border-radius:50%; background:${c.color};"></span>
+            <strong>${c.name}</strong>
           </div>
-          <div>
-            ${c.name !== 'כללי' ? `<button type="button" class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')">מחק</button>` : ''}
-          </div>
+          ${c.name !== 'כללי' ? `<button type="button" class="link-action-btn" style="color:var(--rose);" onclick="deleteCategory('${c.id}')">מחק</button>` : ''}
         </li>
       `).join('');
     }
 
-    function renderDonationHtml(d) {
-      const cat = state.categories.find(c => c.name === d.category) || { color: '#475569', name: d.category || 'כללי' };
+    function renderDonationItemHtml(d) {
+      const cat = state.categories.find(c => c.name === d.category) || { color: '#64748b', name: d.category || 'כללי' };
       return `
-        <div class="donation-row-item" onclick="openEditDonation('${d.id}')">
+        <div class="donation-item-row" onclick="openEditDonation('${d.id}')">
           <div>
-            <div class="donation-beneficiary">${escapeHtml(d.beneficiary)}</div>
-            <div class="donation-meta">
+            <div class="donation-title">${d.beneficiary}</div>
+            <div class="donation-tags">
               <span>📅 ${formatDateToDisplay(d.date)}</span>
-              <span class="cat-pill" style="background-color:${cat.color}">${escapeHtml(cat.name)}</span>
-              ${d.section46 ? '<span>📜 סעיף 46</span>' : ''}
+              <span class="category-bubble" style="background:${cat.color};">${cat.name}</span>
+              ${d.paymentMethod ? `<span>• ${d.paymentMethod}</span>` : ''}
+              ${d.section46 ? '<span>• סעיף 46</span>' : ''}
             </div>
           </div>
-          <div class="donation-sum">${formatCurrency(d.amount)}</div>
+          <div class="donation-amount-sum">${formatCurrency(d.amount)}</div>
         </div>
       `;
     }
 
-    function renderHistoryList() {
-      let list = [...state.donations];
-      if (state.filters.beneficiary) list = list.filter(d => d.beneficiary.toLowerCase().includes(state.filters.beneficiary.toLowerCase()));
-      if (state.filters.category) list = list.filter(d => d.category === state.filters.category);
-      document.getElementById('filterResultsCount').textContent = `נמצאו ${list.length} תרומות`;
-      document.getElementById('donationsListContainer').innerHTML = list.map(renderDonationHtml).join('') || '<div class="empty-state card">לא נמצאו תרומות</div>';
+    function renderRecurringList() {
+      const container = document.getElementById('recurringListContainer');
+      if (state.recurring.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:24px 0;" class="text-muted">
+            <span style="font-size:2rem; display:block; margin-bottom:6px;">🔄</span>
+            לא הוגדרו עדיין הוראות קבע חודשיות.<br>הוסף הוראת קבע כדי שתופרש אוטומטית בכל חודש.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = state.recurring.map(r => `
+        <div class="recurring-item-row">
+          <div>
+            <strong style="font-size:1rem;">${r.beneficiary}</strong>
+            <div class="text-muted" style="font-size:0.8rem; margin-top:2px;">
+              יורד ב-${r.day} לכל חודש • ${r.category || 'כללי'}
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <strong style="font-size:1.15rem; color:var(--primary);">${formatCurrency(r.amount)}</strong>
+            <button type="button" class="link-action-btn" style="color:var(--rose);" onclick="deleteRecurring('${r.id}')">הסר</button>
+          </div>
+        </div>
+      `).join('');
     }
 
     function renderMonthsList() {
-      document.getElementById('monthsListContainer').innerHTML = [...state.monthlyData].reverse().map(m => {
-        const isDebt = m.closingBalance > 0;
-        const isExcess = m.closingBalance < 0;
-        const badge = isDebt ? `status-badge debt">חוב: ${formatCurrency(m.closingBalance)}` : (isExcess ? `status-badge excess">עודף: ${formatCurrency(Math.abs(m.closingBalance))}` : `status-badge">מאוזן`);
+      document.getElementById('monthsHistoryListContainer').innerHTML = [...state.monthlyData].reverse().map(m => {
+        const isOk = m.closingBalance <= 0;
+        const statusText = m.closingBalance === 0 ? 'מאוזן לחלוטין' : (m.closingBalance < 0 ? `עודף זכות: ${formatCurrency(Math.abs(m.closingBalance))}` : `נותר להפריש: ${formatCurrency(m.closingBalance)}`);
         return `
-          <div class="month-card" onclick="openMonthModal('${m.id}')">
-            <div class="month-header-row">
-              <span class="month-name">${HEBREW_MONTHS[m.month - 1]} ${m.year}</span>
-              <span class="${badge}</span>
+          <div class="donation-item-row" style="margin-bottom:8px;">
+            <div>
+              <strong style="font-size:0.95rem;">${HEBREW_MONTHS[m.month - 1]} ${m.year}</strong>
+              <div class="text-muted" style="font-size:0.78rem; margin-top:3px;">
+                פתיחה: ${formatCurrency(m.openingBalance)} • הופרש: ${formatCurrency(m.totalDonated)}
+              </div>
             </div>
-            <div class="month-details-grid">
-              <div>פתיחה: <strong>${formatCurrency(m.openingBalance)}</strong></div>
-              <div>חוב בסיס: <strong>${formatCurrency(m.baseDebt)}</strong></div>
-              <div>חוב נוסף: <strong>${formatCurrency(m.additionalDebt||0)}</strong></div>
-              <div>נתרם: <strong>${formatCurrency(m.totalDonations)}</strong></div>
-              <div>תרומות: <strong>${m.donationCount}</strong></div>
-              <div>סגירה: <strong>${formatCurrency(m.closingBalance)}</strong></div>
+            <div style="text-align:left;">
+              <span style="font-size:0.82rem; font-weight:700; color:${isOk ? 'var(--emerald)' : 'var(--rose)'};">
+                ${statusText}
+              </span>
             </div>
           </div>
         `;
       }).join('');
     }
 
-    function renderSvgChart() {
-      const now = new Date();
-      const points = [];
-      for (let i = 11; i >= 0; i--) {
-        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-        const y = d.getFullYear(); const m = d.getMonth() + 1;
-        const rec = state.monthlyData.find(x => x.year === y && x.month === m);
-        points.push({ label: HEBREW_MONTHS[d.getMonth()].slice(0, 3), amount: rec ? rec.totalDonations : 0 });
-      }
-      const max = Math.max(...points.map(p => p.amount), 500);
-      const w = 550; const h = 210; const bW = (w / 12) * 0.65; const step = w / 12;
-      let svg = `<svg class="chart-svg" viewBox="0 0 ${w} ${h}"><line x1="10" y1="175" x2="${w-10}" y2="175" stroke="var(--border-color)" stroke-width="2"/>`;
-      points.forEach((p, i) => {
-        const bH = (p.amount / max) * 140;
-        const x = 15 + i * step;
-        const y = 175 - bH;
-        svg += `<rect x="${x}" y="${y}" width="${bW}" height="${bH}" fill="var(--color-primary)" rx="4"/>`;
-        svg += `<text x="${x + bW/2}" y="195" font-size="11" fill="var(--text-muted)" text-anchor="middle" font-family="system-ui">${p.label}</text>`;
-      });
-      svg += '</svg>';
-      document.getElementById('barChartContainer').innerHTML = svg;
+    /* אירועים וניווט */
+    function switchTab(targetId) {
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+      const activeSection = document.getElementById(targetId);
+      if (activeSection) activeSection.classList.add('active');
+      const activeBtn = document.querySelector(`.nav-tab-btn[data-tab="${targetId}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    /* אירועים ואינטראקציות */
+    function showToast(text) {
+      const toast = document.getElementById('toastContainer');
+      toast.textContent = text;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 2800);
+    }
+
     function bindEvents() {
-      document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-          vibrate();
-          switchTab(item.getAttribute('data-tab'));
-        });
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
       });
 
-      document.getElementById('quickAddBtn').addEventListener('click', () => { vibrate(); openNewDonation(); });
-      document.getElementById('dashAddDonationBtn').addEventListener('click', () => { vibrate(); openNewDonation(); });
-      document.getElementById('viewAllDonationsLink').addEventListener('click', () => {
-        switchTab('tab-history');
-        switchSubTab('subtab-donations');
+      document.getElementById('btnOpenNewDonation').addEventListener('click', () => {
+        openNewDonationForm();
       });
+      document.getElementById('btnSeeAllDonations').addEventListener('click', () => {
+        switchTab('view-history');
+      });
+      document.getElementById('btnDismissForm').addEventListener('click', () => switchTab('view-dashboard'));
+      document.getElementById('btnCancelFormAction').addEventListener('click', () => switchTab('view-dashboard'));
+      document.getElementById('btnTopProfileAvatar').addEventListener('click', () => switchTab('view-settings'));
+      document.getElementById('btnQuickGoogleLogin').addEventListener('click', () => cloud.login());
 
-      document.querySelectorAll('.seg-btn').forEach(b => {
+      // כפתורי סכום מהיר
+      document.querySelectorAll('.pill-amt').forEach(b => {
         b.addEventListener('click', () => {
-          vibrate();
-          switchSubTab(b.getAttribute('data-subtab'));
+          document.getElementById('inpDonationAmount').value = b.dataset.val;
         });
       });
 
-      document.getElementById('btnGoogleSignInMain').addEventListener('click', () => cloud.loginWithGoogle());
-      document.getElementById('userAvatarBtn').addEventListener('click', () => switchTab('tab-settings'));
-      document.getElementById('btnOpenOnboardingManually').addEventListener('click', () => openOnboardingModal());
-
-      // שמירת אשף פתיחה
-      document.getElementById('onboardingForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        vibrate();
-        const base = parseFloat(document.getElementById('obBaseAmount').value) || 1000;
-        const day = parseInt(document.getElementById('obMaaserDay').value, 10) || 10;
-        
-        // שמירת קטגוריות נבחרות
-        const selectedChips = document.querySelectorAll('#obCategoriesChipList .category-chip-select.selected');
-        await db.clear('categories');
-        state.categories = [];
-        let idCounter = 1;
-        for (const chip of selectedChips) {
-          const cat = { id: `cat_${idCounter++}`, name: chip.dataset.name, color: chip.dataset.color };
-          await db.put('categories', cat);
-          state.categories.push(cat);
-        }
-
-        state.settings.baseMaaserAmount = base;
-        state.settings.maaserDay = day;
-        state.settings.monthlyGoal = base;
-        state.settings.annualGoal = base * 12;
-        state.settings.onboardingCompleted = true;
-
-        await Promise.all([
-          db.put('settings', { key: 'baseMaaserAmount', value: base }),
-          db.put('settings', { key: 'maaserDay', value: day }),
-          db.put('settings', { key: 'monthlyGoal', value: base }),
-          db.put('settings', { key: 'annualGoal', value: base * 12 }),
-          db.put('settings', { key: 'onboardingCompleted', value: true })
-        ]);
-
-        recalculateCascadeFromEarliest();
-        document.getElementById('onboardingModal').classList.add('hidden');
-        showToast('ההגדרות נשמרו בהצלחה!', 'success');
-        await notifyDataChanged();
-      });
-
-      // צ'יפים מהירים לסכום תרומה
-      document.querySelectorAll('.chip-amount').forEach(btn => {
-        btn.addEventListener('click', () => {
-          vibrate();
-          document.getElementById('donationAmount').value = btn.dataset.amt;
-          state.isDirty = true;
-        });
-      });
-
-      // בחירת תאריך: פתיחת Date Picker טבעי בלחיצה על כל שורת התאריך
-      const nativeDate = document.getElementById('nativeDatePickerInput');
-      const displayDate = document.getElementById('donationDateDisplay');
-      
-      nativeDate.addEventListener('change', () => {
-        if (nativeDate.value) {
-          displayDate.value = formatDateToDisplay(nativeDate.value);
-          state.isDirty = true;
-          vibrate();
+      // בחירת תאריך נוחה בלחיצה מלאה
+      const nativePicker = document.getElementById('inpNativeDate');
+      const displayPicker = document.getElementById('inpDisplayDate');
+      nativePicker.addEventListener('change', () => {
+        if (nativePicker.value) {
+          displayPicker.value = formatDateToDisplay(nativePicker.value);
         }
       });
-
-      // כפתורי קיצור תאריך
-      document.getElementById('chipDateToday').addEventListener('click', () => {
-        vibrate();
-        const now = new Date();
-        displayDate.value = formatDateToDisplay(now);
-        nativeDate.value = now.toISOString().split('T')[0];
-        state.isDirty = true;
+      document.getElementById('btnQuickDateToday').addEventListener('click', () => {
+        const today = new Date();
+        displayPicker.value = formatDateToDisplay(today);
+        nativePicker.value = today.toISOString().split('T')[0];
       });
-      document.getElementById('chipDateYesterday').addEventListener('click', () => {
-        vibrate();
+      document.getElementById('btnQuickDateYesterday').addEventListener('click', () => {
         const y = new Date(); y.setDate(y.getDate() - 1);
-        displayDate.value = formatDateToDisplay(y);
-        nativeDate.value = y.toISOString().split('T')[0];
-        state.isDirty = true;
+        displayPicker.value = formatDateToDisplay(y);
+        nativePicker.value = y.toISOString().split('T')[0];
       });
 
       // שמירת תרומה
-      document.getElementById('donationForm').addEventListener('submit', async (e) => {
+      document.getElementById('donationEntryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        vibrate();
-        const amt = parseFloat(document.getElementById('donationAmount').value);
-        const ben = document.getElementById('donationBeneficiary').value.trim();
-        const dateDisplay = displayDate.value.trim();
-        const iso = parseDisplayDateToIso(dateDisplay);
+        const amt = parseFloat(document.getElementById('inpDonationAmount').value);
+        const ben = document.getElementById('inpDonationBeneficiary').value.trim();
+        const dateStr = displayPicker.value.trim();
+        const iso = parseDisplayDateToIso(dateStr);
 
         if (isNaN(amt) || amt <= 0 || !ben || !iso) {
-          showToast('נא למלא את כל שדות החובה כראוי', 'error');
+          showToast('נא למלא את כל שדות החובה כראוי');
           return;
         }
 
@@ -1763,257 +1461,185 @@
           amount: Math.round(amt * 100) / 100,
           beneficiary: ben,
           date: iso,
-          category: document.getElementById('donationCategory').value,
-          paymentMethod: document.getElementById('donationPaymentMethod').value,
-          notes: document.getElementById('donationNotes').value.trim(),
-          section46: document.getElementById('donationSection46').checked,
+          category: document.getElementById('selectDonationCategory').value,
+          paymentMethod: document.getElementById('selectPaymentMethod').value,
+          section46: document.getElementById('chkSection46').checked,
           createdAt: new Date().toISOString()
         };
 
         await db.put('donations', item);
         if (state.editingId) {
-          const i = state.donations.findIndex(x => x.id === item.id);
-          if (i !== -1) state.donations[i] = item;
+          const idx = state.donations.findIndex(x => x.id === item.id);
+          if (idx !== -1) state.donations[idx] = item;
         } else {
           state.donations.unshift(item);
         }
         state.donations.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-        const ym = getYearMonthFromIso(item.date);
-        recalculateCascadeFromEarliest(getMonthKey(ym.year, ym.month));
-        state.isDirty = false;
-        showToast('התרומה נשמרה וסונכרנה!', 'success');
-        switchTab('tab-dashboard');
-        await notifyDataChanged();
+        showToast('התרומה נשמרה בהצלחה!');
+        switchTab('view-dashboard');
+        await notifyChanges();
       });
-
-      document.getElementById('btnCancelDonation').addEventListener('click', handleCancelForm);
-      document.getElementById('formCloseBtn').addEventListener('click', handleCancelForm);
 
       // מחיקת תרומה
-      document.getElementById('btnDeleteDonation').addEventListener('click', () => {
+      document.getElementById('btnDeleteDonationRecord').addEventListener('click', async () => {
         if (!state.editingId) return;
-        showConfirm('מחיקת תרומה', 'האם למחוק תרומה זו לצמיתות?', async () => {
-          vibrate();
-          const id = state.editingId;
-          const item = state.donations.find(d => d.id === id);
-          await db.del('donations', id);
-          state.donations = state.donations.filter(d => d.id !== id);
-          if (item) {
-            const ym = getYearMonthFromIso(item.date);
-            recalculateCascadeFromEarliest(getMonthKey(ym.year, ym.month));
-          }
-          state.isDirty = false;
-          showToast('התרומה נמחקה', 'info');
-          switchTab('tab-dashboard');
-          await notifyDataChanged();
-        });
+        await db.del('donations', state.editingId);
+        state.donations = state.donations.filter(d => d.id !== state.editingId);
+        showToast('התרומה נמחקה');
+        switchTab('view-dashboard');
+        await notifyChanges();
       });
 
-      // הגדרות מעשר
+      // מודאל הוראת קבע
+      document.getElementById('btnOpenNewRecurringModal').addEventListener('click', () => {
+        document.getElementById('recurringForm').reset();
+        document.getElementById('recurringModal').classList.remove('hidden');
+      });
+      document.getElementById('btnCloseRecurringModal').addEventListener('click', () => {
+        document.getElementById('recurringModal').classList.add('hidden');
+      });
+      document.getElementById('recurringForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const amt = parseFloat(document.getElementById('recAmount').value);
+        const ben = document.getElementById('recBeneficiary').value.trim();
+        const day = parseInt(document.getElementById('recDay').value, 10) || 10;
+        const cat = document.getElementById('recCategory').value;
+
+        if (!amt || !ben) return;
+        const recItem = {
+          id: `rec_${Date.now()}`,
+          amount: amt,
+          beneficiary: ben,
+          day: day,
+          category: cat
+        };
+
+        await db.put('recurring', recItem);
+        state.recurring.push(recItem);
+        document.getElementById('recurringModal').classList.add('hidden');
+        showToast('הוראת הקבע נוספה בהצלחה!');
+        await notifyChanges();
+      });
+
+      // שמירת הגדרות מעשר
       document.getElementById('settingsMaaserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        vibrate();
-        const base = parseFloat(document.getElementById('settingBaseMaaserAmount').value) || 1000;
-        const day = parseInt(document.getElementById('settingMaaserDay').value, 10) || 10;
-        const mGoal = parseFloat(document.getElementById('settingMonthlyGoal').value) || 1000;
-        const aGoal = parseFloat(document.getElementById('settingAnnualGoal').value) || 12000;
-        state.settings.baseMaaserAmount = base; state.settings.maaserDay = day;
-        state.settings.monthlyGoal = mGoal; state.settings.annualGoal = aGoal;
+        const base = parseFloat(document.getElementById('cfgBaseMaaserAmount').value) || 1000;
+        const day = parseInt(document.getElementById('cfgMaaserDay').value, 10) || 10;
+        const aGoal = parseFloat(document.getElementById('cfgAnnualGoal').value) || 12000;
+
+        state.settings.baseMaaserAmount = base;
+        state.settings.maaserDay = day;
+        state.settings.annualGoal = aGoal;
+
         await Promise.all([
           db.put('settings', { key: 'baseMaaserAmount', value: base }),
           db.put('settings', { key: 'maaserDay', value: day }),
-          db.put('settings', { key: 'monthlyGoal', value: mGoal }),
           db.put('settings', { key: 'annualGoal', value: aGoal })
         ]);
-        recalculateCascadeFromEarliest();
-        showToast('ההגדרות נשמרו וסונכרנו', 'success');
-        await notifyDataChanged();
-      });
 
-      // חוב חודש
-      document.getElementById('monthDebtForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        vibrate();
-        const id = document.getElementById('monthDebtId').value;
-        const add = parseFloat(document.getElementById('monthAdditionalDebtInput').value) || 0;
-        const m = state.monthlyData.find(x => x.id === id);
-        if (m) {
-          m.additionalDebt = add;
-          await db.put('monthlyData', m);
-          recalculateCascadeFromEarliest(getMonthKey(m.year, m.month));
-          document.getElementById('monthDebtModal').classList.add('hidden');
-          showToast('החוב הנוסף עודכן', 'success');
-          await notifyDataChanged();
-        }
+        showToast('ההגדרות עודכנו בהצלחה');
+        await notifyChanges();
       });
-      document.getElementById('btnCloseMonthDebtModal').addEventListener('click', () => document.getElementById('monthDebtModal').classList.add('hidden'));
 
       // קטגוריות
-      document.getElementById('btnInlineNewCategory').addEventListener('click', () => openCatModal());
-      document.getElementById('btnOpenAddCategoryModal').addEventListener('click', () => openCatModal());
-      document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+      document.getElementById('btnAddNewCategoryModal').addEventListener('click', () => {
+        document.getElementById('categoryAddForm').reset();
+        document.getElementById('categoryDialog').classList.remove('hidden');
+      });
+      document.getElementById('btnCloseCatDialog').addEventListener('click', () => {
+        document.getElementById('categoryDialog').classList.add('hidden');
+      });
+      document.getElementById('categoryAddForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        vibrate();
-        const name = document.getElementById('modalCatName').value.trim();
-        const color = document.getElementById('modalCatColor').value;
-        const id = document.getElementById('modalCatId').value || `cat_${Date.now()}`;
+        const name = document.getElementById('newCatName').value.trim();
+        const color = document.getElementById('newCatColor').value;
         if (!name) return;
-        const obj = { id, name, color };
-        await db.put('categories', obj);
-        const idx = state.categories.findIndex(c => c.id === id);
-        if (idx !== -1) state.categories[idx] = obj; else state.categories.push(obj);
-        document.getElementById('categoryModal').classList.add('hidden');
-        showToast('הקטגוריה נשמרה', 'success');
-        await notifyDataChanged();
-      });
-      document.getElementById('btnCloseCatModal').addEventListener('click', () => document.getElementById('categoryModal').classList.add('hidden'));
-
-      // סינונים
-      document.getElementById('filterSearchBeneficiary').addEventListener('input', (e) => {
-        state.filters.beneficiary = e.target.value;
-        renderHistoryList();
-      });
-      document.getElementById('filterCategory').addEventListener('change', (e) => {
-        state.filters.category = e.target.value;
-        renderHistoryList();
-      });
-      document.getElementById('btnResetFilters').addEventListener('click', () => {
-        document.getElementById('filterSearchBeneficiary').value = '';
-        document.getElementById('filterCategory').value = '';
-        state.filters = { beneficiary: '', category: '' };
-        renderHistoryList();
+        const catObj = { id: `cat_${Date.now()}`, name, color };
+        await db.put('categories', catObj);
+        state.categories.push(catObj);
+        document.getElementById('categoryDialog').classList.add('hidden');
+        showToast('הקטגוריה נוספה');
+        await notifyChanges();
       });
 
-      // איפוס
-      document.getElementById('btnResetAllData').addEventListener('click', () => {
-        showConfirm('איפוס נתונים', 'האם למחוק הכל לצמיתות?', async () => {
-          await db.clear('donations'); await db.clear('monthlyData'); await db.clear('categories');
-          await db.seed(); await loadState();
-          showToast('הנתונים אופסו', 'info');
-          await notifyDataChanged();
-        });
+      // ייצוא אקסל CSV
+      document.getElementById('btnExportToExcel').addEventListener('click', () => {
+        const headers = ['תאריך', 'מוטב', 'סכום', 'קטגוריה', 'אמצעי תשלום', 'סעיף 46'];
+        const rows = state.donations.map(d => [
+          formatDateToDisplay(d.date),
+          `"${(d.beneficiary||'').replace(/"/g, '""')}"`,
+          d.amount,
+          `"${(d.category||'').replace(/"/g, '""')}"`,
+          `"${(d.paymentMethod||'').replace(/"/g, '""')}"`,
+          d.section46 ? 'כן' : 'לא'
+        ]);
+        const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `מעשר_כספים_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
       });
     }
 
-    function switchTab(tId) {
-      document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
-      document.querySelectorAll('.bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
-      document.getElementById(tId).classList.add('active');
-      const navBtn = document.querySelector(`.bottom-nav [data-tab="${tId}"]`);
-      if (navBtn) navBtn.classList.add('active');
-      render();
-    }
-
-    function switchSubTab(sId) {
-      document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === sId));
-      document.querySelectorAll('.subtab-content').forEach(c => c.classList.toggle('active', c.id === sId));
-    }
-
-    function openNewDonation() {
+    function openNewDonationForm() {
       state.editingId = null;
-      state.isDirty = false;
-      document.getElementById('donationForm').reset();
-      document.getElementById('donationId').value = '';
-      
+      document.getElementById('donationEntryForm').reset();
+      document.getElementById('editDonationId').value = '';
       const today = new Date();
-      document.getElementById('donationDateDisplay').value = formatDateToDisplay(today);
-      document.getElementById('nativeDatePickerInput').value = today.toISOString().split('T')[0];
-      
-      document.getElementById('formScreenTitle').textContent = 'הוספת תרומה';
-      document.getElementById('btnDeleteDonation').classList.add('hidden');
-      switchTab('tab-donation-form');
+      document.getElementById('inpDisplayDate').value = formatDateToDisplay(today);
+      document.getElementById('inpNativeDate').value = today.toISOString().split('T')[0];
+      document.getElementById('formHeaderTitle').textContent = 'הוספת תרומה למעשר';
+      document.getElementById('btnDeleteDonationRecord').classList.add('hidden');
+      switchTab('view-donation-form');
     }
 
     window.openEditDonation = function(id) {
       const d = state.donations.find(x => x.id === id);
       if (!d) return;
-      vibrate();
       state.editingId = d.id;
-      state.isDirty = false;
-      document.getElementById('donationId').value = d.id;
-      document.getElementById('donationAmount').value = d.amount;
-      document.getElementById('donationBeneficiary').value = d.beneficiary;
-      document.getElementById('donationDateDisplay').value = formatDateToDisplay(d.date);
-      document.getElementById('nativeDatePickerInput').value = d.date;
-      document.getElementById('donationCategory').value = d.category || 'כללי';
-      document.getElementById('donationPaymentMethod').value = d.paymentMethod || 'העברה בנקאית';
-      document.getElementById('donationNotes').value = d.notes || '';
-      document.getElementById('donationSection46').checked = !!d.section46;
-      document.getElementById('formScreenTitle').textContent = 'עריכת תרומה';
-      document.getElementById('btnDeleteDonation').classList.remove('hidden');
-      switchTab('tab-donation-form');
+      document.getElementById('editDonationId').value = d.id;
+      document.getElementById('inpDonationAmount').value = d.amount;
+      document.getElementById('inpDonationBeneficiary').value = d.beneficiary;
+      document.getElementById('inpDisplayDate').value = formatDateToDisplay(d.date);
+      document.getElementById('inpNativeDate').value = d.date;
+      document.getElementById('selectDonationCategory').value = d.category || 'כללי';
+      document.getElementById('selectPaymentMethod').value = d.paymentMethod || 'העברה בנקאית';
+      document.getElementById('chkSection46').checked = !!d.section46;
+      document.getElementById('formHeaderTitle').textContent = 'עריכת תרומה';
+      document.getElementById('btnDeleteDonationRecord').classList.remove('hidden');
+      switchTab('view-donation-form');
     };
 
-    function handleCancelForm() {
-      if (state.isDirty) {
-        document.getElementById('unsavedModal').classList.remove('hidden');
-        document.getElementById('btnConfirmLeave').onclick = () => {
-          state.isDirty = false;
-          document.getElementById('unsavedModal').classList.add('hidden');
-          switchTab('tab-dashboard');
-        };
-      } else {
-        switchTab('tab-dashboard');
-      }
-    }
-
-    window.openMonthModal = function(id) {
-      const m = state.monthlyData.find(x => x.id === id);
-      if (!m) return;
-      vibrate();
-      document.getElementById('monthDebtId').value = m.id;
-      document.getElementById('monthDebtSub').textContent = `${HEBREW_MONTHS[m.month - 1]} ${m.year}`;
-      document.getElementById('monthAdditionalDebtInput').value = m.additionalDebt || 0;
-      document.getElementById('monthDebtModal').classList.remove('hidden');
+    window.deleteRecurring = async function(id) {
+      await db.del('recurring', id);
+      state.recurring = state.recurring.filter(r => r.id !== id);
+      showToast('הוראת הקבע הוסרה');
+      await notifyChanges();
     };
 
-    function openCatModal() {
-      document.getElementById('modalCatId').value = '';
-      document.getElementById('modalCatName').value = '';
-      document.getElementById('modalCatColor').value = '#1d4ed8';
-      document.getElementById('categoryModal').classList.remove('hidden');
-    }
-
-    window.deleteCategory = function(id) {
-      const c = state.categories.find(x => x.id === id);
-      if (!c || c.name === 'כללי') return;
-      showConfirm('מחיקת קטגוריה', `למחוק את "${c.name}"? התרומות יועברו ל"כללי".`, async () => {
-        vibrate();
-        for (const d of state.donations.filter(x => x.category === c.name)) {
-          d.category = 'כללי';
-          await db.put('donations', d);
-        }
-        await db.del('categories', id);
-        state.categories = state.categories.filter(x => x.id !== id);
-        showToast('הקטגוריה נמחקה', 'info');
-        await notifyDataChanged();
-      });
+    window.deleteCategory = async function(id) {
+      const cat = state.categories.find(c => c.id === id);
+      if (!cat || cat.name === 'כללי') return;
+      await db.del('categories', id);
+      state.categories = state.categories.filter(c => c.id !== id);
+      showToast('הקטגוריה נמחקה');
+      await notifyChanges();
     };
 
-    function showToast(msg, type = 'info') {
-      const t = document.createElement('div');
-      t.className = `toast ${type}`;
-      t.textContent = msg;
-      document.getElementById('toastContainer').appendChild(t);
-      setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 250); }, 3000);
+    async function initApp() {
+      await db.init();
+      await loadState();
+      bindEvents();
+      render();
+      cloud.init();
     }
 
-    function showConfirm(title, msg, onYes) {
-      document.getElementById('confirmModalTitle').textContent = title;
-      document.getElementById('confirmModalMsg').textContent = msg;
-      const modal = document.getElementById('confirmModal');
-      modal.classList.remove('hidden');
-      const yesBtn = document.getElementById('btnGenericConfirmYes');
-      const noBtn = document.getElementById('btnGenericConfirmCancel');
-      const clean = () => { modal.classList.add('hidden'); yesBtn.onclick = null; noBtn.onclick = null; };
-      yesBtn.onclick = () => { clean(); onYes(); };
-      noBtn.onclick = () => clean();
-    }
-
-    function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
-
-    window.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
 </html>
