@@ -199,7 +199,7 @@
 
     .hero-main-stat { margin-bottom: 14px; }
     .hero-stat-label {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: #94a3b8;
       display: block;
@@ -238,11 +238,11 @@
       color: #f8fafc;
     }
 
-    /* מד התקדמות */
+    /* מד התקדמות כפול: תשלום מול ימי החודש */
     .progress-box {
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.22);
       border-radius: var(--radius-md);
-      padding: 10px 12px;
+      padding: 12px 14px;
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
     .progress-labels-row {
@@ -250,21 +250,33 @@
       justify-content: space-between;
       font-size: 0.8rem;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       color: #cbd5e1;
     }
     .progress-track-bg {
+      position: relative;
       width: 100%;
-      height: 7px;
+      height: 9px;
       background: rgba(255, 255, 255, 0.16);
       border-radius: var(--radius-full);
-      overflow: hidden;
+      overflow: visible;
     }
     .progress-bar-fill-bar {
       height: 100%;
       background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
       border-radius: var(--radius-full);
       transition: width 400ms ease;
+    }
+    .month-day-indicator-line {
+      position: absolute;
+      top: -3px;
+      bottom: -3px;
+      width: 3px;
+      background: #ffffff;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+      border-radius: 2px;
+      z-index: 3;
+      transition: right 300ms ease;
     }
 
     /* קוביות מדדים 2x2 */
@@ -491,7 +503,7 @@
       cursor: pointer;
     }
 
-    /* סרגל ניווט צף תחתון (5 טאבים) */
+    /* סרגל ניווט צף תחתון */
     .floating-bottom-nav {
       position: fixed;
       bottom: 12px;
@@ -534,7 +546,7 @@
     .nav-tab-btn.active { color: var(--primary-accent); }
     .nav-tab-btn svg { width: 19px; height: 19px; fill: currentColor; }
 
-    /* עיצובי גרפים ו-BI */
+    /* עיצובי גרפים */
     .chart-box {
       width: 100%;
       overflow-x: auto;
@@ -676,9 +688,9 @@
           <span class="hero-overall-badge" id="heroOverallStatusBadge">מאזן עדכני</span>
         </div>
 
-        <!-- מדד סך הכל מצטבר -->
+        <!-- מדד סך הכל מצטבר (ללא סוגריים) -->
         <div class="hero-main-stat">
-          <span class="hero-stat-label">סך הכל מצטבר (כולל יתרות קודמות):</span>
+          <span class="hero-stat-label">סך הכל מצטבר:</span>
           <div class="hero-amount-display" id="heroAccumulatedAmount">₪0</div>
           <div style="font-size:0.9rem; font-weight:600;" id="heroAccumulatedNote">הכל מאוזן ומסודר</div>
         </div>
@@ -695,20 +707,27 @@
           </div>
         </div>
 
-        <!-- מד התקדמות יעד החודש -->
+        <!-- מד התקדמות כפול: יעד תשלום + התקדמות ימי החודש (יחסיות הזמן) -->
         <div class="progress-box">
           <div class="progress-labels-row">
-            <span>התקדמות יעד החודש:</span>
-            <span id="heroMonthProgressPct">0%</span>
+            <span id="heroDonationProgressLabel">הפרשה: 0%</span>
+            <span id="heroMonthDaysProgressLabel">יום 1 מתוך 30</span>
           </div>
           <div class="progress-track-bg">
+            <!-- סרגל מילוי תרומות -->
             <div class="progress-bar-fill-bar" id="progressBarFill" style="width: 0%;"></div>
+            <!-- סמן יום אנכי על הסרגל המציג איפה אנחנו עומדים בלוח השנה ביחס לחודש -->
+            <div class="month-day-indicator-line" id="monthDayMarker" style="right: 0%;" title="התקדמות ימי החודש"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:0.75rem;">
+            <span id="monthRelativePacingText" style="font-weight:700;">מעקב קצב...</span>
+            <span id="monthRemainingDaysText" style="color:#94a3b8;">נותרו ימים</span>
           </div>
         </div>
       </div>
 
       <!-- רשת מדדים (2x2) -->
-      <div class="stats-card-grid">
+      <div class="stats-grid stats-card-grid">
         <div class="micro-stat-card">
           <span class="micro-label">חיוב מעשר מוגדר</span>
           <span class="micro-value" id="statBaseMaaserAmount">₪1,000</span>
@@ -721,6 +740,7 @@
           <span class="micro-label">מספר תרומות החודש</span>
           <span class="micro-value" id="statCountThisMonth">0</span>
         </div>
+        <!-- יתרה מחודש קודם ללא סוגריים -->
         <div class="micro-stat-card">
           <span class="micro-label">יתרה מחודש קודם</span>
           <span class="micro-value" id="statOpeningBalance">0 ₪</span>
@@ -757,7 +777,7 @@
       </div>
     </section>
 
-    <!-- מסך 2: הוספת תרומה / הוראת קבע (מאופס בכל כניסה) -->
+    <!-- מסך 2: הוספת תרומה / הוראת קבע -->
     <section id="view-donation-form" class="tab-section">
       <div class="section-card">
         <div class="section-header-row" style="border-bottom:1px solid var(--border); padding-bottom:10px;">
@@ -856,9 +876,8 @@
       </div>
     </section>
 
-    <!-- מסך 3: סיכום ו-BI (דשבורד אנליטיקה וגרפים חכמים) -->
+    <!-- מסך 3: סיכום (דשבורד אנליטיקה וגרפים חכמים) -->
     <section id="view-analytics" class="tab-section">
-      <!-- 4 כרטיסי KPI BI -->
       <div class="stats-card-grid">
         <div class="micro-stat-card">
           <span class="micro-label">סה״כ הופרש בפועל</span>
@@ -878,16 +897,14 @@
         </div>
       </div>
 
-      <!-- גרף עמודות השוואתי חודשי (כמה נדרש מול כמה נתרם בפועל) -->
+      <!-- גרף עמודות השוואתי חודשי -->
       <div class="section-card">
         <div class="section-header-row" style="margin-bottom:6px;">
           <h2 class="section-headline">השוואה חודשית: חיוב מול הופרש בפועל</h2>
         </div>
         <p class="text-muted" style="font-size:0.8rem; margin-bottom:12px;">מבט חודשי להשוואת סכום היעד מול סך התרומות שבוצעו.</p>
         
-        <div class="chart-box" id="biMonthlyCompareChartContainer">
-          <!-- נטען באמצעות SVG דינמי -->
-        </div>
+        <div class="chart-box" id="biMonthlyCompareChartContainer"></div>
 
         <div class="chart-legend">
           <span class="legend-item">
@@ -901,16 +918,14 @@
         </div>
       </div>
 
-      <!-- גרף מגמת המאזן המצטבר (Closing Balance Trend) -->
+      <!-- גרף מגמת המאזן המצטבר -->
       <div class="section-card">
         <div class="section-header-row" style="margin-bottom:6px;">
           <h2 class="section-headline">מגמת המאזן המצטבר (חודש אחר חודש)</h2>
         </div>
         <p class="text-muted" style="font-size:0.8rem; margin-bottom:12px;">מציג האם צברת עודף זכות (חיובי) או נותר סכום להפרשה (שלילי).</p>
         
-        <div class="chart-box" id="biBalanceTrendChartContainer">
-          <!-- נטען באמצעות SVG דינמי -->
-        </div>
+        <div class="chart-box" id="biBalanceTrendChartContainer"></div>
       </div>
 
       <!-- פילוח לפי קטגוריות -->
@@ -992,7 +1007,7 @@
 
   </main>
 
-  <!-- סרגל תחתון צף (5 טאבים ברורים ונוחים) -->
+  <!-- סרגל תחתון צף (טאב הסיכום נקרא "סיכום") -->
   <nav class="floating-bottom-nav">
     <button type="button" class="nav-tab-btn active" data-tab="view-dashboard">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
@@ -1004,7 +1019,7 @@
     </button>
     <button type="button" class="nav-tab-btn" data-tab="view-analytics">
       <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-      <span>סיכום ו-BI</span>
+      <span>סיכום</span>
     </button>
     <button type="button" class="nav-tab-btn" data-tab="view-history">
       <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
@@ -1413,7 +1428,6 @@
       await cloud.push(state);
     }
 
-    /* איפוס מלא של הטופס לדף חדש ונקי */
     function clearAndResetDonationForm() {
       state.editingId = null;
       document.getElementById('donationEntryForm').reset();
@@ -1458,14 +1472,11 @@
       }
     }
 
-    /* ========================================================
-       רינדור דשבורד BI וגרפים אנליטיים (Pure Inline SVG)
-       ======================================================== */
+    /* רינדור דשבורד סיכום וגרפים */
     function renderAnalyticsBI() {
       const months = state.monthlyData;
       if (!months || months.length === 0) return;
 
-      // 1. KPI Cards
       const totalDonated = months.reduce((s, m) => s + m.monthDonated, 0);
       const totalRequired = months.reduce((s, m) => s + m.baseDebt, 0);
       const complianceRate = totalRequired > 0 ? Math.round((totalDonated / totalRequired) * 100) : 0;
@@ -1480,16 +1491,9 @@
 
       document.getElementById('biMonthlyAvg').textContent = formatCurrency(monthlyAvg);
 
-      // 2. גרף עמודות השוואתי חודשי (כמה נדרש מול כמה הופרש בפועל)
       renderMonthlyCompareChart(months);
-
-      // 3. גרף מגמת המאזן המצטבר (חודש אחר חודש)
       renderBalanceTrendChart(months);
-
-      // 4. פילוח לפי קטגוריות
       renderCategoryDistribution(totalDonated);
-
-      // 5. חמשת המוטבים המובילים
       renderTopBeneficiaries(totalDonated);
     }
 
@@ -1510,19 +1514,16 @@
 
       let svg = `
         <svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="width:100%; min-width:${chartWidth}px; height:${chartHeight}px; display:block;">
-          <!-- קו בסיס -->
           <line x1="${padLeft}" y1="${chartHeight - padBottom}" x2="${chartWidth - padRight}" y2="${chartHeight - padBottom}" stroke="var(--border)" stroke-width="1.5"/>
       `;
 
       months.forEach((m, idx) => {
         const xGroup = padLeft + idx * step + (step / 2);
         
-        // עמודת חיוב (Required) - כחול
         const hRequired = Math.round((m.baseDebt / maxVal) * plotHeight);
         const yRequired = chartHeight - padBottom - hRequired;
         const xReq = xGroup - barWidth - 2;
 
-        // עמודת הופרש (Donated) - ירוק אמרלד
         const hDonated = Math.round((m.monthDonated / maxVal) * plotHeight);
         const yDonated = chartHeight - padBottom - hDonated;
         const xDon = xGroup + 2;
@@ -1530,21 +1531,17 @@
         const monthName = SHORT_HEBREW_MONTHS[m.month - 1] || `${m.month}`;
 
         svg += `
-          <!-- עמודת חיוב -->
           <rect x="${xReq}" y="${yRequired}" width="${barWidth}" height="${hRequired}" fill="#3b82f6" rx="3">
             <title>חיוב ${monthName}: ${formatCurrency(m.baseDebt)}</title>
           </rect>
-          <!-- עמודת הופרש בפועל -->
           <rect x="${xDon}" y="${yDonated}" width="${barWidth}" height="${hDonated}" fill="#10b981" rx="3">
             <title>הופרש בפועל ${monthName}: ${formatCurrency(m.monthDonated)}</title>
           </rect>
-          <!-- סכום מעל עמודת הופרש אם גדול מ-0 -->
           ${m.monthDonated > 0 ? `
             <text x="${xDon + barWidth/2}" y="${yDonated - 5}" font-size="9" font-weight="700" fill="var(--slate-600)" text-anchor="middle" font-family="system-ui">
               ${Math.round(m.monthDonated)}
             </text>
           ` : ''}
-          <!-- תווית חודש -->
           <text x="${xGroup}" y="${chartHeight - padBottom + 18}" font-size="11" font-weight="600" fill="var(--slate-600)" text-anchor="middle" font-family="system-ui">
             ${monthName}
           </text>
@@ -1569,15 +1566,12 @@
       const balances = months.map(m => m.closingBalance);
       const maxAbs = Math.max(...balances.map(b => Math.abs(b)), 500);
 
-      // קו האמצע (אפס)
       const zeroY = padTop + (plotHeight / 2);
       const step = plotWidth / (months.length > 1 ? months.length - 1 : 1);
 
       const points = months.map((m, idx) => {
         const x = padLeft + idx * step;
-        // ערך חיובי = נותר להפריש (למטה מקו האפס או למעלה),
-        // נציג: מעל קו האפס = זכות עודפת (עודף ששולם מראש), מתחת = חוסר שנותר להפריש
-        const normalized = -m.closingBalance; // כי מינוס ב-closingBalance זה עודף
+        const normalized = -m.closingBalance;
         const y = zeroY - ((normalized / maxAbs) * (plotHeight / 2.3));
         return { x, y, val: m.closingBalance, label: SHORT_HEBREW_MONTHS[m.month - 1] };
       });
@@ -1589,20 +1583,11 @@
 
       let svg = `
         <svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="width:100%; min-width:${chartWidth}px; height:${chartHeight}px; display:block;">
-          <defs>
-            <linearGradient id="balanceGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
-              <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.1"/>
-            </linearGradient>
-          </defs>
-          <!-- קו האפס המאוזן -->
           <line x1="${padLeft}" y1="${zeroY}" x2="${chartWidth - padRight}" y2="${zeroY}" stroke="var(--slate-400)" stroke-width="1" stroke-dasharray="4 3"/>
           <text x="${chartWidth - padRight + 4}" y="${zeroY + 3}" font-size="9" fill="var(--slate-400)" font-family="system-ui">מאוזן (0)</text>
 
-          <!-- קו המגמה -->
           <path d="${pathD}" fill="none" stroke="var(--primary-accent)" stroke-width="3" stroke-linecap="round"/>
 
-          <!-- נקודות וטקסטים לכל חודש -->
           ${points.map(p => `
             <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${p.val <= 0 ? '#10b981' : '#f43f5e'}" stroke="#ffffff" stroke-width="2">
               <title>${p.label}: ${formatCurrency(p.val)}</title>
@@ -1693,7 +1678,7 @@
         closingBalance: 0, openingBalance: 0, monthDonated: 0, donationCount: 0, baseDebt: 1000
       };
 
-      // 1. סך הכל מצטבר
+      // 1. סך הכל מצטבר (ללא סוגריים)
       const closing = curM.closingBalance;
       const heroAmount = document.getElementById('heroAccumulatedAmount');
       const heroNote = document.getElementById('heroAccumulatedNote');
@@ -1727,27 +1712,62 @@
       document.getElementById('heroMonthDebtSum').textContent = formatCurrency(baseDebt);
       document.getElementById('heroMonthDonatedSum').textContent = formatCurrency(monthDonated);
 
-      const pct = Math.min(Math.round((monthDonated / (baseDebt || 1)) * 100), 100);
-      document.getElementById('heroMonthProgressPct').textContent = `${pct}% מתוך החיוב`;
-      document.getElementById('progressBarFill').style.width = `${pct}%`;
+      // חישוב יחסיות התרומות מול ימי החודש שחלפו
+      const donationPct = Math.min(Math.round((monthDonated / (baseDebt || 1)) * 100), 100);
+      document.getElementById('progressBarFill').style.width = `${donationPct}%`;
+
+      const dayOfMonth = now.getDate();
+      const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+      const monthDaysPct = Math.min(Math.round((dayOfMonth / totalDaysInMonth) * 100), 100);
+      const daysRemaining = totalDaysInMonth - dayOfMonth;
+
+      // עדכון תוויות התקדמות כפולה
+      document.getElementById('heroDonationProgressLabel').textContent = `הפרשה: ${donationPct}% (${formatCurrency(monthDonated)} מתוך ${formatCurrency(baseDebt)})`;
+      document.getElementById('heroMonthDaysProgressLabel').textContent = `יום ${dayOfMonth} מתוך ${totalDaysInMonth} (${monthDaysPct}% מהחודש)`;
+
+      // סמן יום אנכי על הסרגל (ב-RTL: right מייצג את ההתקדמות מראש הסרגל מימין)
+      const dayMarker = document.getElementById('monthDayMarker');
+      if (dayMarker) {
+        dayMarker.style.right = `${monthDaysPct}%`;
+      }
+
+      // חיווי קצב אינטליגנטי ביחס לחודש
+      const pacingTextEl = document.getElementById('monthRelativePacingText');
+      const remainingDaysEl = document.getElementById('monthRemainingDaysText');
+
+      remainingDaysEl.textContent = daysRemaining === 0 ? 'היום היום האחרון לחודש' : `נותרו עוד ${daysRemaining} ימים`;
+
+      if (donationPct >= 100) {
+        pacingTextEl.textContent = 'הושלם כל היעד החודשי! 🎯';
+        pacingTextEl.style.color = '#34d399';
+      } else if (donationPct >= monthDaysPct) {
+        pacingTextEl.textContent = 'מקדים את קצב החודש ⏱️';
+        pacingTextEl.style.color = '#34d399';
+      } else if (dayOfMonth <= 7) {
+        pacingTextEl.textContent = 'תחילת חודש — יש עוד זמן ⏳';
+        pacingTextEl.style.color = '#94a3b8';
+      } else {
+        pacingTextEl.textContent = `קצב החודש (${monthDaysPct}%) מקדים את התרומות (${donationPct}%)`;
+        pacingTextEl.style.color = '#fecdd3';
+      }
 
       // 3. קוביות מדדים
       document.getElementById('statBaseMaaserAmount').textContent = formatCurrency(baseDebt);
       document.getElementById('statDonatedThisMonth').textContent = formatCurrency(monthDonated);
       document.getElementById('statCountThisMonth').textContent = curM.donationCount;
 
-      // 4. יתרה מחודש קודם
+      // 4. יתרה מחודש קודם (ללא סוגריים וללא כיתוב חוסר להשלמה)
       const openBal = curM.openingBalance;
       const openBalEl = document.getElementById('statOpeningBalance');
       openBalEl.className = 'micro-value';
       if (openBal > 0) {
-        openBalEl.textContent = `- ${formatCurrency(openBal)} (חוסר להשלמה)`;
+        openBalEl.textContent = `- ${formatCurrency(openBal)}`;
         openBalEl.classList.add('opening-minus');
       } else if (openBal < 0) {
-        openBalEl.textContent = `+ ${formatCurrency(Math.abs(openBal))} (זכות עודפת)`;
+        openBalEl.textContent = `+ ${formatCurrency(Math.abs(openBal))}`;
         openBalEl.classList.add('opening-plus');
       } else {
-        openBalEl.textContent = '0 ₪ (מאוזן)';
+        openBalEl.textContent = '0 ₪';
       }
 
       // 5. יעד שנתי ומעקב קצב
@@ -1773,8 +1793,6 @@
       document.getElementById('allDonationsListContainer').innerHTML = state.donations.map(renderDonationItemHtml).join('') || '<p class="text-muted">אין תרומות רשומות</p>';
 
       renderMonthsList();
-
-      // רינדור טאב הסיכום וה-BI
       renderAnalyticsBI();
 
       // סלקטים
@@ -1800,6 +1818,25 @@
           ${c.name !== 'כללי' ? `<button type="button" class="link-action-btn" style="color:var(--rose);" onclick="deleteCategory('${c.id}')">מחק</button>` : ''}
         </li>
       `).join('');
+    }
+
+    function renderDonationItemHtml(d) {
+      const cat = state.categories.find(c => c.name === d.category) || { color: '#64748b', name: d.category || 'כללי' };
+      return `
+        <div class="donation-item-row" onclick="openEditDonation('${d.id}')">
+          <div>
+            <div class="donation-title">
+              ${d.isRecurring ? '🔄 ' : ''}${d.beneficiary}
+            </div>
+            <div class="donation-tags">
+              <span>📅 ${d.isRecurring ? `הוראת קבע ב-${d.day} לחודש` : formatDateToDisplay(d.date)}</span>
+              <span class="category-bubble" style="background:${cat.color};">${cat.name}</span>
+              ${d.section46 ? '<span>• סעיף 46</span>' : ''}
+            </div>
+          </div>
+          <div class="donation-amount-sum">${formatCurrency(d.amount)}</div>
+        </div>
+      `;
     }
 
     function renderMonthsList() {
@@ -1866,11 +1903,9 @@
       document.getElementById('btnCancelFormAction').addEventListener('click', () => switchTab('view-dashboard'));
       document.getElementById('btnTopProfileAvatar').addEventListener('click', () => switchTab('view-settings'));
 
-      // מתג תרומה מול קבע
       document.getElementById('tabOptOneTime').addEventListener('click', () => setDonationMode(false));
       document.getElementById('tabOptRecurring').addEventListener('click', () => setDonationMode(true));
 
-      // סכום מהיר
       document.querySelectorAll('.pill-amt').forEach(b => {
         b.addEventListener('click', () => {
           document.getElementById('inpDonationAmount').value = b.dataset.val;
@@ -1879,7 +1914,6 @@
         });
       });
 
-      // תאריכים
       const nativePicker = document.getElementById('inpNativeDate');
       const displayPicker = document.getElementById('inpDisplayDate');
       nativePicker.addEventListener('change', () => {
@@ -1904,7 +1938,6 @@
         document.getElementById('errDonationDate').classList.remove('visible');
       });
 
-      // שמירת תרומה עם אימות
       document.getElementById('donationEntryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         clearValidationErrors();
@@ -1982,7 +2015,6 @@
         await notifyChanges();
       });
 
-      // מחיקת תרומה
       document.getElementById('btnDeleteDonationRecord').addEventListener('click', async () => {
         if (!state.editingId) return;
         await db.del('donations', state.editingId);
@@ -1993,7 +2025,6 @@
         await notifyChanges();
       });
 
-      // שמירת הגדרות
       document.getElementById('settingsMaaserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const startMonth = parseInt(document.getElementById('cfgStartMonth').value, 10);
@@ -2017,7 +2048,6 @@
         await notifyChanges();
       });
 
-      // פופ-אפ שמירה במסך הבית
       document.getElementById('btnHelpPwa').addEventListener('click', () => {
         document.getElementById('pwaInstallModal').classList.remove('hidden');
       });
@@ -2028,7 +2058,6 @@
         document.getElementById('pwaInstallModal').classList.add('hidden');
       });
 
-      // קטגוריות
       document.getElementById('btnAddNewCategoryModal').addEventListener('click', () => {
         document.getElementById('categoryAddForm').reset();
         document.getElementById('categoryDialog').classList.remove('hidden');
@@ -2049,7 +2078,6 @@
         await notifyChanges();
       });
 
-      // ייצוא CSV
       document.getElementById('btnExportToExcel').addEventListener('click', () => {
         const headers = ['סוג', 'תאריך / יום', 'מוטב', 'סכום', 'קטגוריה', 'אמצעי תשלום', 'סעיף 46'];
         const rows = state.donations.map(d => [
