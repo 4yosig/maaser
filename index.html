@@ -23,8 +23,10 @@
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       --primary: #0f172a;
       --primary-accent: #2563eb;
+      --primary-soft: #38bdf8;
       --gold: #d97706;
       --emerald: #059669;
+      --emerald-light: #10b981;
       --emerald-bg: #ecfdf5;
       --rose: #e11d48;
       --rose-bg: #fff1f2;
@@ -158,7 +160,7 @@
     .tab-section.active { display: block; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* כרטיס Hero ראשי - Slate-Navy מודרני */
+    /* כרטיס Hero ראשי */
     .hero-summary-card {
       background: linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #334155 100%);
       color: #ffffff;
@@ -195,10 +197,7 @@
       background: rgba(255, 255, 255, 0.12);
     }
 
-    /* מדד סך הכל מצטבר */
-    .hero-main-stat {
-      margin-bottom: 14px;
-    }
+    .hero-main-stat { margin-bottom: 14px; }
     .hero-stat-label {
       font-size: 0.8rem;
       font-weight: 600;
@@ -213,11 +212,10 @@
       line-height: 1.1;
       margin-bottom: 6px;
     }
-    .hero-amount-display.is-minus { color: #fecdd3; } /* נותר להפריש - גוון אפרסק רך */
-    .hero-amount-display.is-plus { color: #a7f3d0; }  /* עודף זכות - מנטה */
+    .hero-amount-display.is-minus { color: #fecdd3; }
+    .hero-amount-display.is-plus { color: #a7f3d0; }
     .hero-amount-display.is-balanced { color: #ffffff; }
 
-    /* פירוט חודש זה בלבד */
     .hero-month-breakdown {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -240,7 +238,7 @@
       color: #f8fafc;
     }
 
-    /* מד התקדמות יעד */
+    /* מד התקדמות */
     .progress-box {
       background: rgba(0, 0, 0, 0.2);
       border-radius: var(--radius-md);
@@ -269,7 +267,7 @@
       transition: width 400ms ease;
     }
 
-    /* רשת מדדים (2x2) */
+    /* קוביות מדדים 2x2 */
     .stats-card-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -296,10 +294,10 @@
       color: var(--slate-900);
     }
     .micro-value.accent { color: var(--emerald); }
-    .micro-value.opening-plus { color: var(--emerald); font-weight: 800; }
-    .micro-value.opening-minus { color: var(--rose); font-weight: 800; }
+    .micro-value.opening-plus { color: var(--emerald); }
+    .micro-value.opening-minus { color: var(--rose); }
 
-    /* כרטיסים כלליים */
+    /* כרטיסי עמוד */
     .section-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -364,7 +362,7 @@
       direction: ltr;
     }
 
-    /* מתג בחירה בין תרומה חד-פעמית להוראת קבע */
+    /* מתג בחירה בין תרומה לקבע */
     .donation-type-toggle {
       display: flex;
       background: var(--slate-100);
@@ -391,7 +389,7 @@
       box-shadow: var(--shadow-soft);
     }
 
-    /* שדות קלט והודעות שגיאה */
+    /* שדות קלט ושגיאות */
     .input-block { margin-bottom: 16px; position: relative; }
     .input-label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
     
@@ -462,7 +460,7 @@
     }
     .quick-pill-btn:hover { background: var(--border); }
 
-    /* כפתורים */
+    /* כפתורים ראשיים */
     .action-button-main {
       width: 100%;
       height: 50px;
@@ -493,16 +491,16 @@
       cursor: pointer;
     }
 
-    /* סרגל ניווט צף תחתון */
+    /* סרגל ניווט צף תחתון (5 טאבים) */
     .floating-bottom-nav {
       position: fixed;
       bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
-      width: calc(100% - 24px);
-      max-width: 500px;
+      width: calc(100% - 20px);
+      max-width: 520px;
       height: 64px;
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
@@ -512,9 +510,9 @@
       justify-content: space-around;
       box-shadow: var(--shadow-card);
       z-index: 50;
-      padding: 0 8px;
+      padding: 0 4px;
     }
-    [data-theme="dark"] .floating-bottom-nav { background: rgba(19, 29, 49, 0.94); }
+    [data-theme="dark"] .floating-bottom-nav { background: rgba(19, 29, 49, 0.95); }
 
     .nav-tab-btn {
       flex: 1;
@@ -527,15 +525,45 @@
       justify-content: center;
       color: var(--slate-400);
       cursor: pointer;
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       font-weight: 700;
-      gap: 2px;
+      gap: 3px;
       transition: color var(--transition);
+      padding: 2px;
     }
     .nav-tab-btn.active { color: var(--primary-accent); }
-    .nav-tab-btn svg { width: 20px; height: 20px; fill: currentColor; }
+    .nav-tab-btn svg { width: 19px; height: 19px; fill: currentColor; }
 
-    /* דיאלוגים מודאליים ופופ-אפ */
+    /* עיצובי גרפים ו-BI */
+    .chart-box {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 8px;
+    }
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-color-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+    .category-bi-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .cat-bi-name { width: 90px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cat-bi-bar-wrap { flex: 1; height: 10px; background: var(--slate-100); border-radius: var(--radius-full); overflow: hidden; }
+    .cat-bi-bar-fill { height: 100%; border-radius: var(--radius-full); }
+    .cat-bi-value { width: 85px; text-align: left; font-size: 0.85rem; font-weight: 800; direction: ltr; }
+
+    /* פופ-אפ שמירה במסך הבית */
     .dialog-backdrop {
       position: fixed;
       inset: 0;
@@ -556,7 +584,6 @@
       box-shadow: var(--shadow-card);
       border: 1px solid var(--border);
     }
-
     .install-step-box {
       display: flex;
       align-items: flex-start;
@@ -639,7 +666,7 @@
     <!-- מסך 1: ראשי (Dashboard) -->
     <section id="view-dashboard" class="tab-section active">
       
-      <!-- כרטיס Hero ראשי ומפורט -->
+      <!-- כרטיס Hero ראשי -->
       <div class="hero-summary-card">
         <div class="hero-top-row">
           <div class="hero-month-title">
@@ -681,7 +708,7 @@
       </div>
 
       <!-- רשת מדדים (2x2) -->
-      <div class="stats-grid stats-card-grid">
+      <div class="stats-card-grid">
         <div class="micro-stat-card">
           <span class="micro-label">חיוב מעשר מוגדר</span>
           <span class="micro-value" id="statBaseMaaserAmount">₪1,000</span>
@@ -710,7 +737,7 @@
         <button type="button" class="action-button-main" id="btnOpenNewDonation" style="margin-top:14px;">➕ הוסף תרומה חדשה</button>
       </div>
 
-      <!-- כרטיס יעד שנתי ומעקב מסודר -->
+      <!-- יעד שנתי ומעקב קצב -->
       <div class="section-card">
         <h2 class="section-headline" style="margin-bottom:12px;">יעד שנתי ומעקב קצב</h2>
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
@@ -730,7 +757,7 @@
       </div>
     </section>
 
-    <!-- מסך 2: הוספת תרומה / הוראת קבע (טופס מאוחד שמתנקה בכל פעם) -->
+    <!-- מסך 2: הוספת תרומה / הוראת קבע (מאופס בכל כניסה) -->
     <section id="view-donation-form" class="tab-section">
       <div class="section-card">
         <div class="section-header-row" style="border-bottom:1px solid var(--border); padding-bottom:10px;">
@@ -741,13 +768,13 @@
         <form id="donationEntryForm" novalidate style="margin-top:14px;">
           <input type="hidden" id="editDonationId" value="">
 
-          <!-- מתג בחירה בין תרומה חד-פעמית לקבועה -->
+          <!-- מתג בחירה -->
           <div class="donation-type-toggle">
             <button type="button" class="toggle-opt-btn active" id="tabOptOneTime">תרומה חד-פעמית</button>
             <button type="button" class="toggle-opt-btn" id="tabOptRecurring">הוראת קבע חודשית</button>
           </div>
 
-          <!-- סכום התרומה -->
+          <!-- סכום -->
           <div class="input-block">
             <label class="input-label" for="inpDonationAmount">סכום התרומה (₪) *</label>
             <input type="number" id="inpDonationAmount" inputmode="decimal" step="0.01" min="0.01" class="text-input-field" placeholder="0.00" required>
@@ -761,7 +788,7 @@
             </div>
           </div>
 
-          <!-- שם המוטב -->
+          <!-- מוטב -->
           <div class="input-block">
             <label class="input-label" for="inpDonationBeneficiary">שם הארגון / המוטב *</label>
             <input type="text" id="inpDonationBeneficiary" list="beneficiarySuggestions" class="text-input-field" placeholder="למשל: קופת העיר, עזר מציון, ישיבה..." required>
@@ -769,7 +796,7 @@
             <datalist id="beneficiarySuggestions"></datalist>
           </div>
 
-          <!-- שדות ייחודיים לתרומה חד-פעמית -->
+          <!-- שדות לתרומה רגילה -->
           <div id="blockOneTimeFields">
             <div class="input-block">
               <label class="input-label">תאריך התרומה *</label>
@@ -797,7 +824,7 @@
             </div>
           </div>
 
-          <!-- שדות ייחודיים להוראת קבע -->
+          <!-- שדות להוראת קבע -->
           <div id="blockRecurringFields" class="hidden">
             <div class="input-block">
               <label class="input-label" for="inpRecurringDay">יום החיוב הקבוע בחודש (1–28)</label>
@@ -820,7 +847,6 @@
             </label>
           </div>
 
-          <!-- כפתורי פעולה -->
           <div style="display:flex; flex-direction:column; gap:10px; margin-top:24px;">
             <button type="submit" class="action-button-main" id="btnSubmitForm">✓ שמור תרומה</button>
             <button type="button" class="action-button-secondary" id="btnCancelFormAction">ביטול</button>
@@ -830,7 +856,77 @@
       </div>
     </section>
 
-    <!-- מסך 3: היסטוריה ומעקב חודשים -->
+    <!-- מסך 3: סיכום ו-BI (דשבורד אנליטיקה וגרפים חכמים) -->
+    <section id="view-analytics" class="tab-section">
+      <!-- 4 כרטיסי KPI BI -->
+      <div class="stats-card-grid">
+        <div class="micro-stat-card">
+          <span class="micro-label">סה״כ הופרש בפועל</span>
+          <span class="micro-value accent" id="biTotalDonated">₪0</span>
+        </div>
+        <div class="micro-stat-card">
+          <span class="micro-label">סה״כ חיוב בסיס נדרש</span>
+          <span class="micro-value" id="biTotalRequired">₪0</span>
+        </div>
+        <div class="micro-stat-card">
+          <span class="micro-label">אחוז עמידה ביעד</span>
+          <span class="micro-value" id="biComplianceRate">0%</span>
+        </div>
+        <div class="micro-stat-card">
+          <span class="micro-label">ממוצע הפרשה חודשי</span>
+          <span class="micro-value" id="biMonthlyAvg">₪0</span>
+        </div>
+      </div>
+
+      <!-- גרף עמודות השוואתי חודשי (כמה נדרש מול כמה נתרם בפועל) -->
+      <div class="section-card">
+        <div class="section-header-row" style="margin-bottom:6px;">
+          <h2 class="section-headline">השוואה חודשית: חיוב מול הופרש בפועל</h2>
+        </div>
+        <p class="text-muted" style="font-size:0.8rem; margin-bottom:12px;">מבט חודשי להשוואת סכום היעד מול סך התרומות שבוצעו.</p>
+        
+        <div class="chart-box" id="biMonthlyCompareChartContainer">
+          <!-- נטען באמצעות SVG דינמי -->
+        </div>
+
+        <div class="chart-legend">
+          <span class="legend-item">
+            <span class="legend-color-dot" style="background:#3b82f6;"></span>
+            <span>חיוב חודשי נדרש</span>
+          </span>
+          <span class="legend-item">
+            <span class="legend-color-dot" style="background:#10b981;"></span>
+            <span>הופרש בפועל</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- גרף מגמת המאזן המצטבר (Closing Balance Trend) -->
+      <div class="section-card">
+        <div class="section-header-row" style="margin-bottom:6px;">
+          <h2 class="section-headline">מגמת המאזן המצטבר (חודש אחר חודש)</h2>
+        </div>
+        <p class="text-muted" style="font-size:0.8rem; margin-bottom:12px;">מציג האם צברת עודף זכות (חיובי) או נותר סכום להפרשה (שלילי).</p>
+        
+        <div class="chart-box" id="biBalanceTrendChartContainer">
+          <!-- נטען באמצעות SVG דינמי -->
+        </div>
+      </div>
+
+      <!-- פילוח לפי קטגוריות -->
+      <div class="section-card">
+        <h2 class="section-headline" style="margin-bottom:12px;">התפלגות תרומות לפי קטגוריה</h2>
+        <div id="biCategoryDistributionList"></div>
+      </div>
+
+      <!-- 5 המוטבים המובילים -->
+      <div class="section-card">
+        <h2 class="section-headline" style="margin-bottom:12px;">5 המוטבים המובילים בתרומות</h2>
+        <div id="biTopBeneficiariesList"></div>
+      </div>
+    </section>
+
+    <!-- מסך 4: היסטוריה ומעקב חודשים -->
     <section id="view-history" class="tab-section">
       <div class="section-card">
         <h2 class="section-headline" style="margin-bottom:12px;">סיכום מעשרות לפי חודשים</h2>
@@ -846,7 +942,7 @@
       </div>
     </section>
 
-    <!-- מסך 4: הגדרות וחישוב מעשר -->
+    <!-- מסך 5: הגדרות וחישוב מעשר -->
     <section id="view-settings" class="tab-section">
       <div class="section-card" style="border:1.5px solid var(--primary-accent);">
         <h2 class="section-headline">חשבון Google וגיבוי ענן ☁️</h2>
@@ -896,7 +992,7 @@
 
   </main>
 
-  <!-- סרגל תחתון צף (4 טאבים מסודרים) -->
+  <!-- סרגל תחתון צף (5 טאבים ברורים ונוחים) -->
   <nav class="floating-bottom-nav">
     <button type="button" class="nav-tab-btn active" data-tab="view-dashboard">
       <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
@@ -905,6 +1001,10 @@
     <button type="button" class="nav-tab-btn" data-tab="view-donation-form" id="navBtnDonationTab">
       <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
       <span>תרומה</span>
+    </button>
+    <button type="button" class="nav-tab-btn" data-tab="view-analytics">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      <span>סיכום ו-BI</span>
     </button>
     <button type="button" class="nav-tab-btn" data-tab="view-history">
       <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
@@ -916,7 +1016,7 @@
     </button>
   </nav>
 
-  <!-- פופ-אפ שמירה במסך הבית (Install Guide) -->
+  <!-- פופ-אפ שמירה במסך הבית -->
   <div class="dialog-backdrop hidden" id="pwaInstallModal">
     <div class="dialog-card-box">
       <div style="text-align:center; margin-bottom:14px;">
@@ -976,6 +1076,7 @@
   <!-- ================= קוד התוכנה ================= -->
   <script>
     const HEBREW_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
+    const SHORT_HEBREW_MONTHS = ["ינו'", "פבר'", "מרץ", "אפר'", "מאי", "יוני", "יולי", "אוג'", "ספט'", "אוק'", "נוב'", "דצמ'"];
 
     function formatCurrency(val) {
       const num = Number(val) || 0;
@@ -1261,11 +1362,9 @@
       const monthsMap = new Map();
       let runningOpening = 0;
 
-      // איסוף הוראות קבע (הן נספרות בכל חודש מיום התחלתן)
       const recurringItems = state.donations.filter(d => d.isRecurring);
 
       monthKeys.forEach(item => {
-        // תרומות חד-פעמיות השייכות לחודש זה
         const monthDons = state.donations.filter(d => {
           if (d.isRecurring) return false;
           const ym = getYearMonthFromIso(d.date);
@@ -1276,7 +1375,6 @@
         const recurringTotal = recurringItems.reduce((s, d) => s + (Number(d.amount) || 0), 0);
         const totalDonated = manualTotal + recurringTotal;
 
-        // סגירה = פתיחה + חיוב החודש - תרומות
         const closing = Math.round((runningOpening + baseDebt - totalDonated) * 100) / 100;
 
         monthsMap.set(item.key, {
@@ -1325,10 +1423,7 @@
       document.getElementById('inpDisplayDate').value = formatDateToDisplay(today);
       document.getElementById('inpNativeDate').value = today.toISOString().split('T')[0];
       
-      // החזרת מצב לתרומה חד-פעמית
       setDonationMode(false);
-
-      // ניקוי כל הודעות השגיאה והסימונים
       clearValidationErrors();
 
       document.getElementById('formHeaderTitle').textContent = 'הוספת תרומה חדשה';
@@ -1363,14 +1458,235 @@
       }
     }
 
-    /* רינדור המסכים וה-UI */
+    /* ========================================================
+       רינדור דשבורד BI וגרפים אנליטיים (Pure Inline SVG)
+       ======================================================== */
+    function renderAnalyticsBI() {
+      const months = state.monthlyData;
+      if (!months || months.length === 0) return;
+
+      // 1. KPI Cards
+      const totalDonated = months.reduce((s, m) => s + m.monthDonated, 0);
+      const totalRequired = months.reduce((s, m) => s + m.baseDebt, 0);
+      const complianceRate = totalRequired > 0 ? Math.round((totalDonated / totalRequired) * 100) : 0;
+      const monthlyAvg = months.length > 0 ? Math.round(totalDonated / months.length) : 0;
+
+      document.getElementById('biTotalDonated').textContent = formatCurrency(totalDonated);
+      document.getElementById('biTotalRequired').textContent = formatCurrency(totalRequired);
+      
+      const rateEl = document.getElementById('biComplianceRate');
+      rateEl.textContent = `${complianceRate}%`;
+      rateEl.style.color = complianceRate >= 100 ? 'var(--emerald)' : (complianceRate >= 80 ? 'var(--gold)' : 'var(--rose)');
+
+      document.getElementById('biMonthlyAvg').textContent = formatCurrency(monthlyAvg);
+
+      // 2. גרף עמודות השוואתי חודשי (כמה נדרש מול כמה הופרש בפועל)
+      renderMonthlyCompareChart(months);
+
+      // 3. גרף מגמת המאזן המצטבר (חודש אחר חודש)
+      renderBalanceTrendChart(months);
+
+      // 4. פילוח לפי קטגוריות
+      renderCategoryDistribution(totalDonated);
+
+      // 5. חמשת המוטבים המובילים
+      renderTopBeneficiaries(totalDonated);
+    }
+
+    function renderMonthlyCompareChart(months) {
+      const container = document.getElementById('biMonthlyCompareChartContainer');
+      const maxVal = Math.max(...months.map(m => Math.max(m.baseDebt, m.monthDonated)), 500);
+
+      const chartWidth = Math.max(months.length * 68, 360);
+      const chartHeight = 220;
+      const padTop = 30;
+      const padBottom = 35;
+      const padLeft = 20;
+      const padRight = 20;
+      const plotHeight = chartHeight - padTop - padBottom;
+      const plotWidth = chartWidth - padLeft - padRight;
+      const step = plotWidth / months.length;
+      const barWidth = 14;
+
+      let svg = `
+        <svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="width:100%; min-width:${chartWidth}px; height:${chartHeight}px; display:block;">
+          <!-- קו בסיס -->
+          <line x1="${padLeft}" y1="${chartHeight - padBottom}" x2="${chartWidth - padRight}" y2="${chartHeight - padBottom}" stroke="var(--border)" stroke-width="1.5"/>
+      `;
+
+      months.forEach((m, idx) => {
+        const xGroup = padLeft + idx * step + (step / 2);
+        
+        // עמודת חיוב (Required) - כחול
+        const hRequired = Math.round((m.baseDebt / maxVal) * plotHeight);
+        const yRequired = chartHeight - padBottom - hRequired;
+        const xReq = xGroup - barWidth - 2;
+
+        // עמודת הופרש (Donated) - ירוק אמרלד
+        const hDonated = Math.round((m.monthDonated / maxVal) * plotHeight);
+        const yDonated = chartHeight - padBottom - hDonated;
+        const xDon = xGroup + 2;
+
+        const monthName = SHORT_HEBREW_MONTHS[m.month - 1] || `${m.month}`;
+
+        svg += `
+          <!-- עמודת חיוב -->
+          <rect x="${xReq}" y="${yRequired}" width="${barWidth}" height="${hRequired}" fill="#3b82f6" rx="3">
+            <title>חיוב ${monthName}: ${formatCurrency(m.baseDebt)}</title>
+          </rect>
+          <!-- עמודת הופרש בפועל -->
+          <rect x="${xDon}" y="${yDonated}" width="${barWidth}" height="${hDonated}" fill="#10b981" rx="3">
+            <title>הופרש בפועל ${monthName}: ${formatCurrency(m.monthDonated)}</title>
+          </rect>
+          <!-- סכום מעל עמודת הופרש אם גדול מ-0 -->
+          ${m.monthDonated > 0 ? `
+            <text x="${xDon + barWidth/2}" y="${yDonated - 5}" font-size="9" font-weight="700" fill="var(--slate-600)" text-anchor="middle" font-family="system-ui">
+              ${Math.round(m.monthDonated)}
+            </text>
+          ` : ''}
+          <!-- תווית חודש -->
+          <text x="${xGroup}" y="${chartHeight - padBottom + 18}" font-size="11" font-weight="600" fill="var(--slate-600)" text-anchor="middle" font-family="system-ui">
+            ${monthName}
+          </text>
+        `;
+      });
+
+      svg += `</svg>`;
+      container.innerHTML = svg;
+    }
+
+    function renderBalanceTrendChart(months) {
+      const container = document.getElementById('biBalanceTrendChartContainer');
+      const chartWidth = Math.max(months.length * 65, 360);
+      const chartHeight = 180;
+      const padTop = 25;
+      const padBottom = 30;
+      const padLeft = 25;
+      const padRight = 25;
+      const plotHeight = chartHeight - padTop - padBottom;
+      const plotWidth = chartWidth - padLeft - padRight;
+
+      const balances = months.map(m => m.closingBalance);
+      const maxAbs = Math.max(...balances.map(b => Math.abs(b)), 500);
+
+      // קו האמצע (אפס)
+      const zeroY = padTop + (plotHeight / 2);
+      const step = plotWidth / (months.length > 1 ? months.length - 1 : 1);
+
+      const points = months.map((m, idx) => {
+        const x = padLeft + idx * step;
+        // ערך חיובי = נותר להפריש (למטה מקו האפס או למעלה),
+        // נציג: מעל קו האפס = זכות עודפת (עודף ששולם מראש), מתחת = חוסר שנותר להפריש
+        const normalized = -m.closingBalance; // כי מינוס ב-closingBalance זה עודף
+        const y = zeroY - ((normalized / maxAbs) * (plotHeight / 2.3));
+        return { x, y, val: m.closingBalance, label: SHORT_HEBREW_MONTHS[m.month - 1] };
+      });
+
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        pathD += ` L ${points[i].x} ${points[i].y}`;
+      }
+
+      let svg = `
+        <svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="width:100%; min-width:${chartWidth}px; height:${chartHeight}px; display:block;">
+          <defs>
+            <linearGradient id="balanceGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.1"/>
+            </linearGradient>
+          </defs>
+          <!-- קו האפס המאוזן -->
+          <line x1="${padLeft}" y1="${zeroY}" x2="${chartWidth - padRight}" y2="${zeroY}" stroke="var(--slate-400)" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="${chartWidth - padRight + 4}" y="${zeroY + 3}" font-size="9" fill="var(--slate-400)" font-family="system-ui">מאוזן (0)</text>
+
+          <!-- קו המגמה -->
+          <path d="${pathD}" fill="none" stroke="var(--primary-accent)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- נקודות וטקסטים לכל חודש -->
+          ${points.map(p => `
+            <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${p.val <= 0 ? '#10b981' : '#f43f5e'}" stroke="#ffffff" stroke-width="2">
+              <title>${p.label}: ${formatCurrency(p.val)}</title>
+            </circle>
+            <text x="${p.x}" y="${chartHeight - padBottom + 18}" font-size="10" font-weight="600" fill="var(--slate-600)" text-anchor="middle" font-family="system-ui">
+              ${p.label}
+            </text>
+          `).join('')}
+        </svg>
+      `;
+      container.innerHTML = svg;
+    }
+
+    function renderCategoryDistribution(totalDonated) {
+      const container = document.getElementById('biCategoryDistributionList');
+      const categorySums = {};
+
+      state.donations.forEach(d => {
+        const cat = d.category || 'כללי';
+        const amt = Number(d.amount) || 0;
+        categorySums[cat] = (categorySums[cat] || 0) + amt;
+      });
+
+      const entries = Object.entries(categorySums).sort((a, b) => b[1] - a[1]);
+      if (entries.length === 0 || totalDonated === 0) {
+        container.innerHTML = '<p class="text-muted" style="text-align:center; padding:12px 0;">אין עדיין נתונים לחלוקה</p>';
+        return;
+      }
+
+      container.innerHTML = entries.map(([name, sum]) => {
+        const pct = Math.round((sum / totalDonated) * 100);
+        const catObj = state.categories.find(c => c.name === name) || { color: '#64748b' };
+        return `
+          <div class="category-bi-row">
+            <span class="cat-bi-name" title="${name}">${name}</span>
+            <div class="cat-bi-bar-wrap">
+              <div class="cat-bi-bar-fill" style="width:${pct}%; background:${catObj.color};"></div>
+            </div>
+            <span class="cat-bi-value">${formatCurrency(sum)} (${pct}%)</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTopBeneficiaries(totalDonated) {
+      const container = document.getElementById('biTopBeneficiariesList');
+      const beneficiarySums = {};
+
+      state.donations.forEach(d => {
+        const ben = d.beneficiary || 'לא צוין';
+        const amt = Number(d.amount) || 0;
+        beneficiarySums[ben] = (beneficiarySums[ben] || 0) + amt;
+      });
+
+      const sorted = Object.entries(beneficiarySums).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      if (sorted.length === 0 || totalDonated === 0) {
+        container.innerHTML = '<p class="text-muted" style="text-align:center; padding:12px 0;">אין עדיין תרומות ברשימה</p>';
+        return;
+      }
+
+      container.innerHTML = sorted.map(([name, sum], idx) => {
+        const pct = Math.round((sum / totalDonated) * 100);
+        return `
+          <div class="donation-item-row" style="cursor:default; margin-bottom:6px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:0.85rem; font-weight:800; color:var(--primary-accent); width:20px;">#${idx + 1}</span>
+              <div>
+                <strong style="font-size:0.95rem;">${name}</strong>
+                <div class="text-muted" style="font-size:0.75rem;">${pct}% מסך כל התרומות</div>
+              </div>
+            </div>
+            <strong style="font-size:1.05rem; color:var(--slate-900);">${formatCurrency(sum)}</strong>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /* רינדור המסכים וה-UI הכללי */
     function render() {
       const now = new Date();
       const currentYear = now.getFullYear();
       const currentMonth = now.getMonth() + 1;
       const curKey = getMonthKey(currentYear, currentMonth);
 
-      // חודש נוכחי ב-KPI
       document.getElementById('heroCurrentMonthName').textContent = `${HEBREW_MONTHS[currentMonth - 1]} ${currentYear}`;
 
       const curM = state.monthlyData.find(m => m.key === curKey) || state.monthlyData[state.monthlyData.length - 1] || {
@@ -1420,7 +1736,7 @@
       document.getElementById('statDonatedThisMonth').textContent = formatCurrency(monthDonated);
       document.getElementById('statCountThisMonth').textContent = curM.donationCount;
 
-      // 4. יתרה מחודש קודם עם סימון מפורש של פלוס או מינוס
+      // 4. יתרה מחודש קודם
       const openBal = curM.openingBalance;
       const openBalEl = document.getElementById('statOpeningBalance');
       openBalEl.className = 'micro-value';
@@ -1458,6 +1774,9 @@
 
       renderMonthsList();
 
+      // רינדור טאב הסיכום וה-BI
+      renderAnalyticsBI();
+
       // סלקטים
       const catOpts = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
       document.getElementById('selectDonationCategory').innerHTML = catOpts;
@@ -1481,25 +1800,6 @@
           ${c.name !== 'כללי' ? `<button type="button" class="link-action-btn" style="color:var(--rose);" onclick="deleteCategory('${c.id}')">מחק</button>` : ''}
         </li>
       `).join('');
-    }
-
-    function renderDonationItemHtml(d) {
-      const cat = state.categories.find(c => c.name === d.category) || { color: '#64748b', name: d.category || 'כללי' };
-      return `
-        <div class="donation-item-row" onclick="openEditDonation('${d.id}')">
-          <div>
-            <div class="donation-title">
-              ${d.isRecurring ? '🔄 ' : ''}${d.beneficiary}
-            </div>
-            <div class="donation-tags">
-              <span>📅 ${d.isRecurring ? `הוראת קבע ב-${d.day} לחודש` : formatDateToDisplay(d.date)}</span>
-              <span class="category-bubble" style="background:${cat.color};">${cat.name}</span>
-              ${d.section46 ? '<span>• סעיף 46</span>' : ''}
-            </div>
-          </div>
-          <div class="donation-amount-sum">${formatCurrency(d.amount)}</div>
-        </div>
-      `;
     }
 
     function renderMonthsList() {
@@ -1531,6 +1831,11 @@
       if (activeSection) activeSection.classList.add('active');
       const activeBtn = document.querySelector(`.nav-tab-btn[data-tab="${targetId}"]`);
       if (activeBtn) activeBtn.classList.add('active');
+      
+      if (targetId === 'view-analytics') {
+        renderAnalyticsBI();
+      }
+      
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1542,7 +1847,6 @@
     }
 
     function bindEvents() {
-      // מעבר טאבים תחתון: בלחיצה על "תרומה" תמיד מאפסים לדף ריק חדש!
       document.querySelectorAll('.nav-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           if (btn.dataset.tab === 'view-donation-form') {
@@ -1562,11 +1866,11 @@
       document.getElementById('btnCancelFormAction').addEventListener('click', () => switchTab('view-dashboard'));
       document.getElementById('btnTopProfileAvatar').addEventListener('click', () => switchTab('view-settings'));
 
-      // מתג תרומה חד-פעמית מול קבע
+      // מתג תרומה מול קבע
       document.getElementById('tabOptOneTime').addEventListener('click', () => setDonationMode(false));
       document.getElementById('tabOptRecurring').addEventListener('click', () => setDonationMode(true));
 
-      // כפתורי סכום מהיר
+      // סכום מהיר
       document.querySelectorAll('.pill-amt').forEach(b => {
         b.addEventListener('click', () => {
           document.getElementById('inpDonationAmount').value = b.dataset.val;
@@ -1575,7 +1879,7 @@
         });
       });
 
-      // לוח תאריכים
+      // תאריכים
       const nativePicker = document.getElementById('inpNativeDate');
       const displayPicker = document.getElementById('inpDisplayDate');
       nativePicker.addEventListener('change', () => {
@@ -1600,7 +1904,7 @@
         document.getElementById('errDonationDate').classList.remove('visible');
       });
 
-      // שמירת תרומה עם בדיקת תקינות מקיפה
+      // שמירת תרומה עם אימות
       document.getElementById('donationEntryForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         clearValidationErrors();
@@ -1614,7 +1918,6 @@
         let hasError = false;
         let firstInvalidField = null;
 
-        // בדיקת שדה סכום
         if (isNaN(amt) || amt <= 0) {
           amtInput.classList.add('is-invalid');
           document.getElementById('errDonationAmount').classList.add('visible');
@@ -1622,7 +1925,6 @@
           firstInvalidField = firstInvalidField || amtInput;
         }
 
-        // בדיקת שדה מוטב
         if (!ben) {
           benInput.classList.add('is-invalid');
           document.getElementById('errDonationBeneficiary').classList.add('visible');
@@ -1675,8 +1977,6 @@
         state.donations.sort((a,b) => new Date(b.date) - new Date(a.date));
 
         showToast(isRec ? 'הוראת הקבע נשמרה בהצלחה!' : 'התרומה נשמרה בהצלחה!');
-        
-        // איפוס מלא של הטופס כך שבפעם הבאה ייפתח ריק לגמרי
         clearAndResetDonationForm();
         switchTab('view-dashboard');
         await notifyChanges();
@@ -1693,7 +1993,7 @@
         await notifyChanges();
       });
 
-      // שמירת הגדרות מעשר
+      // שמירת הגדרות
       document.getElementById('settingsMaaserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const startMonth = parseInt(document.getElementById('cfgStartMonth').value, 10);
@@ -1717,7 +2017,7 @@
         await notifyChanges();
       });
 
-      // פופ-אפ התקנה במסך הבית
+      // פופ-אפ שמירה במסך הבית
       document.getElementById('btnHelpPwa').addEventListener('click', () => {
         document.getElementById('pwaInstallModal').classList.remove('hidden');
       });
@@ -1817,7 +2117,6 @@
       render();
       cloud.init();
 
-      // הצגת פופ-אפ התקנה במסך הבית בכניסה ראשונה (אלא אם סומן לא להציג)
       if (!localStorage.getItem('hidePwaInstallGuide')) {
         setTimeout(() => {
           document.getElementById('pwaInstallModal').classList.remove('hidden');
