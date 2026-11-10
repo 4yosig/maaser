@@ -6,12 +6,11 @@
   <meta name="theme-color" content="#0f172a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="מעשר כספים">
+  <meta name="apple-mobile-web-app-title" content="מעשר">
   <title>מעשר כספים</title>
 
-  <!-- PWA Icons -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231e293b' stroke='%23d97706' stroke-width='4'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23d97706' stroke-width='1.5' stroke-dasharray='4 2'/><text x='50' y='65' font-size='42' font-weight='bold' fill='%23fbbf24' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231e293b' stroke='%23d97706' stroke-width='4'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23d97706' stroke-width='1.5' stroke-dasharray='4 2'/><text x='50' y='65' font-size='42' font-weight='bold' fill='%23fbbf24' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231e293b' stroke='%23d97706' stroke-width='4'/><text x='50' y='65' font-size='42' font-weight='bold' fill='%23fbbf24' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231e293b' stroke='%23d97706' stroke-width='4'/><text x='50' y='65' font-size='42' font-weight='bold' fill='%23fbbf24' text-anchor='middle' font-family='system-ui'>₪</text></svg>">
 
   <!-- Google Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -20,556 +19,396 @@
 
   <style>
     :root {
-      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      
       --primary: #0f172a;
-      --primary-accent: #2563eb;
-      --gold: #d97706;
-      --emerald: #059669;
-      --emerald-light: #10b981;
-      --emerald-bg: #ecfdf5;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --green-bg: #f0fdf4;
+      --green-border: #bbf7d0;
       --rose: #e11d48;
       --rose-bg: #fff1f2;
+      --rose-border: #fecdd3;
       --purple: #7c3aed;
-      --purple-bg: #f5f3ff;
-      --slate-50: #f8fafc;
-      --slate-100: #f1f5f9;
-      --slate-200: #e2e8f0;
-      --slate-400: #94a3b8;
-      --slate-600: #475569;
-      --slate-800: #1e293b;
-      --slate-900: #0f172a;
-      
-      --bg-app: #f8fafc;
-      --bg-card: #ffffff;
-      --border: #e2e8f0;
-      --shadow-soft: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-      --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
-      --radius-sm: 10px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
+      --purple-bg: #faf5ff;
+      --purple-border: #e9d5ff;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
       --radius-full: 9999px;
-      --transition: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+      --shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
     }
 
     [data-theme="dark"] {
-      --bg-app: #090d16;
-      --bg-card: #131d31;
+      --bg: #090d16;
+      --card: #131d31;
+      --text: #f8fafc;
+      --muted: #94a3b8;
       --border: #1e293b;
-      --slate-100: #1e293b;
-      --slate-50: #0f172a;
-      --slate-800: #f1f5f9;
-      --slate-900: #ffffff;
-      --slate-600: #94a3b8;
+      --green-bg: #052e16;
+      --rose-bg: #450a0a;
+      --purple-bg: #2e1065;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    
+
     body {
-      font-family: var(--font-family);
-      background-color: var(--bg-app);
-      color: var(--slate-900);
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: calc(85px + env(safe-area-inset-bottom));
-      user-select: none;
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
       -webkit-font-smoothing: antialiased;
+      user-select: none;
     }
 
-    /* פס עליון */
-    .top-bar {
+    /* פס עליון נקי */
+    .header {
       position: sticky;
       top: 0;
       z-index: 40;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border);
-      padding-top: env(safe-area-inset-top);
+      padding: 12px 18px env(safe-area-inset-top);
     }
-    [data-theme="dark"] .top-bar { background: rgba(19, 29, 49, 0.92); }
-    
-    .top-bar-inner {
-      max-width: 650px;
+    [data-theme="dark"] .header { background: rgba(19, 29, 49, 0.95); }
+    .header-inner {
+      max-width: 550px;
       margin: 0 auto;
-      padding: 12px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-
-    .brand-title {
-      font-size: 1.25rem;
+    .brand {
+      font-size: 1.2rem;
       font-weight: 800;
-      letter-spacing: -0.4px;
-      color: var(--slate-900);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-
-    .logo-coin-icon {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .header-sub-badge {
+    .sync-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.74rem;
-      font-weight: 700;
-      padding: 3px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 4px 10px;
       border-radius: var(--radius-full);
-      background: var(--slate-100);
-      color: var(--slate-600);
       border: 1px solid var(--border);
-      margin-top: 3px;
     }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; }
+    .dot.synced { background: #22c55e; }
 
-    .sync-indicator { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; }
-    .sync-indicator.active { background: #10b981; }
-
-    .user-profile-btn {
-      width: 38px;
-      height: 38px;
+    .user-btn {
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
-      border: 1.5px solid var(--border);
-      background: var(--slate-100);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      cursor: pointer;
+      font-size: 0.9rem;
     }
-    .user-profile-btn img { width: 100%; height: 100%; object-fit: cover; }
+    .user-btn img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* תוכן מרכזי */
-    .content-area {
+    /* תוכן ראשי */
+    .container {
       width: 100%;
-      max-width: 650px;
+      max-width: 550px;
       margin: 0 auto;
       padding: 16px;
       flex: 1;
     }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 200ms ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-    .tab-section { display: none; animation: slideUp 240ms ease-out forwards; }
-    .tab-section.active { display: block; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* 1. כרטיס Hero: מאזן כולל בלבד (נקי וממוקד) */
-    .hero-summary-card {
-      background: linear-gradient(145deg, #0f172a 0%, #1e293b 60%, #334155 100%);
+    /* כרטיס המאזן הראשי */
+    .balance-card {
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
       color: #ffffff;
       border-radius: var(--radius-lg);
-      padding: 22px 20px;
-      margin-bottom: 14px;
-      box-shadow: 0 14px 30px -6px rgba(15, 23, 42, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
     }
-
-    .hero-top-row {
+    .balance-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
     }
-
-    .hero-month-title {
-      font-size: 1rem;
+    .month-tag { font-size: 0.95rem; font-weight: 700; color: #94a3b8; }
+    .status-pill {
+      font-size: 0.75rem;
       font-weight: 700;
-      color: #cbd5e1;
-    }
-
-    .hero-overall-badge {
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 4px 12px;
+      padding: 3px 10px;
       border-radius: var(--radius-full);
       background: rgba(255, 255, 255, 0.12);
     }
+    .status-pill.debt { background: rgba(244, 63, 94, 0.2); color: #fecdd3; }
+    .status-pill.excess { background: rgba(34, 197, 94, 0.2); color: #bbf7d0; }
 
-    .hero-main-stat { margin: 6px 0 12px 0; }
-    .hero-stat-label {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #94a3b8;
-      display: block;
-      margin-bottom: 2px;
-    }
-    .hero-amount-display {
-      font-size: 2.7rem;
+    .balance-sum {
+      font-size: 2.8rem;
       font-weight: 900;
-      letter-spacing: -1.2px;
+      letter-spacing: -1px;
       line-height: 1.1;
       margin-bottom: 4px;
     }
-    .hero-amount-display.is-minus { color: #fecdd3; }
-    .hero-amount-display.is-plus { color: #a7f3d0; }
-    .hero-amount-display.is-balanced { color: #ffffff; }
+    .balance-sum.is-debt { color: #fecdd3; }
+    .balance-sum.is-excess { color: #a7f3d0; }
 
-    .hero-bottom-strip {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.82rem;
-      color: #94a3b8;
-    }
-    .hero-opening-pill {
-      font-weight: 700;
-      color: #f8fafc;
+    .balance-desc {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #cbd5e1;
     }
 
-    /* 2. כרטיס החודש הנוכחי ומעקב קצב (מפוצל ומאוורר) */
-    .month-overview-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .month-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-
-    .month-card-title {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--slate-900);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .month-stats-row {
+    /* 2 כפתורי הפעולה הגדולים והברורים */
+    .actions-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-      padding: 12px;
-      background: var(--slate-50);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
     }
-
-    .month-stat-col {
+    .action-tile {
       display: flex;
       flex-direction: column;
-    }
-    .month-stat-label {
-      font-size: 0.72rem;
-      color: var(--slate-600);
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-    .month-stat-num {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--slate-900);
-    }
-    .month-stat-num.accent { color: var(--emerald); }
-
-    /* מד התקדמות נקי ומדויק */
-    .progress-box-clean {
-      margin-top: 4px;
-    }
-    .progress-labels-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: var(--slate-600);
-    }
-    .progress-track-bg {
-      position: relative;
-      width: 100%;
-      height: 9px;
-      background: var(--slate-100);
-      border-radius: var(--radius-full);
-      overflow: visible;
-    }
-    .progress-bar-fill-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
-      border-radius: var(--radius-full);
-      transition: width 400ms ease;
-    }
-    .month-day-indicator-line {
-      position: absolute;
-      top: -3px;
-      bottom: -3px;
-      width: 3px;
-      background: var(--slate-900);
-      border-radius: 2px;
-      z-index: 3;
-      transition: right 300ms ease;
-    }
-    .progress-footer-row {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-top: 8px;
-      font-size: 0.76rem;
-    }
-    .pacing-badge {
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: var(--radius-full);
-      background: var(--slate-100);
-    }
-
-    .mini-link-btn {
-      color: var(--primary-accent);
-      font-size: 0.78rem;
-      font-weight: 700;
+      justify-content: center;
+      padding: 16px 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
       cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
+      font-family: inherit;
+      text-decoration: none;
+      transition: transform 150ms ease, opacity 150ms ease;
     }
+    .action-tile:active { transform: scale(0.97); opacity: 0.9; }
+    .action-tile.green {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+      color: #15803d;
+    }
+    .action-tile.purple {
+      background: var(--purple-bg);
+      border-color: var(--purple-border);
+      color: #6b21a8;
+    }
+    .tile-icon { font-size: 1.5rem; margin-bottom: 4px; }
+    .tile-title { font-size: 0.95rem; font-weight: 800; }
+    .tile-desc { font-size: 0.75rem; opacity: 0.85; margin-top: 1px; }
 
-    /* כרטיסים כלליים */
-    .section-card {
-      background: var(--bg-card);
+    /* כרטיס מידע חודשי נקי ללא ריבועים */
+    .clean-card {
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 18px;
       margin-bottom: 14px;
-      box-shadow: var(--shadow-soft);
+      box-shadow: var(--shadow);
     }
-    .section-header-row {
+    .card-title {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
     }
-    .section-headline {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--slate-900);
+    .stats-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .link-action-btn {
-      background: none;
-      border: none;
-      color: var(--primary-accent);
-      font-size: 0.84rem;
-      font-weight: 700;
-      cursor: pointer;
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .stat-row .label { color: var(--muted); }
+    .stat-row .val { font-weight: 700; }
+
+    .progress-bar-wrap {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #16a34a;
+      border-radius: var(--radius-full);
+      transition: width 300ms ease;
     }
 
-    .donation-item-row {
+    /* רשימת פעולות אחרונות */
+    .item-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 14px;
+      padding: 12px;
       border-radius: var(--radius-md);
-      background: var(--slate-50);
-      border: 1px solid var(--border);
+      background: var(--bg);
       margin-bottom: 8px;
       cursor: pointer;
-      transition: background var(--transition);
     }
-    .donation-item-row:hover { background: var(--slate-100); }
-    .donation-item-row.is-obligation-row {
-      background: var(--purple-bg);
-      border-color: #ddd6fe;
-    }
-    .donation-title { font-size: 0.95rem; font-weight: 700; color: var(--slate-900); }
-    .donation-tags {
+    .item-name { font-weight: 700; font-size: 0.95rem; }
+    .item-meta { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    .item-amount { font-weight: 800; font-size: 1.05rem; direction: ltr; }
+    .item-amount.green { color: #16a34a; }
+    .item-amount.purple { color: #7c3aed; }
+
+    /* טפסי מודאל פשוטים ונקיים */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 4px;
-      font-size: 0.76rem;
-      color: var(--slate-600);
+      justify-content: center;
+      padding: 16px;
     }
-    .category-bubble {
-      padding: 1px 8px;
-      border-radius: var(--radius-full);
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #fff;
+    .modal-sheet {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+      max-height: 90vh;
+      overflow-y: auto;
     }
-    .donation-amount-sum {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--slate-900);
-      direction: ltr;
-    }
-
-    /* מתג בחירה תלת-מצבי */
-    .donation-type-toggle {
+    .modal-header {
       display: flex;
-      background: var(--slate-100);
-      padding: 4px;
-      border-radius: var(--radius-md);
-      margin-bottom: 18px;
-      border: 1px solid var(--border);
-      gap: 4px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
     }
-    .toggle-opt-btn {
-      flex: 1;
-      height: 40px;
-      border: none;
+    .modal-title { font-size: 1.15rem; font-weight: 800; }
+    .close-btn {
       background: none;
-      border-radius: var(--radius-sm);
-      font-size: 0.84rem;
-      font-weight: 700;
-      color: var(--slate-600);
+      border: none;
+      font-size: 1.2rem;
+      color: var(--muted);
       cursor: pointer;
-      transition: all var(--transition);
-      white-space: nowrap;
-    }
-    .toggle-opt-btn.active {
-      background: #ffffff;
-      color: var(--slate-900);
-      box-shadow: var(--shadow-soft);
-    }
-    .toggle-opt-btn.active.is-obligation-tab {
-      color: var(--purple);
+      padding: 4px;
     }
 
-    /* שדות קלט ושגיאות */
-    .input-block { margin-bottom: 16px; position: relative; }
-    .input-label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
-    
-    .text-input-field {
+    .form-group { margin-bottom: 14px; position: relative; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
+    .input {
       width: 100%;
       height: 48px;
       padding: 10px 14px;
       font-size: 16px;
       font-family: inherit;
-      border-radius: var(--radius-md);
       border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--slate-900);
-      transition: border-color var(--transition);
+      border-radius: var(--radius-md);
+      background: var(--card);
+      color: var(--text);
     }
-    .text-input-field:focus {
+    .input:focus {
       outline: none;
-      border-color: var(--primary-accent);
+      border-color: var(--blue);
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     }
-    .text-input-field.is-invalid {
+    .input.is-invalid {
       border-color: var(--rose) !important;
       background-color: var(--rose-bg);
     }
-    .field-error-msg {
+    .error-text {
       font-size: 0.78rem;
       font-weight: 700;
       color: var(--rose);
       margin-top: 4px;
-      min-height: 18px;
       display: none;
     }
-    .field-error-msg.visible { display: block; }
+    .error-text.show { display: block; }
 
-    .text-input-field:read-only {
-      background: var(--slate-100);
-      cursor: not-allowed;
-      color: var(--slate-600);
-    }
-
-    .date-row-picker-wrap { position: relative; cursor: pointer; }
-    .date-row-picker-wrap .text-input-field { cursor: pointer; font-weight: 700; }
-    .hidden-native-date-picker {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
-      z-index: 2;
-    }
-
-    .quick-pill-group {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
-    .quick-pill-btn {
-      background: var(--slate-100);
+    /* כפתורי סכום מהיר */
+    .quick-chips { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+    .chip {
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-full);
-      padding: 6px 14px;
-      font-size: 0.82rem;
+      padding: 5px 12px;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: var(--slate-800);
       cursor: pointer;
+      color: var(--text);
     }
-    .quick-pill-btn:hover { background: var(--border); }
 
-    /* כפתורים ראשיים */
-    .action-button-main {
+    /* כפתורי פעולה */
+    .btn {
       width: 100%;
-      height: 50px;
-      background: var(--slate-900);
-      color: #ffffff;
-      border: none;
+      height: 48px;
       border-radius: var(--radius-md);
       font-size: 1rem;
       font-weight: 800;
+      border: none;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+      gap: 6px;
+      font-family: inherit;
     }
-    .action-button-main:active { transform: scale(0.98); }
-    .action-button-main.btn-purple {
-      background: var(--purple);
-    }
+    .btn:active { opacity: 0.9; }
+    .btn.primary { background: var(--primary); color: #fff; }
+    .btn.green { background: #16a34a; color: #fff; }
+    .btn.purple { background: #7c3aed; color: #fff; }
+    .btn.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .btn.danger { background: transparent; color: var(--rose); border: 1px solid #fecdd3; }
 
-    .action-button-secondary {
-      width: 100%;
-      height: 48px;
-      background: var(--slate-100);
-      color: var(--slate-800);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    /* סרגל ניווט צף תחתון */
-    .floating-bottom-nav {
+    /* סרגל ניווט תחתון (4 טאבים מסודרים) */
+    .nav-bar {
       position: fixed;
       bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
-      width: calc(100% - 20px);
-      max-width: 520px;
-      height: 64px;
+      width: calc(100% - 24px);
+      max-width: 480px;
+      height: 60px;
       background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: var(--radius-full);
       display: flex;
       align-items: center;
       justify-content: space-around;
-      box-shadow: var(--shadow-card);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       z-index: 50;
-      padding: 0 4px;
     }
-    [data-theme="dark"] .floating-bottom-nav { background: rgba(19, 29, 49, 0.95); }
-
-    .nav-tab-btn {
+    [data-theme="dark"] .nav-bar { background: rgba(19, 29, 49, 0.95); }
+    .nav-tab {
       flex: 1;
       height: 100%;
       background: none;
@@ -578,608 +417,377 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: var(--slate-400);
+      color: var(--muted);
       cursor: pointer;
-      font-size: 0.70rem;
+      font-size: 0.72rem;
       font-weight: 700;
       gap: 3px;
-      transition: color var(--transition);
-      padding: 2px;
     }
-    .nav-tab-btn.active { color: var(--primary-accent); }
-    .nav-tab-btn svg { width: 19px; height: 19px; fill: currentColor; }
+    .nav-tab.active { color: var(--blue); }
+    .nav-tab svg { width: 20px; height: 20px; fill: currentColor; }
 
-    /* עיצובי גרפים */
-    .chart-box {
-      width: 100%;
-      overflow-x: auto;
-      margin-top: 8px;
-    }
-    .chart-legend {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      justify-content: center;
-      margin-top: 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
-    .legend-color-dot { width: 10px; height: 10px; border-radius: 2px; }
-
-    .category-bi-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .cat-bi-name { width: 90px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .cat-bi-bar-wrap { flex: 1; height: 10px; background: var(--slate-100); border-radius: var(--radius-full); overflow: hidden; }
-    .cat-bi-bar-fill { height: 100%; border-radius: var(--radius-full); }
-    .cat-bi-value { width: 85px; text-align: left; font-size: 0.85rem; font-weight: 800; direction: ltr; }
-
-    /* פופ-אפ שמירה במסך הבית */
-    .dialog-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(5px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 90;
-    }
-    .dialog-card-box {
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      width: 100%;
-      max-width: 440px;
-      box-shadow: var(--shadow-card);
-      border: 1px solid var(--border);
-    }
-    .install-step-box {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 10px;
-      background: var(--slate-50);
-      border-radius: var(--radius-md);
-      margin-bottom: 8px;
-      font-size: 0.86rem;
-    }
-    .step-badge {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--primary-accent);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 0.75rem;
-      flex-shrink: 0;
-    }
-
-    .toast-msg-box {
+    .toast {
       position: fixed;
       top: 14px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--slate-900);
+      background: var(--primary);
       color: #fff;
       padding: 10px 18px;
       border-radius: var(--radius-full);
       font-size: 0.88rem;
       font-weight: 700;
-      box-shadow: var(--shadow-card);
-      z-index: 100;
+      z-index: 200;
     }
 
     .hidden { display: none !important; }
-    .text-muted { color: var(--slate-600); }
+    .text-green { color: #16a34a; }
+    .text-rose { color: var(--rose); }
   </style>
 </head>
 <body>
 
   <!-- פס עליון -->
-  <header class="top-bar">
-    <div class="top-bar-inner">
-      <div>
-        <div class="brand-title">
-          <div class="logo-coin-icon">
-            <svg viewBox="0 0 36 36" width="32" height="32">
-              <circle cx="18" cy="18" r="16" fill="#1e293b" stroke="#d97706" stroke-width="2"/>
-              <circle cx="18" cy="18" r="13" fill="none" stroke="#d97706" stroke-width="0.8" stroke-dasharray="3 1.5"/>
-              <text x="18" y="24" font-size="16" font-weight="900" fill="#fbbf24" text-anchor="middle" font-family="system-ui">₪</text>
-            </svg>
-          </div>
-          <span>מעשר כספים</span>
-        </div>
-        <div class="header-sub-badge" id="headerSyncStatusBadge">
-          <span class="sync-indicator" id="headerSyncDot"></span>
-          <span id="headerSyncText">מקומי</span>
-        </div>
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <span>מעשר כספים</span>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <button type="button" class="link-action-btn" id="btnHelpPwa" style="font-size:1.1rem; padding:4px;" title="איך לשמור במסך הבית">📱</button>
-        <button type="button" class="user-profile-btn" id="btnTopProfileAvatar" aria-label="פרופיל">
-          <span id="topAvatarLetter">👤</span>
+        <div class="sync-badge">
+          <span class="dot" id="syncDot"></span>
+          <span id="syncText">מקומי</span>
+        </div>
+        <button type="button" class="user-btn" id="btnUser" aria-label="הגדרות חשבון">
+          <span id="avatarText">👤</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- התראה צפה -->
-  <div id="toastContainer" class="hidden toast-msg-box"></div>
+  <!-- הודעה צפה -->
+  <div id="toast" class="toast hidden"></div>
 
-  <!-- תוכן מרכזי -->
-  <main class="content-area">
+  <!-- תוכן ראשי -->
+  <main class="container">
 
-    <!-- מסך 1: ראשי (Dashboard) -->
-    <section id="view-dashboard" class="tab-section active">
+    <!-- מסך 1: ראשי (Dashboard מפושט לחלוטין) -->
+    <section id="tab-home" class="tab-content active">
       
-      <!-- 1. כרטיס מאזן מצטבר כולל (Hero נקי וממוקד) -->
-      <div class="hero-summary-card">
-        <div class="hero-top-row">
-          <div class="hero-month-title">
-            <span id="heroCurrentMonthName">מרץ 2026</span>
-          </div>
-          <span class="hero-overall-badge" id="heroOverallStatusBadge">מאזן עדכני</span>
+      <!-- 1. כרטיס המאזן הראשי -->
+      <div class="balance-card">
+        <div class="balance-header">
+          <span class="month-tag" id="homeMonthLabel">מרץ 2026</span>
+          <span class="status-pill" id="homeStatusPill">מאזן עדכני</span>
         </div>
-
-        <div class="hero-main-stat">
-          <span class="hero-stat-label">סך הכל מצטבר:</span>
-          <div class="hero-amount-display" id="heroAccumulatedAmount">₪0</div>
-          <div style="font-size:0.88rem; font-weight:600;" id="heroAccumulatedNote">הכל מאוזן ומסודר</div>
-        </div>
-
-        <div class="hero-bottom-strip">
-          <span>יתרה מחודש קודם:</span>
-          <span class="hero-opening-pill" id="heroOpeningBalancePill">0 ₪</span>
-        </div>
+        <div class="balance-sum" id="homeBalanceAmount">₪0</div>
+        <div class="balance-desc" id="homeBalanceDesc">מאוזן</div>
       </div>
 
-      <!-- 2. כרטיס נפרד: החודש הנוכחי ומעקב קצב -->
-      <div class="month-overview-card">
-        <div class="month-card-header">
-          <div class="month-card-title">
-            <span>תמונת מצב לחודש זה</span>
-          </div>
-          <button type="button" class="mini-link-btn" id="btnQuickAddObligationHero">+ חיוב נוסף</button>
-        </div>
+      <!-- 2. שני כפתורי פעולה גדולים וברורים -->
+      <div class="actions-grid">
+        <button type="button" class="action-tile green" id="btnOpenDonationModal">
+          <span class="tile-icon">➕</span>
+          <span class="tile-title">רשום תרומה</span>
+          <span class="tile-desc">כסף שנתרם (צדקה)</span>
+        </button>
 
-        <div class="month-stats-row">
-          <div class="month-stat-col">
-            <span class="month-stat-label">חיוב החודש</span>
-            <span class="month-stat-num" id="monthCardRequired">₪1,000</span>
+        <button type="button" class="action-tile purple" id="btnOpenObligationModal">
+          <span class="tile-icon">⚡</span>
+          <span class="tile-title">רשום התחייבות</span>
+          <span class="tile-desc">הכנסה חדשה שחייבת במעשר</span>
+        </button>
+      </div>
+
+      <!-- 3. תקציר החודש (3 שורות נקיות בלבד ללא עומס) -->
+      <div class="clean-card">
+        <div class="card-title">
+          <span>סיכום החודש</span>
+          <span style="font-size:0.8rem; font-weight:600; color:var(--muted);" id="homeMonthName"></span>
+        </div>
+        <div class="stats-rows">
+          <div class="stat-row">
+            <span class="label">חיוב מעשר החודש:</span>
+            <span class="val" id="statMonthRequired">₪0</span>
           </div>
-          <div class="month-stat-col">
-            <span class="month-stat-label">הופרש בפועל</span>
-            <span class="month-stat-num accent" id="monthCardDonated">₪0</span>
+          <div class="stat-row">
+            <span class="label">נתרם בפועל:</span>
+            <span class="val text-green" id="statMonthDonated">₪0</span>
           </div>
-          <div class="month-stat-col">
-            <span class="month-stat-label">תרומות החודש</span>
-            <span class="month-stat-num" id="monthCardCount">0</span>
+          <div class="stat-row">
+            <span class="label">יתרה מחודש קודם:</span>
+            <span class="val" id="statMonthOpening">0 ₪</span>
           </div>
         </div>
-
-        <!-- מד התקדמות נקי: תרומות מול ימי החודש -->
-        <div class="progress-box-clean">
-          <div class="progress-labels-row">
-            <span id="heroDonationProgressLabel">הפרשה: 0%</span>
-            <span id="heroMonthDaysProgressLabel">יום 1 מתוך 30</span>
+        <div class="progress-bar-wrap">
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--muted); font-weight:600;">
+            <span id="progressText">0% הופרש</span>
+            <span id="daysProgressText"></span>
           </div>
-          <div class="progress-track-bg">
-            <div class="progress-bar-fill-bar" id="progressBarFill" style="width: 0%;"></div>
-            <div class="month-day-indicator-line" id="monthDayMarker" style="right: 0%;" title="התקדמות ימי החודש"></div>
-          </div>
-          <div class="progress-footer-row">
-            <span class="pacing-badge" id="monthRelativePacingText">מעקב קצב...</span>
-            <span id="monthRemainingDaysText" style="color:var(--slate-600);">נותרו ימים</span>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width:0%;"></div>
           </div>
         </div>
       </div>
 
-      <!-- 3. פעולות אחרונות -->
-      <div class="section-card">
-        <div class="section-header-row">
-          <h2 class="section-headline">פעולות אחרונות</h2>
-          <button type="button" class="link-action-btn" id="btnSeeAllDonations">לכל הרשימה ←</button>
+      <!-- 4. פעולות אחרונות (רשימה נקייה) -->
+      <div class="clean-card">
+        <div class="card-title">
+          <span>פעולות אחרונות</span>
+          <button type="button" style="background:none; border:none; color:var(--blue); font-size:0.8rem; font-weight:700; cursor:pointer;" id="btnViewAllHistory">לכל הרשימה ←</button>
         </div>
-        <div id="recentDonationsListContainer"></div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:14px;">
-          <button type="button" class="action-button-main" id="btnOpenNewDonation">➕ הוסף תרומה</button>
-          <button type="button" class="action-button-main btn-purple" id="btnOpenNewObligation">+ חיוב מעשר נוסף</button>
-        </div>
-      </div>
-
-      <!-- 4. יעד שנתי ומעקב קצב -->
-      <div class="section-card">
-        <h2 class="section-headline" style="margin-bottom:12px;">יעד שנתי ומעקב קצב</h2>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
-          <div style="background:var(--slate-50); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 12px;">
-            <span class="month-stat-label">הופרש השנה:</span>
-            <span style="font-size:1.15rem; font-weight:800; color:var(--emerald);" id="annualYtdSum">₪0</span>
-          </div>
-          <div style="background:var(--slate-50); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 12px;">
-            <span class="month-stat-label">יעד שנתי כולל:</span>
-            <span style="font-size:1.15rem; font-weight:800;" id="annualGoalSum">₪12,000</span>
-          </div>
-        </div>
-        <div style="background:var(--slate-50); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 14px; font-size:0.84rem; display:flex; justify-content:space-between; align-items:center;">
-          <span class="text-muted">קצב שנתי צפוי:</span>
-          <strong id="annualPaceForecast">₪0</strong>
-        </div>
+        <div id="recentListContainer"></div>
       </div>
     </section>
 
-    <!-- מסך 2: הוספת תרומה / הוראת קבע / התחייבות נוספת -->
-    <section id="view-donation-form" class="tab-section">
-      <div class="section-card">
-        <div class="section-header-row" style="border-bottom:1px solid var(--border); padding-bottom:10px;">
-          <h2 class="section-headline" id="formHeaderTitle">הוספת פעולה חדשה</h2>
-          <button type="button" class="link-action-btn" id="btnDismissForm">✕ סגור</button>
+    <!-- מסך 2: סיכום ודוחות (גרפים פשוטים) -->
+    <section id="tab-stats" class="tab-content">
+      <div class="clean-card">
+        <div class="card-title">סיכום מעשרות מצטבר</div>
+        <div class="stats-rows">
+          <div class="stat-row">
+            <span class="label">סה״כ הופרש בפועל:</span>
+            <span class="val text-green" id="biTotalDonated">₪0</span>
+          </div>
+          <div class="stat-row">
+            <span class="label">סה״כ חיובים נדרשים:</span>
+            <span class="val" id="biTotalRequired">₪0</span>
+          </div>
+          <div class="stat-row">
+            <span class="label">אחוז עמידה ביעד:</span>
+            <span class="val" id="biRate">0%</span>
+          </div>
         </div>
+      </div>
 
-        <form id="donationEntryForm" novalidate style="margin-top:14px;">
-          <input type="hidden" id="editItemId" value="">
+      <div class="clean-card">
+        <div class="card-title">השוואה חודשית: חיוב מול הפרשה</div>
+        <div style="overflow-x:auto;" id="monthlyChartBox"></div>
+      </div>
 
-          <!-- מתג בחירה תלת-מצבי -->
-          <div class="donation-type-toggle">
-            <button type="button" class="toggle-opt-btn active" id="tabOptOneTime">תרומה</button>
-            <button type="button" class="toggle-opt-btn" id="tabOptRecurring">הוראת קבע</button>
-            <button type="button" class="toggle-opt-btn is-obligation-tab" id="tabOptObligation">התחייבות נוספת</button>
-          </div>
-
-          <!-- סכום -->
-          <div class="input-block">
-            <label class="input-label" for="inpDonationAmount" id="lblItemAmount">סכום התרומה (₪) *</label>
-            <input type="number" id="inpDonationAmount" inputmode="decimal" step="0.01" min="0.01" class="text-input-field" placeholder="0.00" required>
-            <div class="field-error-msg" id="errDonationAmount">נא להזין סכום הגדול מ-0 ₪</div>
-            <div class="quick-pill-group">
-              <button type="button" class="quick-pill-btn pill-amt" data-val="50">₪50</button>
-              <button type="button" class="quick-pill-btn pill-amt" data-val="100">₪100</button>
-              <button type="button" class="quick-pill-btn pill-amt" data-val="200">₪200</button>
-              <button type="button" class="quick-pill-btn pill-amt" data-val="500">₪500</button>
-              <button type="button" class="quick-pill-btn pill-amt" data-val="1000">₪1,000</button>
-              <button type="button" class="quick-pill-btn pill-amt" data-val="2000">₪2,000</button>
-            </div>
-          </div>
-
-          <!-- מוטב / פירוט -->
-          <div class="input-block">
-            <label class="input-label" for="inpDonationBeneficiary" id="lblItemBeneficiary">שם הארגון / המוטב *</label>
-            <input type="text" id="inpDonationBeneficiary" list="beneficiarySuggestions" class="text-input-field" placeholder="למשל: קופת העיר, עזר מציון, ישיבה..." required>
-            <div class="field-error-msg" id="errDonationBeneficiary">נא למלא שדה זה</div>
-            <datalist id="beneficiarySuggestions"></datalist>
-          </div>
-
-          <!-- שדות לתרומה רגילה או התחייבות (תאריך) -->
-          <div id="blockOneTimeFields">
-            <div class="input-block">
-              <label class="input-label" id="lblItemDate">תאריך הפעולה (קובע לאיזה חודש ישויך) *</label>
-              <div class="date-row-picker-wrap">
-                <input type="text" id="inpDisplayDate" class="text-input-field" placeholder="DD/MM/YYYY" readonly required>
-                <input type="date" id="inpNativeDate" class="hidden-native-date-picker">
-              </div>
-              <div class="field-error-msg" id="errDonationDate">נא לבחור תאריך תקין</div>
-              <div class="quick-pill-group">
-                <button type="button" class="quick-pill-btn" id="btnQuickDateToday">היום</button>
-                <button type="button" class="quick-pill-btn" id="btnQuickDateYesterday">אתמול</button>
-              </div>
-            </div>
-
-            <div class="input-block" id="blockPaymentMethod">
-              <label class="input-label" for="selectPaymentMethod">אמצעי תשלום</label>
-              <select id="selectPaymentMethod" class="text-input-field">
-                <option value="העברה בנקאית">העברה בנקאית</option>
-                <option value="אשראי">כרטיס אשראי</option>
-                <option value="ביט / פייבוקס">ביט / פייבוקס</option>
-                <option value="מזומן">מזומן</option>
-                <option value="צ'ק">המחאה (צ'ק)</option>
-                <option value="לא צוין">אחר / לא צוין</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- שדות להוראת קבע -->
-          <div id="blockRecurringFields" class="hidden">
-            <div class="input-block">
-              <label class="input-label" for="inpRecurringDay">יום החיוב הקבוע בחודש (1–28)</label>
-              <input type="number" id="inpRecurringDay" class="text-input-field" value="10" min="1" max="28">
-              <small class="text-muted">סכום זה יופרש באופן אוטומטי בכל חודש מחדש.</small>
-            </div>
-          </div>
-
-          <!-- קטגוריה וסעיף 46 -->
-          <div id="blockCategoryAndTax">
-            <div class="input-block">
-              <label class="input-label" for="selectDonationCategory">קטגוריה</label>
-              <select id="selectDonationCategory" class="text-input-field"></select>
-            </div>
-
-            <div class="input-block">
-              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                <input type="checkbox" id="chkSection46" style="width:18px; height:18px; accent-color:var(--primary-accent);">
-                <span style="font-size:0.9rem; font-weight:600;">מוכר לפי סעיף 46 (זיכוי מס)</span>
-              </label>
-            </div>
-          </div>
-
-          <div style="display:flex; flex-direction:column; gap:10px; margin-top:24px;">
-            <button type="submit" class="action-button-main" id="btnSubmitForm">✓ שמור פעולה</button>
-            <button type="button" class="action-button-secondary" id="btnCancelFormAction">ביטול</button>
-            <button type="button" class="action-button-secondary hidden" id="btnDeleteDonationRecord" style="color:var(--rose); border-color:#fecaca;">🗑️ מחק רשומה זו</button>
-          </div>
-        </form>
+      <div class="clean-card">
+        <div class="card-title">התפלגות לפי קטגוריות</div>
+        <div id="categoryListBox"></div>
       </div>
     </section>
 
-    <!-- מסך 3: סיכום ודוחות -->
-    <section id="view-analytics" class="tab-section">
-      <div class="month-overview-card" style="margin-bottom:14px;">
-        <div class="month-card-header">
-          <div class="month-card-title">מדדי סיכום מצטברים</div>
+    <!-- מסך 3: היסטוריה מלאה -->
+    <section id="tab-history" class="tab-content">
+      <div class="clean-card">
+        <div class="card-title">
+          <span>היסטוריית מעשרות</span>
+          <button type="button" style="background:none; border:none; color:var(--blue); font-size:0.8rem; font-weight:700; cursor:pointer;" id="btnExportCsv">ייצוא ל-Excel</button>
         </div>
-        <div class="month-stats-row" style="grid-template-columns: repeat(2, 1fr); gap:12px;">
-          <div class="month-stat-col">
-            <span class="month-stat-label">סה״כ הופרש בפועל</span>
-            <span class="month-stat-num accent" id="biTotalDonated">₪0</span>
-          </div>
-          <div class="month-stat-col">
-            <span class="month-stat-label">סה״כ חיובים נדרשים</span>
-            <span class="month-stat-num" id="biTotalRequired">₪0</span>
-          </div>
-          <div class="month-stat-col">
-            <span class="month-stat-label">אחוז עמידה ביעד</span>
-            <span class="month-stat-num" id="biComplianceRate">0%</span>
-          </div>
-          <div class="month-stat-col">
-            <span class="month-stat-label">ממוצע הפרשה חודשי</span>
-            <span class="month-stat-num" id="biMonthlyAvg">₪0</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- גרף עמודות השוואתי חודשי -->
-      <div class="section-card">
-        <div class="section-header-row" style="margin-bottom:6px;">
-          <h2 class="section-headline">השוואה חודשית: חיוב מול הופרש בפועל</h2>
-        </div>
-        <p class="text-muted" style="font-size:0.8rem; margin-bottom:12px;">החיוב כולל את סכום הבסיס ואת ההתחייבויות הנוספות באותו חודש.</p>
-        
-        <div class="chart-box" id="biMonthlyCompareChartContainer"></div>
-
-        <div class="chart-legend">
-          <span class="legend-item">
-            <span class="legend-color-dot" style="background:#3b82f6;"></span>
-            <span>חיוב כולל נדרש</span>
-          </span>
-          <span class="legend-item">
-            <span class="legend-color-dot" style="background:#10b981;"></span>
-            <span>הופרש בפועל</span>
-          </span>
-        </div>
-      </div>
-
-      <!-- גרף מגמת המאזן המצטבר -->
-      <div class="section-card">
-        <div class="section-header-row" style="margin-bottom:6px;">
-          <h2 class="section-headline">מגמת המאזן המצטבר (חודש אחר חודש)</h2>
-        </div>
-        <p class="text-muted" style="font-size:0.8rem; margin-bottom:12px;">מציג האם צברת עודף זכות (חיובי) או נותר סכום להפרשה (שלילי).</p>
-        <div class="chart-box" id="biBalanceTrendChartContainer"></div>
-      </div>
-
-      <!-- פילוח לפי קטגוריות -->
-      <div class="section-card">
-        <h2 class="section-headline" style="margin-bottom:12px;">התפלגות תרומות לפי קטגוריה</h2>
-        <div id="biCategoryDistributionList"></div>
-      </div>
-
-      <!-- 5 המוטבים המובילים -->
-      <div class="section-card">
-        <h2 class="section-headline" style="margin-bottom:12px;">5 המוטבים המובילים בתרומות</h2>
-        <div id="biTopBeneficiariesList"></div>
+        <div id="fullHistoryContainer"></div>
       </div>
     </section>
 
-    <!-- מסך 4: היסטוריה ומעקב חודשים -->
-    <section id="view-history" class="tab-section">
-      <div class="section-card">
-        <h2 class="section-headline" style="margin-bottom:12px;">סיכום מעשרות לפי חודשים</h2>
-        <div id="monthsHistoryListContainer"></div>
+    <!-- מסך 4: הגדרות (פשוט ונקי) -->
+    <section id="tab-settings" class="tab-content">
+      <div class="clean-card" style="border:1.5px solid var(--blue);">
+        <div class="card-title">חשבון Google וגיבוי ☁️</div>
+        <div id="googleBox" style="margin-bottom:12px; font-size:0.85rem;"></div>
+        <button type="button" class="btn secondary" id="btnGoogleAuth">התחבר עם Google</button>
       </div>
 
-      <div class="section-card">
-        <div class="section-header-row">
-          <h2 class="section-headline">כל התרומות וההתחייבויות</h2>
-          <button type="button" class="link-action-btn" id="btnExportToExcel">ייצוא ל-Excel</button>
-        </div>
-        <div id="allDonationsListContainer"></div>
-      </div>
-    </section>
+      <div class="clean-card">
+        <div class="card-title">הגדרות מעשר</div>
+        <form id="settingsForm">
+          <div class="form-group">
+            <label class="form-label" for="cfgBase">התחייבות חודשית קבועה (₪)</label>
+            <!-- ניתן להזין 0! -->
+            <input type="number" id="cfgBase" class="input" min="0" step="1" required>
+            <small style="color:var(--muted); font-size:0.75rem;">אפשר להגדיר 0 ₪ אם אין לך סכום חודשי קבוע.</small>
+          </div>
 
-    <!-- מסך 5: הגדרות וחישוב מעשר -->
-    <section id="view-settings" class="tab-section">
-      <div class="section-card" style="border:1.5px solid var(--primary-accent);">
-        <h2 class="section-headline">חשבון Google וגיבוי ענן ☁️</h2>
-        <div id="settingsGoogleProfileBox" style="margin:12px 0;"></div>
-        <button type="button" class="action-button-main" id="btnAuthGoogleAction">התחבר עם חשבון Google</button>
-      </div>
+          <div class="form-group">
+            <label class="form-label" for="cfgDay">יום החיוב בחודש (1–28)</label>
+            <input type="number" id="cfgDay" class="input" min="1" max="28" required>
+          </div>
 
-      <div class="section-card">
-        <h2 class="section-headline">הגדרות מעשר וחישוב</h2>
-        <form id="settingsMaaserForm" style="margin-top:12px;">
-          
-          <div class="input-block">
-            <label class="input-label">חישוב מעשרות החל מחודש ושנה:</label>
+          <div class="form-group">
+            <label class="form-label">התחלת מעקב החל מחודש ושנה</label>
             <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px;">
-              <select id="cfgStartMonth" class="text-input-field"></select>
-              <input type="number" id="cfgStartYear" class="text-input-field" min="2020" max="2035" required>
+              <select id="cfgStartMonth" class="input"></select>
+              <input type="number" id="cfgStartYear" class="input" min="2020" max="2035" required>
             </div>
-            <small class="text-muted">חישובי החיובים יחלו אך ורק מחודש זה.</small>
           </div>
 
-          <div class="input-block">
-            <label class="input-label">סכום מעשר חודשי בסיסי (₪)</label>
-            <input type="number" id="cfgBaseMaaserAmount" class="text-input-field" min="0" required>
-            <small class="text-muted">בכל חודש ניתן להוסיף התחייבויות נוספות מעבר לסכום בסיס זה.</small>
-          </div>
-
-          <div class="input-block">
-            <label class="input-label">יום החיוב בחודש (1–28)</label>
-            <input type="number" id="cfgMaaserDay" class="text-input-field" min="1" max="28" required>
-          </div>
-
-          <div class="input-block">
-            <label class="input-label">יעד תרומה שנתי בסיסי (מחושב: בסיס × 12)</label>
-            <input type="text" id="cfgAnnualGoalDisplay" class="text-input-field" readonly>
-          </div>
-
-          <button type="submit" class="action-button-main" style="height:44px;">שמור שינויים בהגדרות</button>
+          <button type="submit" class="btn primary" style="margin-top:10px;">שמור הגדרות</button>
         </form>
-      </div>
-
-      <div class="section-card">
-        <h2 class="section-headline">ניהול קטגוריות</h2>
-        <ul id="settingsCategoriesList" style="list-style:none; margin-top:12px;"></ul>
-        <button type="button" class="action-button-secondary" id="btnAddNewCategoryModal" style="margin-top:10px;">+ קטגוריה חדשה</button>
       </div>
     </section>
 
   </main>
 
-  <!-- סרגל תחתון צף -->
-  <nav class="floating-bottom-nav">
-    <button type="button" class="nav-tab-btn active" data-tab="view-dashboard">
-      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-      <span>ראשי</span>
-    </button>
-    <button type="button" class="nav-tab-btn" data-tab="view-donation-form" id="navBtnDonationTab">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-      <span>תרומה / חיוב</span>
-    </button>
-    <button type="button" class="nav-tab-btn" data-tab="view-analytics">
-      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-      <span>סיכום</span>
-    </button>
-    <button type="button" class="nav-tab-btn" data-tab="view-history">
-      <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
-      <span>היסטוריה</span>
-    </button>
-    <button type="button" class="nav-tab-btn" data-tab="view-settings">
-      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-      <span>הגדרות</span>
-    </button>
-  </nav>
-
-  <!-- פופ-אפ שמירה במסך הבית -->
-  <div class="dialog-backdrop hidden" id="pwaInstallModal">
-    <div class="dialog-card-box">
-      <div style="text-align:center; margin-bottom:14px;">
-        <span style="font-size:2.2rem;">📱</span>
-        <h3 style="font-size:1.2rem; font-weight:800; margin-top:4px;">התקנת האפליקציה במסך הבית</h3>
-        <p class="text-muted" style="font-size:0.84rem;">לגישה מהירה ונוחה כמו אפליקציה רגילה:</p>
+  <!-- ================= מודאל 1: הוספת תרומה (צדקה שיצאה) ================= -->
+  <div class="modal-backdrop hidden" id="modalDonation">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="donationModalTitle">רישום תרומה חדשה</h3>
+        <button type="button" class="close-btn" onclick="closeModals()">✕</button>
       </div>
 
-      <div class="install-step-box">
-        <span class="step-badge">1</span>
-        <div>
-          <strong>באייפון (Safari):</strong>
-          <div>לחץ על סמל השיתוף <strong>(ריבוע עם חץ ⎋)</strong> בתחתית ⬅️ גלול ובחר <strong>"הוסף למסך הבית"</strong>.</div>
-        </div>
-      </div>
+      <form id="formDonation" novalidate>
+        <input type="hidden" id="editDonationId">
 
-      <div class="install-step-box">
-        <span class="step-badge">2</span>
-        <div>
-          <strong>באנדרואיד (Chrome):</strong>
-          <div>לחץ על <strong>3 הנקודות (⋮)</strong> למעלה ⬅️ בחר <strong>"התקן אפליקציה"</strong> או <strong>"הוסף למסך הבית"</strong>.</div>
+        <div class="form-group">
+          <label class="form-label">סכום התרומה (₪) *</label>
+          <input type="number" id="donAmount" class="input" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" required>
+          <div class="error-text" id="errDonAmount">נא להזין סכום הגדול מ-0 ₪</div>
+          <div class="quick-chips">
+            <button type="button" class="chip" onclick="setQuickDon(50)">₪50</button>
+            <button type="button" class="chip" onclick="setQuickDon(100)">₪100</button>
+            <button type="button" class="chip" onclick="setQuickDon(200)">₪200</button>
+            <button type="button" class="chip" onclick="setQuickDon(500)">₪500</button>
+            <button type="button" class="chip" onclick="setQuickDon(1000)">₪1,000</button>
+          </div>
         </div>
-      </div>
 
-      <div style="margin:16px 0 14px 0;">
-        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.86rem;">
-          <input type="checkbox" id="chkDontShowInstallAgain" style="width:17px; height:17px; accent-color:var(--primary-accent);">
-          <span>אל תציג לי הודעה זו שוב</span>
-        </label>
-      </div>
-
-      <button type="button" class="action-button-main" id="btnCloseInstallModal">הבנתי, תודה!</button>
-    </div>
-  </div>
-
-  <!-- מודאל קטגוריה -->
-  <div class="dialog-backdrop hidden" id="categoryDialog">
-    <div class="dialog-card-box">
-      <h3 style="font-size:1.15rem; font-weight:800; margin-bottom:12px;">קטגוריה חדשה</h3>
-      <form id="categoryAddForm">
-        <div class="input-block">
-          <label class="input-label">שם הקטגוריה</label>
-          <input type="text" id="newCatName" class="text-input-field" required>
+        <div class="form-group">
+          <label class="form-label">למי תרמת? (שם הארגון / המוטב) *</label>
+          <input type="text" id="donBeneficiary" class="input" list="benList" placeholder="למשל: קופת העיר, עזר מציון, ישיבה..." required>
+          <div class="error-text" id="errDonBeneficiary">נא להזין את שם הארגון או המוטב</div>
+          <datalist id="benList"></datalist>
         </div>
-        <div class="input-block">
-          <label class="input-label">צבע תגית</label>
-          <input type="color" id="newCatColor" class="text-input-field" style="height:48px;" value="#1e293b">
+
+        <div class="form-group">
+          <label class="form-label">תאריך התרומה *</label>
+          <input type="date" id="donDate" class="input" required>
+          <div class="error-text" id="errDonDate">נא לבחור תאריך</div>
         </div>
-        <div style="display:flex; gap:8px; margin-top:20px;">
-          <button type="submit" class="action-button-main">שמור</button>
-          <button type="button" class="action-button-secondary" id="btnCloseCatDialog">ביטול</button>
+
+        <!-- אפשרויות מתקדמות בלחיצה פשוטה -->
+        <details style="margin:12px 0; font-size:0.85rem; color:var(--muted);">
+          <summary style="cursor:pointer; font-weight:700; margin-bottom:10px;">אפשרויות נוספות (סעיף 46, קטגוריה, קבע)</summary>
+          <div class="form-group">
+            <label class="form-label">קטגוריה</label>
+            <select id="donCategory" class="input"></select>
+          </div>
+          <div class="form-group">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="donIsRecurring" style="width:16px; height:16px;">
+              <span>הוראת קבע (תופרש אוטומטית בכל חודש)</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+              <input type="checkbox" id="donSection46" style="width:16px; height:16px;">
+              <span>מוכר לפי סעיף 46 (זיכוי מס)</span>
+            </label>
+          </div>
+        </details>
+
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
+          <button type="submit" class="btn green">✓ שמור תרומה</button>
+          <button type="button" class="btn secondary" onclick="closeModals()">ביטול</button>
+          <button type="button" class="btn danger hidden" id="btnDeleteDon" onclick="deleteCurrentDonation()">🗑️ מחק תרומה זו</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- ================= קוד התוכנה ================= -->
+  <!-- ================= מודאל 2: הוספת התחייבות (הכנסה חדשה שחייבת במעשר) ================= -->
+  <div class="modal-backdrop hidden" id="modalObligation">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="obModalTitle" style="color:var(--purple);">רישום התחייבות מעשר</h3>
+        <button type="button" class="close-btn" onclick="closeModals()">✕</button>
+      </div>
+
+      <form id="formObligation" novalidate>
+        <input type="hidden" id="editObligationId">
+
+        <div class="form-group">
+          <label class="form-label">סכום המעשר לחיוב (₪) *</label>
+          <input type="number" id="obAmount" class="input" inputmode="decimal" step="0.01" min="0.01" placeholder="0.00" required>
+          <div class="error-text" id="errObAmount">נא להזין סכום הגדול מ-0 ₪</div>
+          <div class="quick-chips">
+            <button type="button" class="chip" onclick="setQuickOb(100)">₪100</button>
+            <button type="button" class="chip" onclick="setQuickOb(200)">₪200</button>
+            <button type="button" class="chip" onclick="setQuickOb(500)">₪500</button>
+            <button type="button" class="chip" onclick="setQuickOb(1000)">₪1,000</button>
+            <button type="button" class="chip" onclick="setQuickOb(2000)">₪2,000</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">עבור מה? (סיבה / מקור ההכנסה) *</label>
+          <input type="text" id="obReason" class="input" placeholder="למשל: בונוס, משכורת, מענק, מכירת חפץ..." required>
+          <div class="error-text" id="errObReason">נא להזין את מקור ההכנסה או הסיבה</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">תאריך החיוב (קובע לאיזה חודש ישויך) *</label>
+          <input type="date" id="obDate" class="input" required>
+          <div class="error-text" id="errObDate">נא לבחור תאריך</div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:20px;">
+          <button type="submit" class="btn purple">✓ שמור התחייבות למעשר</button>
+          <button type="button" class="btn secondary" onclick="closeModals()">ביטול</button>
+          <button type="button" class="btn danger hidden" id="btnDeleteOb" onclick="deleteCurrentObligation()">🗑️ מחק התחייבות זו</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- סרגל תחתון (4 טאבים) -->
+  <nav class="nav-bar">
+    <button type="button" class="nav-tab active" data-tab="tab-home">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>ראשי</span>
+    </button>
+    <button type="button" class="nav-tab" data-tab="tab-stats">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      <span>סיכום</span>
+    </button>
+    <button type="button" class="nav-tab" data-tab="tab-history">
+      <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+      <span>היסטוריה</span>
+    </button>
+    <button type="button" class="nav-tab" data-tab="tab-settings">
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      <span>הגדרות</span>
+    </button>
+  </nav>
+
+  <!-- ================= JavaScript ================= -->
   <script>
     const HEBREW_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"];
-    const SHORT_HEBREW_MONTHS = ["ינו'", "פבר'", "מרץ", "אפר'", "מאי", "יוני", "יולי", "אוג'", "ספט'", "אוק'", "נוב'", "דצמ'"];
+    const SHORT_MONTHS = ["ינו'", "פבר'", "מרץ", "אפר'", "מאי", "יוני", "יולי", "אוג'", "ספט'", "אוק'", "נוב'", "דצמ'"];
 
     function formatCurrency(val) {
       const num = Number(val) || 0;
-      const formatted = Math.abs(num).toLocaleString('he-IL', {
-        minimumFractionDigits: num % 1 === 0 ? 0 : 2,
-        maximumFractionDigits: 2
-      });
-      return num < 0 ? `-₪${formatted}` : `₪${formatted}`;
+      const fmt = Math.abs(num).toLocaleString('he-IL', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      return num < 0 ? `-₪${fmt}` : `₪${fmt}`;
     }
 
-    function formatDateToDisplay(dateInput) {
-      if (!dateInput) return "";
-      const d = new Date(dateInput);
-      if (isNaN(d.getTime())) return "";
-      return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+    function formatDate(isoStr) {
+      if (!isoStr) return "";
+      const p = isoStr.split('-');
+      return `${p[2]}/${p[1]}/${p[0]}`;
     }
 
-    function parseDisplayDateToIso(str) {
-      if (!str || typeof str !== 'string') return null;
-      const parts = str.trim().split('/');
-      if (parts.length !== 3) return null;
-      const day = parseInt(parts[0], 10);
-      const month = parseInt(parts[1], 10);
-      const year = parseInt(parts[2], 10);
-      if (isNaN(day) || isNaN(month) || isNaN(year) || year < 1900 || year > 2100 || month < 1 || month > 12) return null;
-      const daysInMonth = new Date(year, month, 0).getDate();
-      if (day < 1 || day > daysInMonth) return null;
-      return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    }
-
-    function getYearMonthFromIso(iso) {
-      const p = iso.split('-');
+    function getYearMonth(isoStr) {
+      const p = isoStr.split('-');
       return { year: parseInt(p[0], 10), month: parseInt(p[1], 10) };
     }
     function getMonthKey(y, m) { return `${y}-${String(m).padStart(2, '0')}`; }
+
+    /* פונקציה המחזירה סכום בסיס - מאפשרת 0 ₪ באופן מלא */
+    function getBaseDebt() {
+      const val = state.settings.baseMaaserAmount;
+      if (val === undefined || val === null || val === '') return 0;
+      return Number(val);
+    }
 
     /* IndexedDB */
     class LocalDB {
       constructor() { this.db = null; }
       async init() {
         return new Promise((resolve, reject) => {
-          const req = indexedDB.open('MaaserAppDB_v5', 2);
+          const req = indexedDB.open('MaaserAppDB_v6', 1);
           req.onupgradeneeded = (e) => {
             const db = e.target.result;
             if (!db.objectStoreNames.contains('donations')) db.createObjectStore('donations', { keyPath: 'id' });
@@ -1198,13 +806,12 @@
       async seed() {
         const cats = await this.getAll('categories');
         if (cats.length === 0) {
-          await this.put('categories', { id: 'c1', name: 'כללי', color: '#475569' });
-          await this.put('categories', { id: 'c2', name: 'נזקקים', color: '#059669' });
-          await this.put('categories', { id: 'c3', name: 'הוראת קבע ישיבה', color: '#1e293b' });
+          await this.put('categories', { id: 'c1', name: 'כללי', color: '#64748b' });
+          await this.put('categories', { id: 'c2', name: 'נזקקים', color: '#16a34a' });
         }
         const now = new Date();
         const defaults = [
-          { key: 'baseMaaserAmount', value: 1000 },
+          { key: 'baseMaaserAmount', value: 0 }, // ברירת מחדל 0!
           { key: 'maaserDay', value: 10 },
           { key: 'startMonth', value: now.getMonth() + 1 },
           { key: 'startYear', value: now.getFullYear() }
@@ -1280,9 +887,7 @@
             updateUserUi(u);
             if (u) await this.pull();
           });
-        } catch(e) {
-          console.warn('Firebase offline');
-        }
+        } catch(e) {}
       }
       async login() {
         if (!this.auth) return;
@@ -1290,15 +895,15 @@
           const provider = new firebase.auth.GoogleAuthProvider();
           provider.setCustomParameters({ prompt: 'select_account' });
           await this.auth.signInWithPopup(provider);
-          showToast('התחברת בהצלחה לחשבון Google!');
+          showToast('התחברת לחשבון Google!');
         } catch(e) {
-          showToast('לא הצלחנו להתחבר לחשבון Google. אנא נסה שוב.');
+          showToast('לא הצלחנו להתחבר ל-Google');
         }
       }
       async logout() {
         if (this.auth) {
           await this.auth.signOut();
-          showToast('התנתקת מחשבון Google');
+          showToast('התנתקת מ-Google');
         }
       }
       async push(dataState) {
@@ -1312,9 +917,9 @@
             settings: dataState.settings,
             lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
           }, { merge: true });
-          setSyncUi('active', 'מסונכרן עם Google 🟢');
+          setSyncUi('synced', 'מסונכרן ב-Google 🟢');
         } catch(e) {
-          setSyncUi('error', 'שגיאת סנכרון בענן');
+          setSyncUi('error', 'שגיאת סנכרון');
         }
       }
       async pull() {
@@ -1342,11 +947,11 @@
             }
             await loadState();
             render();
-            showToast('הנתונים סונכרנו מחשבון Google שלך!');
+            showToast('הנתונים סונכרנו מהענן!');
           } else if (state.donations.length > 0 || state.obligations.length > 0) {
             await this.push(state);
           }
-          setSyncUi('active', 'מסונכרן עם Google 🟢');
+          setSyncUi('synced', 'מסונכרן ב-Google 🟢');
         } catch(e) {}
       }
     }
@@ -1359,100 +964,84 @@
       obligations: [],
       monthlyData: [],
       categories: [],
-      settings: {},
-      editingId: null,
-      editingType: 'donation',
-      currentFormMode: 'oneTime'
+      settings: {}
     };
 
     function setSyncUi(status, txt) {
-      const dot = document.getElementById('headerSyncDot');
-      const text = document.getElementById('headerSyncText');
-      dot.className = 'sync-indicator ' + (status === 'active' ? 'active' : '');
+      const dot = document.getElementById('syncDot');
+      const text = document.getElementById('syncText');
+      dot.className = 'dot ' + (status === 'synced' ? 'synced' : '');
       text.textContent = txt;
     }
 
     function updateUserUi(u) {
-      const avatar = document.getElementById('topAvatarLetter');
-      const sBox = document.getElementById('settingsGoogleProfileBox');
-      const sBtn = document.getElementById('btnAuthGoogleAction');
+      const avatar = document.getElementById('avatarText');
+      const box = document.getElementById('googleBox');
+      const btn = document.getElementById('btnGoogleAuth');
 
       if (u) {
-        avatar.innerHTML = u.photoURL ? `<img src="${u.photoURL}" alt="">` : (u.displayName ? u.displayName.slice(0, 1) : '👤');
-        sBox.innerHTML = `
-          <div style="display:flex; align-items:center; gap:10px;">
-            ${u.photoURL ? `<img src="${u.photoURL}" style="width:40px; height:40px; border-radius:50%;">` : ''}
-            <div>
-              <strong>${u.displayName || 'משתמש Google'}</strong>
-              <div class="text-muted" style="font-size:0.8rem;">${u.email || ''}</div>
-              <div style="color:var(--emerald); font-size:0.78rem; font-weight:700;">● מחובר ומסונכרן אוטומטית</div>
-            </div>
-          </div>
-        `;
-        sBtn.textContent = 'התנתק מחשבון Google';
-        sBtn.className = 'action-button-secondary';
-        sBtn.onclick = () => cloud.logout();
+        avatar.innerHTML = u.photoURL ? `<img src="${u.photoURL}">` : '👤';
+        box.innerHTML = `<strong>${u.displayName || 'משתמש Google'}</strong><br><span style="color:var(--muted);">${u.email || ''}</span>`;
+        btn.textContent = 'התנתק מחשבון Google';
+        btn.onclick = () => cloud.logout();
       } else {
         avatar.textContent = '👤';
-        sBox.innerHTML = '<p class="text-muted" style="font-size:0.85rem;">אינך מחובר לחשבון Google. הנתונים נשמרים כרגע במכשירך בלבד.</p>';
-        sBtn.textContent = 'התחבר עם חשבון Google';
-        sBtn.className = 'action-button-main';
-        sBtn.onclick = () => cloud.login();
+        box.innerHTML = 'הנתונים נשמרים כרגע במכשיר שלך בלבד.';
+        btn.textContent = 'התחבר עם Google לשמירה בענן';
+        btn.onclick = () => cloud.login();
       }
     }
 
-    /* חישוב מדויק של חודשים */
+    /* חישוב חודשים רציף ללא באגים ועם תמיכה ב-0 */
     function recalculateAllMonths() {
       const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth() + 1;
-      const baseDebt = Number(state.settings.baseMaaserAmount) || 1000;
+      const curYear = now.getFullYear();
+      const curMonth = now.getMonth() + 1;
+      const baseDebt = getBaseDebt(); // תומך ב-0 ₪!
 
-      const startYear = Number(state.settings.startYear) || currentYear;
-      const startMonth = Number(state.settings.startMonth) || currentMonth;
+      const startYear = Number(state.settings.startYear) || curYear;
+      const startMonth = Number(state.settings.startMonth) || curMonth;
 
       const monthKeys = [];
       let y = startYear;
       let m = startMonth;
 
-      while (y < currentYear || (y === currentYear && m <= currentMonth)) {
+      while (y < curYear || (y === curYear && m <= curMonth)) {
         monthKeys.push({ year: y, month: m, key: getMonthKey(y, m) });
         m++;
-        if (m > 12) {
-          m = 1;
-          y++;
-        }
+        if (m > 12) { m = 1; y++; }
       }
-
       if (monthKeys.length === 0) {
-        monthKeys.push({ year: currentYear, month: currentMonth, key: getMonthKey(currentYear, currentMonth) });
+        monthKeys.push({ year: curYear, month: curMonth, key: getMonthKey(curYear, curMonth) });
       }
 
       const monthsMap = new Map();
       let runningOpening = 0;
 
-      const recurringItems = state.donations.filter(d => d.isRecurring);
+      const recurringDonations = state.donations.filter(d => d.isRecurring);
 
       monthKeys.forEach(item => {
-        const monthDons = state.donations.filter(d => {
+        // תרומות של החודש
+        const donsThisMonth = state.donations.filter(d => {
           if (d.isRecurring) return false;
-          const ym = getYearMonthFromIso(d.date);
+          const ym = getYearMonth(d.date);
           return ym.year === item.year && ym.month === item.month;
         });
 
-        const monthObligations = state.obligations.filter(o => {
-          const ym = getYearMonthFromIso(o.date);
+        // התחייבויות של החודש
+        const obThisMonth = state.obligations.filter(o => {
+          const ym = getYearMonth(o.date);
           return ym.year === item.year && ym.month === item.month;
         });
 
-        const extraDebtTotal = monthObligations.reduce((s, o) => s + (Number(o.amount) || 0), 0);
-        const monthRequired = baseDebt + extraDebtTotal;
+        const extraDebts = obThisMonth.reduce((s, o) => s + (Number(o.amount) || 0), 0);
+        const requiredTotal = baseDebt + extraDebts;
 
-        const manualTotal = monthDons.reduce((s, d) => s + (Number(d.amount) || 0), 0);
-        const recurringTotal = recurringItems.reduce((s, d) => s + (Number(d.amount) || 0), 0);
-        const totalDonated = manualTotal + recurringTotal;
+        const donatedManual = donsThisMonth.reduce((s, d) => s + (Number(d.amount) || 0), 0);
+        const donatedRecurring = recurringDonations.reduce((s, d) => s + (Number(d.amount) || 0), 0);
+        const totalDonated = donatedManual + donatedRecurring;
 
-        const closing = Math.round((runningOpening + monthRequired - totalDonated) * 100) / 100;
+        const closing = Math.round((runningOpening + requiredTotal - totalDonated) * 100) / 100;
 
         monthsMap.set(item.key, {
           key: item.key,
@@ -1460,11 +1049,9 @@
           month: item.month,
           openingBalance: runningOpening,
           baseDebt: baseDebt,
-          extraDebt: extraDebtTotal,
-          monthRequired: monthRequired,
-          monthDonated: totalDonated,
-          donationCount: monthDons.length + recurringItems.length,
-          obligationCount: monthObligations.length,
+          extraDebts: extraDebts,
+          requiredTotal: requiredTotal,
+          totalDonated: totalDonated,
           closingBalance: closing
         });
 
@@ -1475,14 +1062,14 @@
     }
 
     async function loadState() {
-      const [dons, obligations, cats, setts] = await Promise.all([
+      const [dons, obs, cats, setts] = await Promise.all([
         db.getAll('donations'),
         db.getAll('obligations'),
         db.getAll('categories'),
         db.getAll('settings')
       ]);
-      state.donations = dons.sort((a,b) => new Date(b.date) - new Date(a.date));
-      state.obligations = obligations.sort((a,b) => new Date(b.date) - new Date(a.date));
+      state.donations = dons.sort((a,b) => b.date.localeCompare(a.date));
+      state.obligations = obs.sort((a,b) => b.date.localeCompare(a.date));
       state.categories = cats;
       const sMap = {}; setts.forEach(s => sMap[s.key] = s.value);
       state.settings = sMap;
@@ -1495,848 +1082,433 @@
       await cloud.push(state);
     }
 
-    function clearAndResetDonationForm() {
-      state.editingId = null;
-      state.editingType = 'donation';
-      document.getElementById('donationEntryForm').reset();
-      document.getElementById('editItemId').value = '';
-      
-      const today = new Date();
-      document.getElementById('inpDisplayDate').value = formatDateToDisplay(today);
-      document.getElementById('inpNativeDate').value = today.toISOString().split('T')[0];
-      
-      setFormMode('oneTime');
-      clearValidationErrors();
-
-      document.getElementById('btnSubmitForm').textContent = '✓ שמור תרומה';
-      document.getElementById('btnDeleteDonationRecord').classList.add('hidden');
-    }
-
-    function clearValidationErrors() {
-      document.querySelectorAll('.field-error-msg').forEach(el => el.classList.remove('visible'));
-      document.querySelectorAll('.text-input-field').forEach(el => el.classList.remove('is-invalid'));
-    }
-
-    function setFormMode(mode) {
-      state.currentFormMode = mode;
-      const optOneTime = document.getElementById('tabOptOneTime');
-      const optRecurring = document.getElementById('tabOptRecurring');
-      const optObligation = document.getElementById('tabOptObligation');
-      const blockOneTime = document.getElementById('blockOneTimeFields');
-      const blockRecurring = document.getElementById('blockRecurringFields');
-      const blockCategoryTax = document.getElementById('blockCategoryAndTax');
-      const blockPaymentMethod = document.getElementById('blockPaymentMethod');
-
-      const lblAmount = document.getElementById('lblItemAmount');
-      const lblBen = document.getElementById('lblItemBeneficiary');
-      const inpBen = document.getElementById('inpDonationBeneficiary');
-      const formTitle = document.getElementById('formHeaderTitle');
-      const btnSubmit = document.getElementById('btnSubmitForm');
-
-      optOneTime.classList.remove('active');
-      optRecurring.classList.remove('active');
-      optObligation.classList.remove('active');
-      btnSubmit.classList.remove('btn-purple');
-
-      if (mode === 'recurring') {
-        optRecurring.classList.add('active');
-        blockRecurring.classList.remove('hidden');
-        blockOneTime.classList.add('hidden');
-        blockCategoryTax.classList.remove('hidden');
-        lblAmount.textContent = 'סכום חודשי קבוע (₪) *';
-        lblBen.textContent = 'שם הארגון / המוטב *';
-        inpBen.placeholder = 'למשל: ישיבה, עמותת חסד...';
-        formTitle.textContent = state.editingId ? 'עריכת הוראת קבע' : 'הוספת הוראת קבע';
-        btnSubmit.textContent = '✓ שמור הוראת קבע';
-      } else if (mode === 'obligation') {
-        optObligation.classList.add('active');
-        blockOneTime.classList.remove('hidden');
-        blockRecurring.classList.add('hidden');
-        blockCategoryTax.classList.add('hidden');
-        blockPaymentMethod.classList.add('hidden');
-        lblAmount.textContent = 'סכום החיוב / התחייבות נוספת (₪) *';
-        lblBen.textContent = 'פירוט / סיבת החיוב הנוסף *';
-        inpBen.placeholder = 'למשל: בונוס בעבודה, מענק, מכירת חפץ, נדר...';
-        formTitle.textContent = state.editingId ? 'עריכת התחייבות מעשר' : 'הוספת התחייבות מעשר לחודש';
-        btnSubmit.textContent = '✓ הוסף התחייבות למעשר';
-        btnSubmit.classList.add('btn-purple');
-      } else {
-        optOneTime.classList.add('active');
-        blockOneTime.classList.remove('hidden');
-        blockRecurring.classList.add('hidden');
-        blockCategoryTax.classList.remove('hidden');
-        blockPaymentMethod.classList.remove('hidden');
-        lblAmount.textContent = 'סכום התרומה (₪) *';
-        lblBen.textContent = 'שם הארגון / המוטב *';
-        inpBen.placeholder = 'למשל: קופת העיר, עזר מציון, ישיבה...';
-        formTitle.textContent = state.editingId ? 'עריכת תרומה' : 'הוספת תרומה חדשה';
-        btnSubmit.textContent = '✓ שמור תרומה';
-      }
-    }
-
-    /* רינדור דשבורד סיכום וגרפים */
-    function renderAnalyticsBI() {
-      const months = state.monthlyData;
-      if (!months || months.length === 0) return;
-
-      const totalDonated = months.reduce((s, m) => s + m.monthDonated, 0);
-      const totalRequired = months.reduce((s, m) => s + m.monthRequired, 0);
-      const complianceRate = totalRequired > 0 ? Math.round((totalDonated / totalRequired) * 100) : 0;
-      const monthlyAvg = months.length > 0 ? Math.round(totalDonated / months.length) : 0;
-
-      document.getElementById('biTotalDonated').textContent = formatCurrency(totalDonated);
-      document.getElementById('biTotalRequired').textContent = formatCurrency(totalRequired);
-      
-      const rateEl = document.getElementById('biComplianceRate');
-      rateEl.textContent = `${complianceRate}%`;
-      rateEl.style.color = complianceRate >= 100 ? 'var(--emerald)' : (complianceRate >= 80 ? 'var(--gold)' : 'var(--rose)');
-
-      document.getElementById('biMonthlyAvg').textContent = formatCurrency(monthlyAvg);
-
-      renderMonthlyCompareChart(months);
-      renderBalanceTrendChart(months);
-      renderCategoryDistribution(totalDonated);
-      renderTopBeneficiaries(totalDonated);
-    }
-
-    function renderMonthlyCompareChart(months) {
-      const container = document.getElementById('biMonthlyCompareChartContainer');
-      const maxVal = Math.max(...months.map(m => Math.max(m.monthRequired, m.monthDonated)), 500);
-
-      const chartWidth = Math.max(months.length * 68, 360);
-      const chartHeight = 220;
-      const padTop = 30;
-      const padBottom = 35;
-      const padLeft = 20;
-      const padRight = 20;
-      const plotHeight = chartHeight - padTop - padBottom;
-      const plotWidth = chartWidth - padLeft - padRight;
-      const step = plotWidth / months.length;
-      const barWidth = 14;
-
-      let svg = `
-        <svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="width:100%; min-width:${chartWidth}px; height:${chartHeight}px; display:block;">
-          <line x1="${padLeft}" y1="${chartHeight - padBottom}" x2="${chartWidth - padRight}" y2="${chartHeight - padBottom}" stroke="var(--border)" stroke-width="1.5"/>
-      `;
-
-      months.forEach((m, idx) => {
-        const xGroup = padLeft + idx * step + (step / 2);
-        const hRequired = Math.round((m.monthRequired / maxVal) * plotHeight);
-        const yRequired = chartHeight - padBottom - hRequired;
-        const xReq = xGroup - barWidth - 2;
-
-        const hDonated = Math.round((m.monthDonated / maxVal) * plotHeight);
-        const yDonated = chartHeight - padBottom - hDonated;
-        const xDon = xGroup + 2;
-
-        const monthName = SHORT_HEBREW_MONTHS[m.month - 1] || `${m.month}`;
-
-        svg += `
-          <rect x="${xReq}" y="${yRequired}" width="${barWidth}" height="${hRequired}" fill="#3b82f6" rx="3">
-            <title>חיוב כולל ${monthName}: ${formatCurrency(m.monthRequired)}</title>
-          </rect>
-          <rect x="${xDon}" y="${yDonated}" width="${barWidth}" height="${hDonated}" fill="#10b981" rx="3">
-            <title>הופרש בפועל ${monthName}: ${formatCurrency(m.monthDonated)}</title>
-          </rect>
-          ${m.monthDonated > 0 ? `
-            <text x="${xDon + barWidth/2}" y="${yDonated - 5}" font-size="9" font-weight="700" fill="var(--slate-600)" text-anchor="middle" font-family="system-ui">
-              ${Math.round(m.monthDonated)}
-            </text>
-          ` : ''}
-          <text x="${xGroup}" y="${chartHeight - padBottom + 18}" font-size="11" font-weight="600" fill="var(--slate-600)" text-anchor="middle" font-family="system-ui">
-            ${monthName}
-          </text>
-        `;
-      });
-
-      svg += `</svg>`;
-      container.innerHTML = svg;
-    }
-
-    function renderBalanceTrendChart(months) {
-      const container = document.getElementById('biBalanceTrendChartContainer');
-      const chartWidth = Math.max(months.length * 65, 360);
-      const chartHeight = 180;
-      const padTop = 25;
-      const padBottom = 30;
-      const padLeft = 25;
-      const padRight = 25;
-      const plotHeight = chartHeight - padTop - padBottom;
-      const plotWidth = chartWidth - padLeft - padRight;
-
-      const balances = months.map(m => m.closingBalance);
-      const maxAbs = Math.max(...balances.map(b => Math.abs(b)), 500);
-
-      const zeroY = padTop + (plotHeight / 2);
-      const step = plotWidth / (months.length > 1 ? months.length - 1 : 1);
-
-      const points = months.map((m, idx) => {
-        const x = padLeft + idx * step;
-        const normalized = -m.closingBalance;
-        const y = zeroY - ((normalized / maxAbs) * (plotHeight / 2.3));
-        return { x, y, val: m.closingBalance, label: SHORT_HEBREW_MONTHS[m.month - 1] };
-      });
-
-      let pathD = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 1; i < points.length; i++) {
-        pathD += ` L ${points[i].x} ${points[i].y}`;
-      }
-
-      let svg = `
-        <svg viewBox="0 0 ${chartWidth} ${chartHeight}" style="width:100%; min-width:${chartWidth}px; height:${chartHeight}px; display:block;">
-          <line x1="${padLeft}" y1="${zeroY}" x2="${chartWidth - padRight}" y2="${zeroY}" stroke="var(--slate-400)" stroke-width="1" stroke-dasharray="4 3"/>
-          <text x="${chartWidth - padRight + 4}" y="${zeroY + 3}" font-size="9" fill="var(--slate-400)" font-family="system-ui">מאוזן (0)</text>
-
-          <path d="${pathD}" fill="none" stroke="var(--primary-accent)" stroke-width="3" stroke-linecap="round"/>
-
-          ${points.map(p => `
-            <circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${p.val <= 0 ? '#10b981' : '#f43f5e'}" stroke="#ffffff" stroke-width="2">
-              <title>${p.label}: ${formatCurrency(p.val)}</title>
-            </circle>
-            <text x="${p.x}" y="${chartHeight - padBottom + 18}" font-size="10" font-weight="600" fill="var(--slate-600)" text-anchor="middle" font-family="system-ui">
-              ${p.label}
-            </text>
-          `).join('')}
-        </svg>
-      `;
-      container.innerHTML = svg;
-    }
-
-    function renderCategoryDistribution(totalDonated) {
-      const container = document.getElementById('biCategoryDistributionList');
-      const categorySums = {};
-
-      state.donations.forEach(d => {
-        const cat = d.category || 'כללי';
-        const amt = Number(d.amount) || 0;
-        categorySums[cat] = (categorySums[cat] || 0) + amt;
-      });
-
-      const entries = Object.entries(categorySums).sort((a, b) => b[1] - a[1]);
-      if (entries.length === 0 || totalDonated === 0) {
-        container.innerHTML = '<p class="text-muted" style="text-align:center; padding:12px 0;">אין עדיין נתונים לחלוקה</p>';
-        return;
-      }
-
-      container.innerHTML = entries.map(([name, sum]) => {
-        const pct = Math.round((sum / totalDonated) * 100);
-        const catObj = state.categories.find(c => c.name === name) || { color: '#64748b' };
-        return `
-          <div class="category-bi-row">
-            <span class="cat-bi-name" title="${name}">${name}</span>
-            <div class="cat-bi-bar-wrap">
-              <div class="cat-bi-bar-fill" style="width:${pct}%; background:${catObj.color};"></div>
-            </div>
-            <span class="cat-bi-value">${formatCurrency(sum)} (${pct}%)</span>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function renderTopBeneficiaries(totalDonated) {
-      const container = document.getElementById('biTopBeneficiariesList');
-      const beneficiarySums = {};
-
-      state.donations.forEach(d => {
-        const ben = d.beneficiary || 'לא צוין';
-        const amt = Number(d.amount) || 0;
-        beneficiarySums[ben] = (beneficiarySums[ben] || 0) + amt;
-      });
-
-      const sorted = Object.entries(beneficiarySums).sort((a, b) => b[1] - a[1]).slice(0, 5);
-      if (sorted.length === 0 || totalDonated === 0) {
-        container.innerHTML = '<p class="text-muted" style="text-align:center; padding:12px 0;">אין עדיין תרומות ברשימה</p>';
-        return;
-      }
-
-      container.innerHTML = sorted.map(([name, sum], idx) => {
-        const pct = Math.round((sum / totalDonated) * 100);
-        return `
-          <div class="donation-item-row" style="cursor:default; margin-bottom:6px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span style="font-size:0.85rem; font-weight:800; color:var(--primary-accent); width:20px;">#${idx + 1}</span>
-              <div>
-                <strong style="font-size:0.95rem;">${name}</strong>
-                <div class="text-muted" style="font-size:0.75rem;">${pct}% מסך כל התרומות</div>
-              </div>
-            </div>
-            <strong style="font-size:1.05rem; color:var(--slate-900);">${formatCurrency(sum)}</strong>
-          </div>
-        `;
-      }).join('');
-    }
-
-    /* רינדור המסכים וה-UI הכללי */
+    /* רינדור נקי ופשוט */
     function render() {
       const now = new Date();
-      const currentYear = now.getFullYear();
-      const currentMonth = now.getMonth() + 1;
-      const curKey = getMonthKey(currentYear, currentMonth);
+      const curYear = now.getFullYear();
+      const curMonth = now.getMonth() + 1;
+      const curKey = getMonthKey(curYear, curMonth);
 
-      document.getElementById('heroCurrentMonthName').textContent = `${HEBREW_MONTHS[currentMonth - 1]} ${currentYear}`;
+      document.getElementById('homeMonthLabel').textContent = `${HEBREW_MONTHS[curMonth - 1]} ${curYear}`;
+      document.getElementById('homeMonthName').textContent = `חודש ${HEBREW_MONTHS[curMonth - 1]}`;
 
       const curM = state.monthlyData.find(m => m.key === curKey) || state.monthlyData[state.monthlyData.length - 1] || {
-        closingBalance: 0, openingBalance: 0, monthDonated: 0, donationCount: 0, baseDebt: 1000, extraDebt: 0, monthRequired: 1000
+        closingBalance: 0, openingBalance: 0, requiredTotal: 0, totalDonated: 0
       };
 
-      // 1. כרטיס מצב כולל מצטבר (נקי)
+      // 1. כרטיס המאזן הראשי
       const closing = curM.closingBalance;
-      const heroAmount = document.getElementById('heroAccumulatedAmount');
-      const heroNote = document.getElementById('heroAccumulatedNote');
-      const heroBadge = document.getElementById('heroOverallStatusBadge');
+      const sumEl = document.getElementById('homeBalanceAmount');
+      const descEl = document.getElementById('homeBalanceDesc');
+      const pillEl = document.getElementById('homeStatusPill');
 
-      heroAmount.classList.remove('is-minus', 'is-plus', 'is-balanced');
+      sumEl.classList.remove('is-debt', 'is-excess');
+      pillEl.classList.remove('debt', 'excess');
 
       if (closing > 0) {
-        heroAmount.textContent = formatCurrency(closing);
-        heroAmount.classList.add('is-minus');
-        heroNote.textContent = `מינוס מצטבר: נותר להפריש עוד ${formatCurrency(closing)}`;
-        heroBadge.textContent = 'נותר להפריש';
-        heroBadge.style.background = 'rgba(244, 63, 94, 0.25)';
+        sumEl.textContent = formatCurrency(closing);
+        sumEl.classList.add('is-debt');
+        descEl.textContent = `נותר להפריש לסגירת החודש: ${formatCurrency(closing)}`;
+        pillEl.textContent = 'חוסר לתשלום';
+        pillEl.classList.add('debt');
       } else if (closing < 0) {
-        heroAmount.textContent = formatCurrency(Math.abs(closing));
-        heroAmount.classList.add('is-plus');
-        heroNote.textContent = `פלוס מצטבר: זכות מעשר עודפת של ${formatCurrency(Math.abs(closing))}`;
-        heroBadge.textContent = 'בפלוס (זכות עודפת) ✨';
-        heroBadge.style.background = 'rgba(16, 185, 129, 0.25)';
+        sumEl.textContent = formatCurrency(Math.abs(closing));
+        sumEl.classList.add('is-excess');
+        descEl.textContent = `זכות עודפת שמועברת הלאה: ${formatCurrency(Math.abs(closing))}`;
+        pillEl.textContent = 'בזכות עודפת ✨';
+        pillEl.classList.add('excess');
       } else {
-        heroAmount.textContent = '₪0';
-        heroAmount.classList.add('is-balanced');
-        heroNote.textContent = 'המעשר מאוזן במדויק לחלוטין! ✨';
-        heroBadge.textContent = 'מאוזן ומדויק';
-        heroBadge.style.background = 'rgba(255, 255, 255, 0.15)';
+        sumEl.textContent = '₪0';
+        descEl.textContent = 'המעשר מאוזן במדויק ✨';
+        pillEl.textContent = 'מאוזן';
       }
 
-      // יתרה מחודש קודם ברצועה התחתונה של ה-Hero
+      // 2. כרטיס החודש (3 שורות בלבד)
+      const req = curM.requiredTotal;
+      const don = curM.totalDonated;
       const openBal = curM.openingBalance;
-      const openBalEl = document.getElementById('heroOpeningBalancePill');
-      if (openBal > 0) {
-        openBalEl.textContent = `- ${formatCurrency(openBal)}`;
-        openBalEl.style.color = '#fecdd3';
-      } else if (openBal < 0) {
-        openBalEl.textContent = `+ ${formatCurrency(Math.abs(openBal))}`;
-        openBalEl.style.color = '#a7f3d0';
-      } else {
-        openBalEl.textContent = '0 ₪';
-        openBalEl.style.color = '#f8fafc';
-      }
 
-      // 2. כרטיס החודש הנוכחי (הפרדה נקייה)
-      const monthRequired = curM.monthRequired;
-      const monthDonated = curM.monthDonated;
-      const extraDebtText = curM.extraDebt > 0 ? ` (+${formatCurrency(curM.extraDebt)})` : '';
+      document.getElementById('statMonthRequired').textContent = formatCurrency(req);
+      document.getElementById('statMonthDonated').textContent = formatCurrency(don);
       
-      document.getElementById('monthCardRequired').textContent = `${formatCurrency(monthRequired)}${extraDebtText}`;
-      document.getElementById('monthCardDonated').textContent = formatCurrency(monthDonated);
-      document.getElementById('monthCardCount').textContent = curM.donationCount;
-
-      // יחסיות התרומות מול ימי החודש
-      const donationPct = Math.min(Math.round((monthDonated / (monthRequired || 1)) * 100), 100);
-      document.getElementById('progressBarFill').style.width = `${donationPct}%`;
-
-      const dayOfMonth = now.getDate();
-      const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-      const monthDaysPct = Math.min(Math.round((dayOfMonth / totalDaysInMonth) * 100), 100);
-      const daysRemaining = totalDaysInMonth - dayOfMonth;
-
-      document.getElementById('heroDonationProgressLabel').textContent = `הפרשה: ${donationPct}% (${formatCurrency(monthDonated)} מתוך ${formatCurrency(monthRequired)})`;
-      document.getElementById('heroMonthDaysProgressLabel').textContent = `יום ${dayOfMonth} מתוך ${totalDaysInMonth} (${monthDaysPct}% מהחודש)`;
-
-      const dayMarker = document.getElementById('monthDayMarker');
-      if (dayMarker) {
-        dayMarker.style.right = `${monthDaysPct}%`;
-      }
-
-      const pacingTextEl = document.getElementById('monthRelativePacingText');
-      const remainingDaysEl = document.getElementById('monthRemainingDaysText');
-
-      remainingDaysEl.textContent = daysRemaining === 0 ? 'היום האחרון לחודש' : `נותרו עוד ${daysRemaining} ימים`;
-
-      if (donationPct >= 100) {
-        pacingTextEl.textContent = 'הושלם כל היעד החודשי! 🎯';
-        pacingTextEl.style.color = 'var(--emerald)';
-        pacingTextEl.style.background = 'var(--emerald-bg)';
-      } else if (donationPct >= monthDaysPct) {
-        pacingTextEl.textContent = 'מקדים את קצב החודש ⏱️';
-        pacingTextEl.style.color = 'var(--emerald)';
-        pacingTextEl.style.background = 'var(--emerald-bg)';
-      } else if (dayOfMonth <= 7) {
-        pacingTextEl.textContent = 'תחילת חודש — יש זמן ⏳';
-        pacingTextEl.style.color = 'var(--slate-600)';
-        pacingTextEl.style.background = 'var(--slate-100)';
+      const openEl = document.getElementById('statMonthOpening');
+      if (openBal > 0) {
+        openEl.textContent = `- ${formatCurrency(openBal)}`;
+        openEl.style.color = 'var(--rose)';
+      } else if (openBal < 0) {
+        openEl.textContent = `+ ${formatCurrency(Math.abs(openBal))}`;
+        openEl.style.color = 'var(--green)';
       } else {
-        pacingTextEl.textContent = `קצב החודש (${monthDaysPct}%) מקדים את התרומות (${donationPct}%)`;
-        pacingTextEl.style.color = 'var(--rose)';
-        pacingTextEl.style.background = 'var(--rose-bg)';
+        openEl.textContent = '0 ₪';
+        openEl.style.color = 'var(--text)';
       }
 
-      // 3. יעד שנתי ומעקב קצב
-      const calculatedAnnualGoal = (Number(state.settings.baseMaaserAmount) || 1000) * 12;
-      document.getElementById('annualGoalSum').textContent = formatCurrency(calculatedAnnualGoal);
-      document.getElementById('cfgAnnualGoalDisplay').value = formatCurrency(calculatedAnnualGoal);
+      // סרגל התקדמות
+      const pct = req > 0 ? Math.min(Math.round((don / req) * 100), 100) : (don > 0 ? 100 : 0);
+      document.getElementById('progressFill').style.width = `${pct}%`;
+      document.getElementById('progressText').textContent = req > 0 ? `${pct}% הופרש (${formatCurrency(don)} מתוך ${formatCurrency(req)})` : `הופרש: ${formatCurrency(don)}`;
 
-      const ytdDons = state.donations.filter(d => {
-        const ym = getYearMonthFromIso(d.date);
-        return ym.year === currentYear;
-      });
-      const recurringItems = state.donations.filter(d => d.isRecurring);
-      const recurringSumYear = recurringItems.reduce((s, d) => s + (Number(d.amount) || 0), 0) * currentMonth;
-      const manualYtdSum = ytdDons.filter(d => !d.isRecurring).reduce((s, d) => s + (Number(d.amount) || 0), 0);
-      const ytdTotal = manualYtdSum + recurringSumYear;
-      document.getElementById('annualYtdSum').textContent = formatCurrency(ytdTotal);
+      const daysInMonth = new Date(curYear, curMonth, 0).getDate();
+      document.getElementById('daysProgressText').textContent = `יום ${now.getDate()} מתוך ${daysInMonth}`;
 
-      const daysPassed = Math.max(Math.ceil((now - new Date(currentYear, 0, 1)) / (1000 * 60 * 60 * 24)), 1);
-      document.getElementById('annualPaceForecast').textContent = `${formatCurrency(Math.round((ytdTotal / daysPassed) * 365))} (לפי קצב נוכחי)`;
+      // 3. פעולות אחרונות (איחוד תרומות והתחייבויות ברשימה אחת פשוטה)
+      const combined = [
+        ...state.donations.map(d => ({ ...d, type: 'donation' })),
+        ...state.obligations.map(o => ({ ...o, type: 'obligation' }))
+      ].sort((a,b) => b.date.localeCompare(a.date));
 
-      // איחוד פעולות אחרונות
-      const combinedRecent = [
-        ...state.donations.map(d => ({ ...d, itemType: 'donation' })),
-        ...state.obligations.map(o => ({ ...o, itemType: 'obligation' }))
-      ].sort((a,b) => new Date(b.date || b.createdAt) - new Date(a.date || a.createdAt));
+      document.getElementById('recentListContainer').innerHTML = combined.slice(0, 3).map(renderItemHtml).join('') || '<p style="color:var(--muted); font-size:0.85rem; text-align:center; padding:10px 0;">אין עדיין פעולות</p>';
+      document.getElementById('fullHistoryContainer').innerHTML = combined.map(renderItemHtml).join('') || '<p style="color:var(--muted); text-align:center; padding:20px 0;">אין פעולות רשומות</p>';
 
-      document.getElementById('recentDonationsListContainer').innerHTML = combinedRecent.slice(0, 4).map(renderUnifiedItemHtml).join('') || '<p class="text-muted" style="text-align:center; padding:14px 0;">אין עדיין פעולות רשומות</p>';
-      document.getElementById('allDonationsListContainer').innerHTML = combinedRecent.map(renderUnifiedItemHtml).join('') || '<p class="text-muted">אין פעולות רשומות</p>';
+      // דוחות וסיכום
+      renderStatsTab();
 
-      renderMonthsList();
-      renderAnalyticsBI();
-
-      // סלקטים
-      const catOpts = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-      document.getElementById('selectDonationCategory').innerHTML = catOpts;
-      document.getElementById('beneficiarySuggestions').innerHTML = Array.from(new Set(state.donations.map(d => d.beneficiary))).map(b => `<option value="${b}">`).join('');
-
-      // הגדרות
-      const startMonthSelect = document.getElementById('cfgStartMonth');
-      startMonthSelect.innerHTML = HEBREW_MONTHS.map((name, i) => `
-        <option value="${i + 1}" ${Number(state.settings.startMonth || currentMonth) === (i + 1) ? 'selected' : ''}>${name}</option>
+      // מילוי הגדרות (תומך ב-0!)
+      document.getElementById('cfgBase').value = getBaseDebt();
+      document.getElementById('cfgDay').value = state.settings.maaserDay || 10;
+      
+      const mSel = document.getElementById('cfgStartMonth');
+      mSel.innerHTML = HEBREW_MONTHS.map((name, i) => `
+        <option value="${i + 1}" ${Number(state.settings.startMonth || curMonth) === (i + 1) ? 'selected' : ''}>${name}</option>
       `).join('');
-      document.getElementById('cfgStartYear').value = state.settings.startYear || currentYear;
-      document.getElementById('cfgBaseMaaserAmount').value = state.settings.baseMaaserAmount || 1000;
-      document.getElementById('cfgMaaserDay').value = state.settings.maaserDay || 10;
+      document.getElementById('cfgStartYear').value = state.settings.startYear || curYear;
 
-      document.getElementById('settingsCategoriesList').innerHTML = state.categories.map(c => `
-        <li style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="width:12px; height:12px; border-radius:50%; background:${c.color};"></span>
-            <strong>${c.name}</strong>
-          </div>
-          ${c.name !== 'כללי' ? `<button type="button" class="link-action-btn" style="color:var(--rose);" onclick="deleteCategory('${c.id}')">מחק</button>` : ''}
-        </li>
-      `).join('');
+      // סלקט קטגוריות
+      document.getElementById('donCategory').innerHTML = state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      document.getElementById('benList').innerHTML = Array.from(new Set(state.donations.map(d => d.beneficiary))).map(b => `<option value="${b}">`).join('');
     }
 
-    function renderUnifiedItemHtml(item) {
-      if (item.itemType === 'obligation') {
+    function renderItemHtml(item) {
+      if (item.type === 'obligation') {
         return `
-          <div class="donation-item-row is-obligation-row" onclick="openEditObligation('${item.id}')">
+          <div class="item-row" onclick="openEditObligation('${item.id}')">
             <div>
-              <div class="donation-title" style="color:var(--purple);">
-                ⚡ התחייבות מעשר נוספת: ${item.beneficiary}
-              </div>
-              <div class="donation-tags">
-                <span>📅 ${formatDateToDisplay(item.date)}</span>
-                <span class="category-bubble" style="background:var(--purple);">חיוב מעשר נוסף</span>
-              </div>
+              <div class="item-name" style="color:#7c3aed;">⚡ התחייבות: ${item.beneficiary}</div>
+              <div class="item-meta">תאריך: ${formatDate(item.date)}</div>
             </div>
-            <div class="donation-amount-sum" style="color:var(--purple);">+ ${formatCurrency(item.amount)}</div>
+            <div class="item-amount purple">+ ${formatCurrency(item.amount)}</div>
           </div>
         `;
       }
-
-      const cat = state.categories.find(c => c.name === item.category) || { color: '#64748b', name: item.category || 'כללי' };
       return `
-        <div class="donation-item-row" onclick="openEditDonation('${item.id}')">
+        <div class="item-row" onclick="openEditDonation('${item.id}')">
           <div>
-            <div class="donation-title">
-              ${item.isRecurring ? '🔄 ' : ''}${item.beneficiary}
-            </div>
-            <div class="donation-tags">
-              <span>📅 ${item.isRecurring ? `הוראת קבע ב-${item.day} לחודש` : formatDateToDisplay(item.date)}</span>
-              <span class="category-bubble" style="background:${cat.color};">${cat.name}</span>
-              ${item.section46 ? '<span>• סעיף 46</span>' : ''}
-            </div>
+            <div class="item-name">${item.isRecurring ? '🔄 ' : ''}${item.beneficiary}</div>
+            <div class="item-meta">${formatDate(item.date)} • ${item.category || 'כללי'}</div>
           </div>
-          <div class="donation-amount-sum">${formatCurrency(item.amount)}</div>
+          <div class="item-amount green">${formatCurrency(item.amount)}</div>
         </div>
       `;
     }
 
-    function renderMonthsList() {
-      document.getElementById('monthsHistoryListContainer').innerHTML = [...state.monthlyData].reverse().map(m => {
-        const isOk = m.closingBalance <= 0;
-        const statusText = m.closingBalance === 0 ? 'מאוזן לחלוטין' : (m.closingBalance < 0 ? `עודף זכות: ${formatCurrency(Math.abs(m.closingBalance))}` : `נותר להפריש: ${formatCurrency(m.closingBalance)}`);
-        const extraNote = m.extraDebt > 0 ? ` • חיוב: ${formatCurrency(m.baseDebt)} + ${formatCurrency(m.extraDebt)} נוסף` : ` • חיוב: ${formatCurrency(m.baseDebt)}`;
-        return `
-          <div class="donation-item-row" style="margin-bottom:8px;">
-            <div>
-              <strong style="font-size:0.95rem;">${HEBREW_MONTHS[m.month - 1]} ${m.year}</strong>
-              <div class="text-muted" style="font-size:0.78rem; margin-top:3px;">
-                פתיחה: ${formatCurrency(m.openingBalance)}${extraNote} • הופרש: ${formatCurrency(m.monthDonated)}
-              </div>
-            </div>
-            <div style="text-align:left;">
-              <span style="font-size:0.82rem; font-weight:700; color:${isOk ? 'var(--emerald)' : 'var(--rose)'};">
-                ${statusText}
-              </span>
-            </div>
-          </div>
+    function renderStatsTab() {
+      const months = state.monthlyData;
+      if (!months || months.length === 0) return;
+
+      const totalDonated = months.reduce((s, m) => s + m.totalDonated, 0);
+      const totalRequired = months.reduce((s, m) => s + m.requiredTotal, 0);
+      const rate = totalRequired > 0 ? Math.round((totalDonated / totalRequired) * 100) : (totalDonated > 0 ? 100 : 0);
+
+      document.getElementById('biTotalDonated').textContent = formatCurrency(totalDonated);
+      document.getElementById('biTotalRequired').textContent = formatCurrency(totalRequired);
+      document.getElementById('biRate').textContent = `${rate}%`;
+
+      // גרף חודשי פשוט ב-SVG
+      const maxVal = Math.max(...months.map(m => Math.max(m.requiredTotal, m.totalDonated)), 500);
+      const width = Math.max(months.length * 60, 320);
+      const height = 180;
+      const pad = 24;
+      const plotH = height - pad * 2;
+      const step = (width - pad * 2) / months.length;
+
+      let svg = `<svg viewBox="0 0 ${width} ${height}" style="width:100%; min-width:${width}px; height:${height}px;">`;
+      months.forEach((m, i) => {
+        const x = pad + i * step + step / 2;
+        const hReq = Math.round((m.requiredTotal / maxVal) * plotH);
+        const hDon = Math.round((m.totalDonated / maxVal) * plotH);
+
+        svg += `
+          <rect x="${x - 14}" y="${height - pad - hReq}" width="12" height="${hReq}" fill="#94a3b8" rx="2"><title>חיוב: ${formatCurrency(m.requiredTotal)}</title></rect>
+          <rect x="${x + 2}" y="${height - pad - hDon}" width="12" height="${hDon}" fill="#16a34a" rx="2"><title>נתרם: ${formatCurrency(m.totalDonated)}</title></rect>
+          <text x="${x}" y="${height - 6}" font-size="10" fill="#64748b" text-anchor="middle" font-family="system-ui">${SHORT_MONTHS[m.month - 1]}</text>
         `;
-      }).join('');
+      });
+      svg += `</svg>`;
+      document.getElementById('monthlyChartBox').innerHTML = svg;
+
+      // קטגוריות
+      const sums = {};
+      state.donations.forEach(d => {
+        const c = d.category || 'כללי';
+        sums[c] = (sums[c] || 0) + (Number(d.amount) || 0);
+      });
+      document.getElementById('categoryListBox').innerHTML = Object.entries(sums).map(([cat, amt]) => `
+        <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.9rem;">
+          <span>${cat}</span>
+          <strong>${formatCurrency(amt)}</strong>
+        </div>
+      `).join('') || '<p style="color:var(--muted); font-size:0.85rem;">אין תרומות לחלוקה</p>';
     }
 
-    function switchTab(targetId) {
-      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-      const activeSection = document.getElementById(targetId);
-      if (activeSection) activeSection.classList.add('active');
-      const activeBtn = document.querySelector(`.nav-tab-btn[data-tab="${targetId}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-      
-      if (targetId === 'view-analytics') {
-        renderAnalyticsBI();
-      }
-      
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    /* איפוס טפסים ומודאלים */
+    function closeModals() {
+      document.getElementById('modalDonation').classList.add('hidden');
+      document.getElementById('modalObligation').classList.add('hidden');
+      clearErrors();
     }
 
-    function showToast(text) {
-      const toast = document.getElementById('toastContainer');
-      toast.textContent = text;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 2800);
+    function clearErrors() {
+      document.querySelectorAll('.error-text').forEach(e => e.classList.remove('show'));
+      document.querySelectorAll('.input').forEach(i => i.classList.remove('is-invalid'));
     }
 
-    function bindEvents() {
-      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (btn.dataset.tab === 'view-donation-form') {
-            clearAndResetDonationForm();
-          }
-          switchTab(btn.dataset.tab);
-        });
-      });
-
-      document.getElementById('btnOpenNewDonation').addEventListener('click', () => {
-        clearAndResetDonationForm();
-        setFormMode('oneTime');
-        switchTab('view-donation-form');
-      });
-
-      document.getElementById('btnOpenNewObligation').addEventListener('click', () => {
-        clearAndResetDonationForm();
-        setFormMode('obligation');
-        switchTab('view-donation-form');
-      });
-
-      document.getElementById('btnQuickAddObligationHero').addEventListener('click', () => {
-        clearAndResetDonationForm();
-        setFormMode('obligation');
-        switchTab('view-donation-form');
-      });
-
-      document.getElementById('btnSeeAllDonations').addEventListener('click', () => switchTab('view-history'));
-      document.getElementById('btnDismissForm').addEventListener('click', () => switchTab('view-dashboard'));
-      document.getElementById('btnCancelFormAction').addEventListener('click', () => switchTab('view-dashboard'));
-      document.getElementById('btnTopProfileAvatar').addEventListener('click', () => switchTab('view-settings'));
-
-      document.getElementById('tabOptOneTime').addEventListener('click', () => setFormMode('oneTime'));
-      document.getElementById('tabOptRecurring').addEventListener('click', () => setFormMode('recurring'));
-      document.getElementById('tabOptObligation').addEventListener('click', () => setFormMode('obligation'));
-
-      document.querySelectorAll('.pill-amt').forEach(b => {
-        b.addEventListener('click', () => {
-          document.getElementById('inpDonationAmount').value = b.dataset.val;
-          document.getElementById('inpDonationAmount').classList.remove('is-invalid');
-          document.getElementById('errDonationAmount').classList.remove('visible');
-        });
-      });
-
-      const nativePicker = document.getElementById('inpNativeDate');
-      const displayPicker = document.getElementById('inpDisplayDate');
-      nativePicker.addEventListener('change', () => {
-        if (nativePicker.value) {
-          displayPicker.value = formatDateToDisplay(nativePicker.value);
-          displayPicker.classList.remove('is-invalid');
-          document.getElementById('errDonationDate').classList.remove('visible');
-        }
-      });
-      document.getElementById('btnQuickDateToday').addEventListener('click', () => {
-        const today = new Date();
-        displayPicker.value = formatDateToDisplay(today);
-        nativePicker.value = today.toISOString().split('T')[0];
-        displayPicker.classList.remove('is-invalid');
-        document.getElementById('errDonationDate').classList.remove('visible');
-      });
-      document.getElementById('btnQuickDateYesterday').addEventListener('click', () => {
-        const y = new Date(); y.setDate(y.getDate() - 1);
-        displayPicker.value = formatDateToDisplay(y);
-        nativePicker.value = y.toISOString().split('T')[0];
-        displayPicker.classList.remove('is-invalid');
-        document.getElementById('errDonationDate').classList.remove('visible');
-      });
-
-      document.getElementById('donationEntryForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        clearValidationErrors();
-
-        const amtInput = document.getElementById('inpDonationAmount');
-        const benInput = document.getElementById('inpDonationBeneficiary');
-        const amt = parseFloat(amtInput.value);
-        const ben = benInput.value.trim();
-        const mode = state.currentFormMode;
-
-        let hasError = false;
-        let firstInvalidField = null;
-
-        if (isNaN(amt) || amt <= 0) {
-          amtInput.classList.add('is-invalid');
-          document.getElementById('errDonationAmount').classList.add('visible');
-          hasError = true;
-          firstInvalidField = firstInvalidField || amtInput;
-        }
-
-        if (!ben) {
-          benInput.classList.add('is-invalid');
-          const errBen = document.getElementById('errDonationBeneficiary');
-          errBen.textContent = mode === 'obligation' ? 'נא להזין פירוט או סיבה לחיוב הנוסף' : 'נא להזין את שם הארגון או המוטב';
-          errBen.classList.add('visible');
-          hasError = true;
-          firstInvalidField = firstInvalidField || benInput;
-        }
-
-        let isoDate = null;
-        if (mode !== 'recurring') {
-          const dateStr = displayPicker.value.trim();
-          isoDate = parseDisplayDateToIso(dateStr);
-          if (!isoDate) {
-            displayPicker.classList.add('is-invalid');
-            document.getElementById('errDonationDate').classList.add('visible');
-            hasError = true;
-            firstInvalidField = firstInvalidField || displayPicker;
-          }
-        }
-
-        if (hasError) {
-          if (firstInvalidField) firstInvalidField.focus();
-          return;
-        }
-
-        if (mode === 'obligation') {
-          const item = {
-            id: state.editingId || `ob_${Date.now()}`,
-            amount: Math.round(amt * 100) / 100,
-            beneficiary: ben,
-            date: isoDate,
-            createdAt: new Date().toISOString()
-          };
-
-          await db.put('obligations', item);
-          if (state.editingId && state.editingType === 'obligation') {
-            const idx = state.obligations.findIndex(x => x.id === item.id);
-            if (idx !== -1) state.obligations[idx] = item;
-          } else {
-            state.obligations.unshift(item);
-          }
-          state.obligations.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-          showToast('התחייבות המעשר הנוספת נשמרה!');
-        } else {
-          const isRec = (mode === 'recurring');
-          const item = {
-            id: state.editingId || `don_${Date.now()}`,
-            amount: Math.round(amt * 100) / 100,
-            beneficiary: ben,
-            category: document.getElementById('selectDonationCategory').value,
-            section46: document.getElementById('chkSection46').checked,
-            isRecurring: isRec,
-            createdAt: new Date().toISOString()
-          };
-
-          if (isRec) {
-            item.day = parseInt(document.getElementById('inpRecurringDay').value, 10) || 10;
-            item.date = new Date().toISOString().split('T')[0];
-          } else {
-            item.date = isoDate;
-            item.paymentMethod = document.getElementById('selectPaymentMethod').value;
-          }
-
-          await db.put('donations', item);
-          if (state.editingId && state.editingType === 'donation') {
-            const idx = state.donations.findIndex(x => x.id === item.id);
-            if (idx !== -1) state.donations[idx] = item;
-          } else {
-            state.donations.unshift(item);
-          }
-          state.donations.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-          showToast(isRec ? 'הוראת הקבע נשמרה בהצלחה!' : 'התרומה נשמרה בהצלחה!');
-        }
-
-        clearAndResetDonationForm();
-        switchTab('view-dashboard');
-        await notifyChanges();
-      });
-
-      document.getElementById('btnDeleteDonationRecord').addEventListener('click', async () => {
-        if (!state.editingId) return;
-        if (state.editingType === 'obligation') {
-          await db.del('obligations', state.editingId);
-          state.obligations = state.obligations.filter(d => d.id !== state.editingId);
-          showToast('ההתחייבות נמחקה');
-        } else {
-          await db.del('donations', state.editingId);
-          state.donations = state.donations.filter(d => d.id !== state.editingId);
-          showToast('התרומה נמחקה');
-        }
-        clearAndResetDonationForm();
-        switchTab('view-dashboard');
-        await notifyChanges();
-      });
-
-      document.getElementById('settingsMaaserForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const startMonth = parseInt(document.getElementById('cfgStartMonth').value, 10);
-        const startYear = parseInt(document.getElementById('cfgStartYear').value, 10);
-        const base = parseFloat(document.getElementById('cfgBaseMaaserAmount').value) || 1000;
-        const day = parseInt(document.getElementById('cfgMaaserDay').value, 10) || 10;
-
-        state.settings.startMonth = startMonth;
-        state.settings.startYear = startYear;
-        state.settings.baseMaaserAmount = base;
-        state.settings.maaserDay = day;
-
-        await Promise.all([
-          db.put('settings', { key: 'startMonth', value: startMonth }),
-          db.put('settings', { key: 'startYear', value: startYear }),
-          db.put('settings', { key: 'baseMaaserAmount', value: base }),
-          db.put('settings', { key: 'maaserDay', value: day })
-        ]);
-
-        showToast('ההגדרות עודכנו, והחישובים סודרו מחדש!');
-        await notifyChanges();
-      });
-
-      document.getElementById('btnHelpPwa').addEventListener('click', () => {
-        document.getElementById('pwaInstallModal').classList.remove('hidden');
-      });
-      document.getElementById('btnCloseInstallModal').addEventListener('click', () => {
-        if (document.getElementById('chkDontShowInstallAgain').checked) {
-          localStorage.setItem('hidePwaInstallGuide', 'true');
-        }
-        document.getElementById('pwaInstallModal').classList.add('hidden');
-      });
-
-      document.getElementById('btnAddNewCategoryModal').addEventListener('click', () => {
-        document.getElementById('categoryAddForm').reset();
-        document.getElementById('categoryDialog').classList.remove('hidden');
-      });
-      document.getElementById('btnCloseCatDialog').addEventListener('click', () => {
-        document.getElementById('categoryDialog').classList.add('hidden');
-      });
-      document.getElementById('categoryAddForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('newCatName').value.trim();
-        const color = document.getElementById('newCatColor').value;
-        if (!name) return;
-        const catObj = { id: `cat_${Date.now()}`, name, color };
-        await db.put('categories', catObj);
-        state.categories.push(catObj);
-        document.getElementById('categoryDialog').classList.add('hidden');
-        showToast('הקטגוריה נוספה');
-        await notifyChanges();
-      });
-
-      document.getElementById('btnExportToExcel').addEventListener('click', () => {
-        const headers = ['סוג פעולה', 'תאריך / יום', 'מוטב / סיבה', 'סכום', 'קטגוריה', 'אמצעי תשלום', 'סעיף 46'];
-        
-        const rows = [
-          ...state.donations.map(d => [
-            d.isRecurring ? 'הוראת קבע' : 'תרומה רגילה',
-            d.isRecurring ? `יום ${d.day} בחודש` : formatDateToDisplay(d.date),
-            `"${(d.beneficiary||'').replace(/"/g, '""')}"`,
-            d.amount,
-            `"${(d.category||'').replace(/"/g, '""')}"`,
-            `"${(d.paymentMethod||'').replace(/"/g, '""')}"`,
-            d.section46 ? 'כן' : 'לא'
-          ]),
-          ...state.obligations.map(o => [
-            'התחייבות מעשר נוספת',
-            formatDateToDisplay(o.date),
-            `"${(o.beneficiary||'').replace(/"/g, '""')}"`,
-            o.amount,
-            '-',
-            '-',
-            '-'
-          ])
-        ];
-
-        const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `מעשר_כספים_${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+    // פתיחת טופס תרומה נקי
+    function openNewDonation() {
+      closeModals();
+      document.getElementById('formDonation').reset();
+      document.getElementById('editDonationId').value = '';
+      document.getElementById('donDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('donationModalTitle').textContent = 'רישום תרומה חדשה';
+      document.getElementById('btnDeleteDon').classList.add('hidden');
+      document.getElementById('modalDonation').classList.remove('hidden');
     }
 
+    // פתיחת טופס התחייבות נקי
+    function openNewObligation() {
+      closeModals();
+      document.getElementById('formObligation').reset();
+      document.getElementById('editObligationId').value = '';
+      document.getElementById('obDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('obModalTitle').textContent = 'רישום התחייבות מעשר';
+      document.getElementById('btnDeleteOb').classList.add('hidden');
+      document.getElementById('modalObligation').classList.remove('hidden');
+    }
+
+    function setQuickDon(v) { document.getElementById('donAmount').value = v; }
+    function setQuickOb(v) { document.getElementById('obAmount').value = v; }
+
+    /* עריכת תרומה קיימת */
     window.openEditDonation = function(id) {
       const d = state.donations.find(x => x.id === id);
       if (!d) return;
-      clearValidationErrors();
-
-      state.editingId = d.id;
-      state.editingType = 'donation';
-      document.getElementById('editItemId').value = d.id;
-      document.getElementById('inpDonationAmount').value = d.amount;
-      document.getElementById('inpDonationBeneficiary').value = d.beneficiary;
-      document.getElementById('selectDonationCategory').value = d.category || 'כללי';
-      document.getElementById('chkSection46').checked = !!d.section46;
-
-      if (d.isRecurring) {
-        setFormMode('recurring');
-        document.getElementById('inpRecurringDay').value = d.day || 10;
-      } else {
-        setFormMode('oneTime');
-        document.getElementById('inpDisplayDate').value = formatDateToDisplay(d.date);
-        document.getElementById('inpNativeDate').value = d.date;
-        document.getElementById('selectPaymentMethod').value = d.paymentMethod || 'העברה בנקאית';
-      }
-
-      document.getElementById('btnSubmitForm').textContent = '✓ שמור שינויים';
-      document.getElementById('btnDeleteDonationRecord').classList.remove('hidden');
-      switchTab('view-donation-form');
+      closeModals();
+      document.getElementById('editDonationId').value = d.id;
+      document.getElementById('donAmount').value = d.amount;
+      document.getElementById('donBeneficiary').value = d.beneficiary;
+      document.getElementById('donDate').value = d.date;
+      document.getElementById('donCategory').value = d.category || 'כללי';
+      document.getElementById('donIsRecurring').checked = !!d.isRecurring;
+      document.getElementById('donSection46').checked = !!d.section46;
+      document.getElementById('donationModalTitle').textContent = 'עריכת תרומה';
+      document.getElementById('btnDeleteDon').classList.remove('hidden');
+      document.getElementById('modalDonation').classList.remove('hidden');
     };
 
+    /* עריכת התחייבות קיימת */
     window.openEditObligation = function(id) {
       const o = state.obligations.find(x => x.id === id);
       if (!o) return;
-      clearValidationErrors();
-
-      state.editingId = o.id;
-      state.editingType = 'obligation';
-      document.getElementById('editItemId').value = o.id;
-      document.getElementById('inpDonationAmount').value = o.amount;
-      document.getElementById('inpDonationBeneficiary').value = o.beneficiary;
-      document.getElementById('inpDisplayDate').value = formatDateToDisplay(o.date);
-      document.getElementById('inpNativeDate').value = o.date;
-
-      setFormMode('obligation');
-
-      document.getElementById('btnSubmitForm').textContent = '✓ שמור שינויים בהתחייבות';
-      document.getElementById('btnDeleteDonationRecord').classList.remove('hidden');
-      switchTab('view-donation-form');
+      closeModals();
+      document.getElementById('editObligationId').value = o.id;
+      document.getElementById('obAmount').value = o.amount;
+      document.getElementById('obReason').value = o.beneficiary;
+      document.getElementById('obDate').value = o.date;
+      document.getElementById('obModalTitle').textContent = 'עריכת התחייבות מעשר';
+      document.getElementById('btnDeleteOb').classList.remove('hidden');
+      document.getElementById('modalObligation').classList.remove('hidden');
     };
 
-    window.deleteCategory = async function(id) {
-      const cat = state.categories.find(c => c.id === id);
-      if (!cat || cat.name === 'כללי') return;
-      await db.del('categories', id);
-      state.categories = state.categories.filter(c => c.id !== id);
-      showToast('הקטגוריה נמחקה');
+    async function deleteCurrentDonation() {
+      const id = document.getElementById('editDonationId').value;
+      if (!id) return;
+      await db.del('donations', id);
+      state.donations = state.donations.filter(d => d.id !== id);
+      closeModals();
+      showToast('התרומה נמחקה');
       await notifyChanges();
-    };
+    }
+
+    async function deleteCurrentObligation() {
+      const id = document.getElementById('editObligationId').value;
+      if (!id) return;
+      await db.del('obligations', id);
+      state.obligations = state.obligations.filter(o => o.id !== id);
+      closeModals();
+      showToast('ההתחייבות נמחקה');
+      await notifyChanges();
+    }
+
+    function showToast(txt) {
+      const t = document.getElementById('toast');
+      t.textContent = txt;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 2500);
+    }
+
+    /* אירועים */
+    function bindEvents() {
+      // מעבר בין 4 טאבים
+      document.querySelectorAll('.nav-tab').forEach(b => {
+        b.addEventListener('click', () => {
+          document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          b.classList.add('active');
+          document.getElementById(b.dataset.tab).classList.add('active');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      document.getElementById('btnOpenDonationModal').addEventListener('click', openNewDonation);
+      document.getElementById('btnOpenObligationModal').addEventListener('click', openNewObligation);
+      document.getElementById('btnViewAllHistory').addEventListener('click', () => {
+        document.querySelector('[data-tab="tab-history"]').click();
+      });
+      document.getElementById('btnUser').addEventListener('click', () => {
+        document.querySelector('[data-tab="tab-settings"]').click();
+      });
+
+      // שמירת תרומה (עם אימות מדויק)
+      document.getElementById('formDonation').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearErrors();
+
+        const amt = parseFloat(document.getElementById('donAmount').value);
+        const ben = document.getElementById('donBeneficiary').value.trim();
+        const date = document.getElementById('donDate').value;
+        const editId = document.getElementById('editDonationId').value;
+
+        let hasErr = false;
+        if (isNaN(amt) || amt <= 0) {
+          document.getElementById('donAmount').classList.add('is-invalid');
+          document.getElementById('errDonAmount').classList.add('show');
+          hasErr = true;
+        }
+        if (!ben) {
+          document.getElementById('donBeneficiary').classList.add('is-invalid');
+          document.getElementById('errDonBeneficiary').classList.add('show');
+          hasErr = true;
+        }
+        if (!date) {
+          document.getElementById('donDate').classList.add('is-invalid');
+          document.getElementById('errDonDate').classList.add('show');
+          hasErr = true;
+        }
+        if (hasErr) return;
+
+        const item = {
+          id: editId || `don_${Date.now()}`,
+          amount: Math.round(amt * 100) / 100,
+          beneficiary: ben,
+          date: date,
+          category: document.getElementById('donCategory').value || 'כללי',
+          isRecurring: document.getElementById('donIsRecurring').checked,
+          section46: document.getElementById('donSection46').checked,
+          createdAt: new Date().toISOString()
+        };
+
+        await db.put('donations', item);
+        if (editId) {
+          const idx = state.donations.findIndex(x => x.id === editId);
+          if (idx !== -1) state.donations[idx] = item;
+        } else {
+          state.donations.unshift(item);
+        }
+        state.donations.sort((a,b) => b.date.localeCompare(a.date));
+
+        closeModals();
+        showToast('התרומה נשמרה בהצלחה!');
+        await notifyChanges();
+      });
+
+      // שמירת התחייבות (עם אימות מדויק)
+      document.getElementById('formObligation').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearErrors();
+
+        const amt = parseFloat(document.getElementById('obAmount').value);
+        const reason = document.getElementById('obReason').value.trim();
+        const date = document.getElementById('obDate').value;
+        const editId = document.getElementById('editObligationId').value;
+
+        let hasErr = false;
+        if (isNaN(amt) || amt <= 0) {
+          document.getElementById('obAmount').classList.add('is-invalid');
+          document.getElementById('errObAmount').classList.add('show');
+          hasErr = true;
+        }
+        if (!reason) {
+          document.getElementById('obReason').classList.add('is-invalid');
+          document.getElementById('errObReason').classList.add('show');
+          hasErr = true;
+        }
+        if (!date) {
+          document.getElementById('obDate').classList.add('is-invalid');
+          document.getElementById('errObDate').classList.add('show');
+          hasErr = true;
+        }
+        if (hasErr) return;
+
+        const item = {
+          id: editId || `ob_${Date.now()}`,
+          amount: Math.round(amt * 100) / 100,
+          beneficiary: reason,
+          date: date,
+          createdAt: new Date().toISOString()
+        };
+
+        await db.put('obligations', item);
+        if (editId) {
+          const idx = state.obligations.findIndex(x => x.id === editId);
+          if (idx !== -1) state.obligations[idx] = item;
+        } else {
+          state.obligations.unshift(item);
+        }
+        state.obligations.sort((a,b) => b.date.localeCompare(a.date));
+
+        closeModals();
+        showToast('ההתחייבות נשמרה!');
+        await notifyChanges();
+      });
+
+      // שמירת הגדרות (תומך ב-0 ₪!)
+      document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const base = parseFloat(document.getElementById('cfgBase').value) || 0; // תומך ב-0 ₪
+        const day = parseInt(document.getElementById('cfgDay').value, 10) || 10;
+        const startMonth = parseInt(document.getElementById('cfgStartMonth').value, 10);
+        const startYear = parseInt(document.getElementById('cfgStartYear').value, 10);
+
+        state.settings.baseMaaserAmount = base;
+        state.settings.maaserDay = day;
+        state.settings.startMonth = startMonth;
+        state.settings.startYear = startYear;
+
+        await Promise.all([
+          db.put('settings', { key: 'baseMaaserAmount', value: base }),
+          db.put('settings', { key: 'maaserDay', value: day }),
+          db.put('settings', { key: 'startMonth', value: startMonth }),
+          db.put('settings', { key: 'startYear', value: startYear })
+        ]);
+
+        showToast('ההגדרות עודכנו בהצלחה!');
+        await notifyChanges();
+      });
+
+      // ייצוא CSV
+      document.getElementById('btnExportCsv').addEventListener('click', () => {
+        const rows = [
+          ['סוג', 'תאריך', 'פרטים', 'סכום'],
+          ...state.donations.map(d => ['תרומה', formatDate(d.date), `"${d.beneficiary}"`, d.amount]),
+          ...state.obligations.map(o => ['התחייבות', formatDate(o.date), `"${o.beneficiary}"`, o.amount])
+        ];
+        const csv = '\uFEFF' + rows.map(r => r.join(',')).join('\r\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `מעשר_כספים_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+      });
+    }
 
     async function initApp() {
       await db.init();
@@ -2344,12 +1516,6 @@
       bindEvents();
       render();
       cloud.init();
-
-      if (!localStorage.getItem('hidePwaInstallGuide')) {
-        setTimeout(() => {
-          document.getElementById('pwaInstallModal').classList.remove('hidden');
-        }, 1000);
-      }
     }
 
     window.addEventListener('DOMContentLoaded', initApp);
